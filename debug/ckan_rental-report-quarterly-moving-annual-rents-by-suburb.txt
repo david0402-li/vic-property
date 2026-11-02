@@ -1,0 +1,26 @@
+('2025-09-30', '2026-02-20', '2026-02-24T06:42:09.566996') |  Rental Report - Moving Annual Rents by LGA Sep 2025 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel
+('2025-06-30', '', '2026-02-13T06:40:15.715651') | Rental Report - Moving Annual Rents by LGA June 2025 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-june-quarter-2025-excel
+('2025-03-31', '', '2025-09-04T03:20:28.351015') | Rental Report - Moving Annual Rents by LGA Mar 2025 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-march-quarter-2025-excel
+('2024-12-31', '', '2025-06-12T02:07:08.587486') | Rental Report - Moving Annual Rents by LGA Dec 2024 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-december-quarter-2024-excel
+('2024-09-30', '', '2025-02-05T23:46:00.964803') | Rental Report - Moving Annual Rents by LGA Sept 2024 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2024-excel
+('2024-03-31', '2024-03-31', '2024-06-06T00:42:57.390531') | Rental Report - Moving Annual Rents by LGA March 2024 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-march-quarter-2024-excel
+('2023-12-31', '', '2024-02-21T02:44:48.210142') | Rental Report - Moving Annual Rents by LGA Dec 2023 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-december-quarter-2023-excel
+('2023-09-30', '', '2024-02-21T02:44:02.405593') | Rental Report - Moving Annual Rents by LGA Sept 2023 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-september-quarter-2023-excel
+('2023-06-30', '2023-09-30', '2023-11-07T21:46:41.010366') | Rental Report - Moving Annual Rents by LGA June 2023 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-june-quarter-2023-excel
+('2023-03-31', '2023-06-28', '2023-06-28T04:14:42.119762') | Rental Report - Moving Annual Rents by LGA Mar 2023 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-march-quarter-2023-excel
+('2022-12-31', '2023-06-28', '2023-06-28T04:13:08.170918') | Rental Report - Moving Annual Rents by LGA Dec 2022 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-december-quarter-2022-excel
+('2022-09-30', '2023-02-09', '2023-02-09T03:12:31.609001') | Rental Report - Quarterly: Moving Annual by Suburb Sept 2022 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-september-quarter-2022-excel
+('2022-06-30', '', '2022-10-11T02:19:32.834674') | Rental Report - Quarterly: Moving Annual Rents by LGA June 2022 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-june-quarter-2022-excel
+('2022-03-31', '', '2022-10-11T02:18:31.048443') | Rental Report - Quarterly: Moving Annual Rents by LGA Mar 2022 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-march-quarter-2022-excel
+('2021-12-31', '', '2022-10-11T02:17:31.023867') | Rental Report - Quarterly: Moving Annual Rents by LGA Dec 2021 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-december-quarter-2021-excel
+('2021-09-30', '2022-01-17', '2022-01-16T22:20:39.234438') | Rental Report - Quarterly: Moving Annual Rents by LGA Sept 2021 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-september-quarter-2021-excel
+('2021-06-30', '2022-01-14', '2022-01-16T22:19:42.987670') | Rental Report - Quarterly: Moving Annual Rents by LGA June 2021 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-june-quarter-2021-excel
+('2021-03-31', '2021-06-01', '2021-08-16T04:48:13.511423') | Rental Report - Quarterly: Moving Annual Rents Mar 2021 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-march-quarter-2021
+('2020-12-31', '', '2021-05-20T06:20:51.959587') | Rental Report - Quarterly: Moving Annual Rents by LGA Dec 2020 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rent-suburb-december-quarter-2020
+('2020-09-30', '', '2024-09-06T02:12:38.742488') | Rental Report - Moving Annual Rents by LGA Sept 2020 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-september-quarter-2020
+('2020-06-30', '', '2024-09-06T02:12:02.886900') | Rental Report - Moving Annual Rents by LGA Jun 2020 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-june-quarter-2020
+('2020-03-31', '', '2024-09-06T02:18:47.740394') | Rental Report - Moving Annual Rents by LGA Mar 2020 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-march-quarter-2020
+('2019-12-31', '2020-03-22', '2020-03-22T04:55:23.946525') | Rental Report - Quarterly: Moving Annual Rents by LGA Dec 2019 | XLSX | https://www.dhhs.vic.gov.au/sites/default/files/documents/202003/Moving%20annual%20rents%20by%20suburb%20-%20December%20quarter%202019.xlsx
+('2019-09-30', '2020-03-22', '2020-03-22T05:14:42.355483') | Rental Report - Quarterly: Moving Annual Rents by LGA Sep 2019 | XLSX | https://www.dhhs.vic.gov.au/moving-annual-rents-suburb-september-quarter-2019
+('2019-09-30', '', '2024-09-06T02:10:05.532206') | Rental Report - Moving Annual Rents by LGA Sept 2019 | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-september-quarter-2019
+('2019-06-30', '2017-02-03', '2016-07-28T09:41:58.513002') | Rental Report - Quarterly: Moving Annual Rents by Suburb | XLSX | https://www.dffh.vic.gov.au/moving-annual-rents-suburb-june-quarter-2019
