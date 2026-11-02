@@ -1,45 +1,45 @@
-"""Try several HTTP client strategies against each blocked host; write debug/diag.txt."""
-import os, subprocess, time, traceback
-import requests
+"""Discovery round 2: ABS Data API dataflows + Wayback availability + data.vic alternatives."""
+import os, re, json, time
+from curl_cffi import requests as cr
 
-URLS = {
-    "landvic": "https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx",
-    "dffh": "https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel",
-    "abs": "https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_TSP_SAL_for_VIC_short-header.zip",
-    "abs_api": "https://data.api.abs.gov.au/rest/dataflow/ABS?detail=allstubs",
-    "wayback_landvic": "https://archive.org/wayback/available?url=www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx",
-}
-H = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36",
-    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-    "Accept-Language": "en-AU,en;q=0.9",
-}
 out = []
 def rec(*a):
     s = " ".join(map(str, a)); print(s, flush=True); out.append(s)
 
-for k, u in URLS.items():
-    rec(f"\n## {k} {u}")
-    t = time.time()
+# 1. ABS dataflows
+r = cr.get("https://data.api.abs.gov.au/rest/dataflow/ABS?detail=allstubs", impersonate="chrome", timeout=60)
+flows = re.findall(r'<structure:Dataflow id="([^"]+)"[^>]*version="([^"]+)"[^>]*>.*?<common:Name xml:lang="en">([^<]+)<', r.text, re.S)
+rec(f"## ABS dataflows: {len(flows)}")
+for fid, ver, name in flows:
+    if re.search(r"C21|C16|C11|CENSUS|ERP|SAL|SA2|POP|DWELL|TSP", fid + name, re.I):
+        rec(f"{fid} v{ver} :: {name}")
+
+# 2. wayback
+for u in ["www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx",
+          "www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx",
+          "www.land.vic.gov.au/__data/assets/excel_doc/0033/756582/units-by-suburb-2014-2024.xlsx"]:
+    r = cr.get("https://archive.org/wayback/available?url=" + u, impersonate="chrome", timeout=60)
+    rec("## wayback", u, r.text[:400])
     try:
-        r = requests.get(u, headers=H, timeout=40, stream=True)
-        b = next(r.iter_content(2048), b"")
-        rec(f"requests+headers: {r.status_code} {r.headers.get('content-type')} len={r.headers.get('content-length')} server={r.headers.get('server')} first={b[:80]!r} {time.time()-t:.1f}s")
-        if k.startswith("wayback") or k == "abs_api":
-            rec("  body:", r.text[:600] if k.startswith("wayback") else b[:300])
+        snap = r.json()["archived_snapshots"].get("closest")
+        if snap:
+            raw = re.sub(r"/web/(\d+)/", r"/web/\1id_/", snap["url"])
+            t = cr.get(raw, impersonate="chrome", timeout=90)
+            rec("   fetch", raw, t.status_code, t.headers.get("content-type"), len(t.content), t.content[:4])
     except Exception as e:
-        rec(f"requests+headers: ERR {type(e).__name__} {e} {time.time()-t:.1f}s")
-    t = time.time()
+        rec("   err", e)
+
+# 3. land.vic other paths / data.vic datastore
+for u in ["https://discover.data.vic.gov.au/api/3/action/package_search?q=median%20house%20suburb&rows=20",
+          "https://discover.data.vic.gov.au/api/3/action/package_search?q=property%20sales%20report&rows=30"]:
+    r = cr.get(u, impersonate="chrome", timeout=60)
     try:
-        from curl_cffi import requests as cr
-        r = cr.get(u, impersonate="chrome", timeout=40)
-        rec(f"curl_cffi chrome: {r.status_code} {r.headers.get('content-type')} len={len(r.content)} first={r.content[:60]!r} {time.time()-t:.1f}s")
+        for p in r.json()["result"]["results"]:
+            rec("## pkg", p["name"], "|", p["title"])
+            for x in p["resources"][:3]:
+                rec("     ", x.get("format"), x.get("url"))
     except Exception as e:
-        rec(f"curl_cffi chrome: ERR {type(e).__name__} {e} {time.time()-t:.1f}s")
-    t = time.time()
-    p = subprocess.run(["curl", "-sS", "-L", "--http2", "-m", "40", "-o", "/tmp/x", "-w", "%{http_code} %{content_type} %{size_download}",
-                        "-A", H["User-Agent"], "-H", "Accept-Language: en-AU", u], capture_output=True, text=True)
-    rec(f"curl cli: {p.stdout} {p.stderr.strip()[:200]} {time.time()-t:.1f}s")
+        rec("pkgsearch err", r.status_code, e)
 
 os.makedirs("debug", exist_ok=True)
 open("debug/diag.txt", "w").write("\n".join(out))
