@@ -1,45 +1,61 @@
-"""Discovery round 2: ABS Data API dataflows + Wayback availability + data.vic alternatives."""
-import os, re, json, time
+"""Discovery round 3: ABS API data formats + ASGS geo service."""
+import os, re, io, time
 from curl_cffi import requests as cr
+import pandas as pd
 
 out = []
 def rec(*a):
     s = " ".join(map(str, a)); print(s, flush=True); out.append(s)
 
-# 1. ABS dataflows
-r = cr.get("https://data.api.abs.gov.au/rest/dataflow/ABS?detail=allstubs", impersonate="chrome", timeout=60)
-flows = re.findall(r'<structure:Dataflow id="([^"]+)"[^>]*version="([^"]+)"[^>]*>.*?<common:Name xml:lang="en">([^<]+)<', r.text, re.S)
-rec(f"## ABS dataflows: {len(flows)}")
-for fid, ver, name in flows:
-    if re.search(r"C21|C16|C11|CENSUS|ERP|SAL|SA2|POP|DWELL|TSP", fid + name, re.I):
-        rec(f"{fid} v{ver} :: {name}")
+prev = open("debug/diag.txt").read() if os.path.exists("debug/diag.txt") else ""
+for line in prev.splitlines():
+    if re.match(r"C21_T\d+_SA2", line) and re.search(r"dwelling|structure", line, re.I):
+        rec("T-table:", line)
 
-# 2. wayback
-for u in ["www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx",
-          "www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx",
-          "www.land.vic.gov.au/__data/assets/excel_doc/0033/756582/units-by-suburb-2014-2024.xlsx"]:
-    r = cr.get("https://archive.org/wayback/available?url=" + u, impersonate="chrome", timeout=60)
-    rec("## wayback", u, r.text[:400])
+API = "https://data.api.abs.gov.au/rest/data/"
+def csv(flow, key="all", extra=""):
+    url = f"{API}{flow}/{key}?format=csvfilewithlabels{extra}"
+    t = time.time()
+    r = cr.get(url, impersonate="chrome", timeout=300)
+    rec(f"\n## {flow} {key} -> {r.status_code} {len(r.content)/1e6:.1f}MB {time.time()-t:.0f}s")
+    if r.status_code != 200:
+        rec(r.text[:500]); return None
+    df = pd.read_csv(io.BytesIO(r.content), low_memory=False)
+    rec("columns:", list(df.columns))
+    for c in df.columns:
+        if df[c].nunique() < 60:
+            rec(f"  {c}: {df[c].nunique()} uniq e.g. {list(df[c].unique()[:12])}")
+        else:
+            rec(f"  {c}: {df[c].nunique()} uniq e.g. {list(df[c].unique()[:5])}")
+    rec(df.head(6).to_string())
+    return df
+
+for flow in ["C21_G01_SAL", "C21_G36_SAL", "ABS_ANNUAL_ERP_ASGS2021", "C21_T01_SA2"]:
     try:
-        snap = r.json()["archived_snapshots"].get("closest")
-        if snap:
-            raw = re.sub(r"/web/(\d+)/", r"/web/\1id_/", snap["url"])
-            t = cr.get(raw, impersonate="chrome", timeout=90)
-            rec("   fetch", raw, t.status_code, t.headers.get("content-type"), len(t.content), t.content[:4])
+        df = csv(flow)
+        if df is not None:
+            m = df.apply(lambda r: r.astype(str).str.contains("Glen Waverley").any(), axis=1)
+            rec("Glen Waverley rows:\n" + df[m].head(25).to_string())
     except Exception as e:
-        rec("   err", e)
+        rec(flow, "ERR", e)
 
-# 3. land.vic other paths / data.vic datastore
-for u in ["https://discover.data.vic.gov.au/api/3/action/package_search?q=median%20house%20suburb&rows=20",
-          "https://discover.data.vic.gov.au/api/3/action/package_search?q=property%20sales%20report&rows=30"]:
-    r = cr.get(u, impersonate="chrome", timeout=60)
+# T table with dwelling structure, try T14..T20
+for n in range(13, 21):
+    flow = f"C21_T{n:02d}_SA2"
     try:
-        for p in r.json()["result"]["results"]:
-            rec("## pkg", p["name"], "|", p["title"])
-            for x in p["resources"][:3]:
-                rec("     ", x.get("format"), x.get("url"))
+        r = cr.get(f"https://data.api.abs.gov.au/rest/dataflow/ABS/{flow}", impersonate="chrome", timeout=60)
+        nm = re.search(r'<common:Name xml:lang="en">([^<]+)<', r.text)
+        rec(flow, nm.group(1) if nm else r.status_code)
     except Exception as e:
-        rec("pkgsearch err", r.status_code, e)
+        rec(flow, e)
 
-os.makedirs("debug", exist_ok=True)
+# ASGS geo service
+for u in ["https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/SAL/MapServer?f=json",
+          "https://geo.abs.gov.au/arcgis/rest/services/ASGS2021/SA2/MapServer?f=json"]:
+    try:
+        r = cr.get(u, impersonate="chrome", timeout=60)
+        rec("##", u, r.status_code, r.text[:300])
+    except Exception as e:
+        rec(u, "ERR", e)
+
 open("debug/diag.txt", "w").write("\n".join(out))
