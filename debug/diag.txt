@@ -1,0 +1,27 @@
+
+## landvic https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx
+requests+headers: 403 text/html; charset=UTF-8 len=None server=cloudflare first=b'<!DOCTYPE html><html lang="en-US"><head><title>Just a moment...</title><meta htt' 0.2s
+curl_cffi chrome: 403 text/html; charset=UTF-8 len=6218 first=b'<!DOCTYPE html><html lang="en-US"><head><title>Just a moment' 0.2s
+curl cli: 403 text/html; charset=UTF-8 5920  0.1s
+
+## dffh https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel
+requests+headers: ERR ReadTimeout HTTPSConnectionPool(host='www.dffh.vic.gov.au', port=443): Read timed out. (read timeout=40) 40.2s
+curl_cffi chrome: 200 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet len=1135709 first=b'PK\x03\x04\x14\x00\x06\x00\x08\x00\x00\x00!\x00\x98\t\x18\x85\xbb\x01\x00\x00=\n\x00\x00\x13\x00\x08\x02[Content_Types].xml \xa2\x04\x02(\xa0\x00\x02\x00\x00\x00' 1.6s
+curl cli: 000  0 curl: (92) HTTP/2 stream 1 was not closed cleanly: INTERNAL_ERROR (err 2) 0.1s
+
+## abs https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_TSP_SAL_for_VIC_short-header.zip
+requests+headers: 503 text/html len=None server=AmazonS3 first=b'<!doctype html>\n<html lang="en" dir="ltr">\n  <head>\n    <meta charset="utf-8" />' 1.4s
+curl_cffi chrome: 503 text/html len=44046 first=b'<!doctype html>\n<html lang="en" dir="ltr">\n  <head>\n    <met' 0.1s
+curl cli: 503 text/html 44046  0.9s
+
+## abs_api https://data.api.abs.gov.au/rest/dataflow/ABS?detail=allstubs
+requests+headers: 200 application/xml; charset=utf-8; version=2.1 len=30985 server=None first=b'<?xml version="1.0" encoding="utf-8"?>\n<!--NSI Web Service v8.19.9.0-->\n<message' 0.5s
+  body: b'<?xml version="1.0" encoding="utf-8"?>\n<!--NSI Web Service v8.19.9.0-->\n<message:Structure xmlns:message="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/message" xmlns:structure="http://www.sdmx.org/resources/sdmxml/schemas/v2_1/structure" xmlns:common="http://www.sdmx.org/resources/sdmxml/schema'
+curl_cffi chrome: 200 application/xml; version=2.1; charset=utf-8 len=791710 first=b'<?xml version="1.0" encoding="utf-8"?>\n<!--NSI Web Service v' 0.5s
+curl cli: 200 application/vnd.sdmx.structure+xml; version=2.1; charset=utf-8 791710  0.9s
+
+## wayback_landvic https://archive.org/wayback/available?url=www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx
+requests+headers: 200 application/json len=350 server=nginx/1.31.3 first=b'{"url": "www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-subur' 0.6s
+  body: 
+curl_cffi chrome: 200 application/json len=350 first=b'{"url": "www.land.vic.gov.au/__data/assets/excel_doc/0033/77' 0.2s
+curl cli: 200 application/json 350  0.2s
