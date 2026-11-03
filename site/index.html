@@ -78,7 +78,8 @@ td.rank{color:var(--muted);width:44px}
 
 <script>
 const STATES=[["VIC","维州",1],["NSW","新州",0],["QLD","昆州",0],["SA","南澳",0],["WA","西澳",0],["TAS","塔州",0],["ACT","首都领地",0],["NT","北领地",0]];
-let STATE="VIC", DB=null, CHARTS=[];
+let STATE=((new URLSearchParams(location.search).get("state")||"VIC").toUpperCase()), DB=null, CHARTS=[];
+if(!STATES.some(x=>x[0]==STATE&&x[2])) STATE="VIC";
 const fmt$=n=>n==null?"–":"$"+Math.round(n).toLocaleString("en-AU");
 const fmtK=n=>n==null?"–":(n>=1e6?"$"+(n/1e6).toFixed(2)+"M":"$"+Math.round(n/1e3)+"K");
 const fmtP=(n,d=2)=>n==null?"–":n.toFixed(d)+"%";
@@ -86,6 +87,7 @@ const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&g
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 
 document.getElementById("states").innerHTML=STATES.map(([c,n,on])=>`<button data-s="${c}" class="${c==STATE?"on":""}" ${on?"":"disabled"}>${n}${on?"":"<small>即将推出</small>"}</button>`).join("");
+document.querySelectorAll("#states button:not(:disabled)").forEach(b=>b.onclick=()=>{location.href="?state="+b.dataset.s});
 fetch("data/"+STATE.toLowerCase()+".json",{cache:"no-cache"}).then(r=>r.json()).then(d=>{
   DB=d; DB.byId=Object.fromEntries(d.suburbs.map(s=>[s.id,s]));
   const m=d.meta;
