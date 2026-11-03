@@ -296,16 +296,41 @@ def parse_rents(path):
 
 
 def rent_group_index(groups):
-    """Map normalised suburb name -> DFFH group name. Groups look like 'Glen Waverley' or 'Albert Park-Middle Park-West St Kilda'."""
+    """Map normalised suburb name -> DFFH group name. Groups look like 'Glen Waverley-Mulgrave'."""
     idx = {}
     for g in groups:
-        parts = re.split(r"\s*[-/&]\s*|\s*,\s*", g)
-        for p in parts:
-            p = norm(p)
-            if p and p not in idx:
-                idx[p] = g
+        for p in re.split(r"\s*-\s*", g):
+            p = norm(p).replace("MT ", "MOUNT ")
+            idx.setdefault(p, g)
         idx.setdefault(norm(g), g)
+    # known spelling quirks in DFFH file
+    if "WANAGARATTA" in idx:
+        idx.setdefault("WANGARATTA", idx["WANAGARATTA"])
     return idx
+
+
+COMPASS = r"(NORTH|SOUTH|EAST|WEST|CENTRAL|UPPER|LOWER|NORTH EAST|NORTH WEST|SOUTH EAST|SOUTH WEST)"
+
+
+def rent_match(key, gidx):
+    """Return (group, how) where how is 'exact' or 'approx'."""
+    k = re.sub(r"\s*\(.*?\)", "", key).strip()
+    if k in gidx:
+        return gidx[k], "exact" if k == key else "approx"
+    cands = []
+    m = re.match(rf"^(.*?)\s+{COMPASS}$", k)
+    if m:
+        base, d = m.group(1), m.group(2)
+        cands += [f"{d} {base}", base]
+    m = re.match(rf"^{COMPASS}\s+(.*)$", k)
+    if m:
+        cands += [f"{m.group(2)} {m.group(1)}", m.group(2)]
+    if k.startswith("MOUNT "):
+        cands.append("MT " + k[6:])
+    for c in cands:
+        if c in gidx:
+            return gidx[c], "approx"
+    return None, None
 
 
 # ---------------------------------------------------------------- ABS Data API
@@ -380,6 +405,21 @@ def load_abs():
     except Exception as e:
         ERRORS.append(f"ABS SAL dwellings: {e}"); log(traceback.format_exc())
 
+    # SAL 2021 median weekly rent (G02 selected medians)
+    try:
+        df = abs_csv("C21_G02_SAL")
+        df = df[df["STATE"] == STATE_CODE]
+        labcol = [c for c in df.columns if not c.isupper() and df[c].astype(str).str.contains("rent", case=False).any()]
+        if labcol:
+            df = df[df[labcol[0]].str.contains("rent", case=False, na=False)]
+            for _, r in df.iterrows():
+                v = float(r["OBS_VALUE"]) if pd.notna(r["OBS_VALUE"]) else 0
+                if v > 0:
+                    out["sal"].setdefault(clean_sal(r["Region"]), {})["rent2021"] = v
+            log(f"  SAL census median rent: {len(df)} rows via label col {labcol[0]}")
+    except Exception as e:
+        ERRORS.append(f"ABS SAL rent: {e}"); log(traceback.format_exc())
+
     # SA2 ERP annual (MEASURE.REGION_TYPE.ASGS_2021.FREQ)
     try:
         df = abs_csv("ABS_ANNUAL_ERP_ASGS2021", "ERP.SA2..A")
@@ -400,32 +440,17 @@ def load_abs():
         if "REGION_TYPE" in df:
             df = df[df["REGION_TYPE"] == "SA2"]
         df = df[df["REGION"].astype(str).str.startswith(STATE_CODE)]
-        lab = [c for c in df.columns if "dwelling structure" in c.lower() and not c.isupper()]
-        ten = [c for c in df.columns if "tenure" in c.lower() and not c.isupper()]
-        if lab and ten:
-            dl, tl = lab[0], ten[0]
-            df = df[df[tl].str.contains("Total", case=False, na=False)]
-            def cat(s):
-                s = str(s).lower()
-                if "total" in s and ":" not in s and ("dwelling" in s or s.strip() == "total"):
-                    return "tot"
-                if s.startswith("separate house"):
-                    return "house"
-                if s.startswith("semi-detached") and "total" in s:
-                    return "semi"
-                if s.startswith("flat") and "total" in s:
-                    return "flat"
-                return None
-            df = df.assign(_c=df[dl].map(cat)).dropna(subset=["_c"])
-            g = df.groupby(["REGION", "TIME_PERIOD", "_c"])["OBS_VALUE"].apply(lambda x: float(x.iloc[0])).unstack("_c")
-            for (reg, yr), r in g.iterrows():
-                tot = r.get("tot") if pd.notna(r.get("tot")) else sum(r.get(k, 0) or 0 for k in ("house", "semi", "flat"))
-                if tot and reg in out["sa2"]:
-                    out["sa2"][reg]["dw"][int(yr)] = {"flat": float(r.get("flat") or 0), "semi": float(r.get("semi") or 0),
-                                                     "tot": float(tot)}
-            log(f"  SA2 dwelling TS: {g.shape[0]} region-years, categories {list(g.columns)}")
-        else:
-            log(f"  T18: couldn't identify label columns {list(df.columns)}")
+        df = df[df["TENLLD"] == "_T"]
+        code = {"11": "house", "2": "semi", "3": "flat", "_T": "tot"}
+        df = df[df["STRD"].isin(code)].assign(_c=lambda d: d["STRD"].map(code))
+        g = df.pivot_table(index=["REGION", "TIME_PERIOD"], columns="_c", values="OBS_VALUE",
+                           aggfunc=lambda x: float(x.iloc[0]))
+        for (reg, yr), r in g.iterrows():
+            tot = r.get("tot")
+            if tot and pd.notna(tot) and reg in out["sa2"]:
+                out["sa2"][reg]["dw"][int(yr)] = {"flat": float(r.get("flat") or 0), "semi": float(r.get("semi") or 0),
+                                                 "tot": float(tot)}
+        log(f"  SA2 dwelling TS: {g.shape[0]} region-years, categories {list(g.columns)}")
     except Exception as e:
         ERRORS.append(f"ABS T18: {e}"); log(traceback.format_exc())
 
@@ -490,18 +515,31 @@ def main():
                               "url": "https://data.api.abs.gov.au"}
 
     gidx = rent_group_index(rents.keys())
+    # statewide rent index: median across DFFH groups of 'all properties' per quarter
+    qs = defaultdict(list)
+    for g, t in rents.items():
+        for q, v in (t.get("all") or {}).items():
+            qs[q].append(v)
+    state_idx = {q: sorted(v)[len(v) // 2] for q, v in qs.items() if len(v) > 20}
+    base_q = "2021-09" if "2021-09" in state_idx else None
     names = set(house) | set(unit)
     suburbs = []
     for key in sorted(names):
         h, u = house.get(key, {}), unit.get(key, {})
-        g = gidx.get(key)
+        g, how = rent_match(key, gidx)
         rq = rents.get(g, {}) if g else {}
-        rh = annual_from_quarterly(rq.get("h3", {}) or rq.get("all", {}))
-        ru = annual_from_quarterly(rq.get("f2", {}) or rq.get("all", {}))
+        sal = absd["sal"].get(key, {})
+        if not rq and sal.get("rent2021") and base_q:
+            # estimate: 2021 census median rent (all dwellings) indexed by statewide DFFH movement
+            f = sal["rent2021"] / state_idx[base_q]
+            est = {q: round(v * f) for q, v in state_idx.items() if q >= "2016"}
+            rq = {"est": est}
+            how = "census-est"
+        rh = annual_from_quarterly(rq.get("h3", {}) or rq.get("all", {}) or rq.get("est", {}))
+        ru = annual_from_quarterly(rq.get("f2", {}) or rq.get("all", {}) or rq.get("est", {}))
         yh = {y: round(rh[y] * 52 / h[y] * 100, 2) for y in h if y in rh and h[y]}
         yu = {y: round(ru[y] * 52 / u[y] * 100, 2) for y in u if y in ru and u[y]}
 
-        sal = absd["sal"].get(key, {})
         codes = absd["sa2_by_suburb"].get(key, [])
         sa2s = [absd["sa2"][c] for c in codes]
         erp = defaultdict(int)
@@ -519,7 +557,7 @@ def main():
         latest = lambda s: s[max(s)] if s else None  # noqa
         dw21 = sal.get("dw2021")
         rec = {
-            "id": slug(key), "name": title(key), "rentGroup": g,
+            "id": slug(key), "name": title(key), "rentGroup": g, "rentMatch": how,
             "house": h, "unit": u, "rent": rq,
             "yieldHouse": yh, "yieldUnit": yu,
             "sa2": [d["name"] for d in sa2s],
@@ -528,7 +566,7 @@ def main():
             "pop2021": sal.get("pop2021"), "dw2021": dw21,
             "latest": {
                 "house": latest(h), "unit": latest(u), "year": max(h) if h else (max(u) if u else None),
-                "rentH3": latest(rq.get("h3", {})), "rentF2": latest(rq.get("f2", {})), "rentAll": latest(rq.get("all", {})),
+                "rentH3": latest(rq.get("h3", {})), "rentF2": latest(rq.get("f2", {})), "rentAll": latest(rq.get("all", {})), "rentEst": latest(rq.get("est", {})), "rentMatch": how,
                 "rentQ": max(rq.get("all", rq.get("h3", {})) or {"": 0}) or None,
                 "yieldHouse": latest(yh), "yieldUnit": latest(yu),
                 "g1": growth(h, 1), "g5": growth(h, 5), "g10": growth(h, 10), "gu5": growth(u, 5),
@@ -543,6 +581,7 @@ def main():
     meta["errors"] = ERRORS
     meta["counts"] = {"suburbs": len(suburbs), "rentGroups": len(rents),
                       "withRent": sum(1 for s in suburbs if s["rentGroup"]),
+                      "withRentEst": sum(1 for s in suburbs if s["rentMatch"] == "census-est"),
                       "withYield": sum(1 for s in suburbs if s["latest"]["yieldHouse"] is not None),
                       "withCensus": sum(1 for s in suburbs if s["pop2021"]),
                       "withErp": sum(1 for s in suburbs if s["erp"])}
@@ -554,6 +593,11 @@ def main():
     debug_write("log.txt", "\n".join(LOG) + "\n\nERRORS:\n" + "\n".join(ERRORS))
     debug_write("sample_glen_waverley.json",
                 json.dumps(next((s for s in suburbs if s["id"] == "glen-waverley"), {}), indent=1, ensure_ascii=False))
+    import shutil
+    os.makedirs(os.path.join(DEBUG, "raw"), exist_ok=True)
+    for fn in os.listdir(CACHE):
+        if fn.endswith(".xlsx") and os.path.getsize(os.path.join(CACHE, fn)) < 5e6:
+            shutil.copy(os.path.join(CACHE, fn), os.path.join(DEBUG, "raw", fn))
     if not suburbs:
         sys.exit(1)
 
