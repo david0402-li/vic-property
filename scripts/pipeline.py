@@ -558,7 +558,7 @@ def main():
         dw21 = sal.get("dw2021")
         rec = {
             "id": slug(key), "name": title(key), "rentGroup": g, "rentMatch": how,
-            "house": h, "unit": u, "rent": rq,
+            "house": h, "unit": u, "rent": {t: {q: v for q, v in ser.items() if q >= "2010"} for t, ser in rq.items()},
             "yieldHouse": yh, "yieldUnit": yu,
             "sa2": [d["name"] for d in sa2s],
             "erp": dict(sorted(erp.items())) or None,
