@@ -1,0 +1,21 @@
+name: Diagnose downloads
+on:
+  push:
+    branches: [main]
+    paths: ["scripts/diag.py"]
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install curl_cffi pandas openpyxl xlrd
+      - run: python scripts/diag.py
+      - if: always()
+        run: |
+          git config user.name "vic-property-bot"; git config user.email "actions@users.noreply.github.com"
+          git add debug; git commit -m "diag" || exit 0
+          git pull --rebase origin main; git push origin HEAD:main
