@@ -2,8 +2,8 @@
  "id": "glen-waverley",
  "name": "Glen Waverley",
  "postcode": "3150",
- "lat": -37.876968,
- "lng": 145.170841,
+ "lat": -37.8743502,
+ "lng": 145.1668205,
  "lga": "Monash",
  "rentGroup": "Glen Waverley-Mulgrave",
  "rentMatch": "exact",
@@ -746,36 +746,36 @@
  },
  "nearby": [
   {
-   "id": "wheelers-hill",
-   "km": 0.0
-  },
-  {
-   "id": "burwood-east",
-   "km": 3.0
-  },
-  {
-   "id": "vermont",
-   "km": 3.7
+   "id": "syndal",
+   "km": 1.5
   },
   {
    "id": "vermont-south",
-   "km": 3.7
+   "km": 2.5
+  },
+  {
+   "id": "burwood-east",
+   "km": 2.5
   },
   {
    "id": "mount-waverley",
-   "km": 3.8
+   "km": 3.5
   },
   {
-   "id": "syndal",
-   "km": 3.8
+   "id": "notting-hill",
+   "km": 3.9
   },
   {
-   "id": "studfield",
-   "km": 4.7
+   "id": "wheelers-hill",
+   "km": 4.1
   },
   {
-   "id": "wantirna",
-   "km": 4.7
+   "id": "forest-hill",
+   "km": 4.4
+  },
+  {
+   "id": "blackburn-south",
+   "km": 4.5
   }
  ]
 }
