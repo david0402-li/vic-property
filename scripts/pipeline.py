@@ -26,7 +26,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, "cache")
 DEBUG = os.path.join(ROOT, "debug")
 OUT = os.path.join(ROOT, "site", "data")
-for d in (CACHE, DEBUG, OUT):
+STORE = os.path.join(ROOT, "data_store")  # last successfully parsed source data (committed)
+for d in (CACHE, DEBUG, OUT, STORE):
     os.makedirs(d, exist_ok=True)
 
 UA = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) "
@@ -460,6 +461,23 @@ def load_abs():
     return out
 
 
+# ---------------------------------------------------------------- last-good store
+def store_save(name, obj, meta):
+    with open(os.path.join(STORE, name + ".json"), "w", encoding="utf-8") as f:
+        json.dump({"meta": meta, "data": obj}, f, ensure_ascii=False)
+
+
+def store_load(name):
+    path = os.path.join(STORE, name + ".json")
+    if not os.path.exists(path):
+        return None, None
+    j = json.load(open(path, encoding="utf-8"))
+    data = j["data"]
+    if name in ("house", "unit"):
+        data = {k: {int(y): v for y, v in ser.items()} for k, ser in data.items()}
+    return data, j["meta"]
+
+
 # ---------------------------------------------------------------- build
 def annual_from_quarterly(ser):
     """quarterly {'YYYY-MM': v} -> annual {YYYY: v} using latest quarter in each year."""
@@ -490,27 +508,57 @@ def main():
             res, _ = ckan_latest(pkg)
             p, via = download_cached(res["url"], f"vpsr_{label}.xlsx")
             data = parse_vpsr(p, label)
+            if len(data) < 100:
+                raise RuntimeError(f"only {len(data)} suburbs parsed")
+            store_save(label, data, {"name": res.get("name"), "url": res["url"], "via": via,
+                                     "fetched": meta["generated"]})
             if label == "house":
                 house = data
             else:
                 unit = data
             meta["sources"][label] = {"name": res.get("name"), "url": res["url"], "via": via}
         except Exception as e:
-            ERRORS.append(f"{label}: {e}")
             log(traceback.format_exc())
+            data, m = store_load(label)
+            if data:
+                house, unit = (data, unit) if label == "house" else (house, data)
+                meta["sources"][label] = dict(m, stale=True)
+                ERRORS.append(f"{label}: 本次下载失败，沿用 {m.get('fetched','')} 的数据")
+            else:
+                ERRORS.append(f"{label}: {e}")
 
     try:
         log("[rent] CKAN " + PKG_RENT)
         res, _ = ckan_latest(PKG_RENT)
         p, via = download_cached(res["url"], "dffh_rents.xlsx")
         rents = parse_rents(p)
+        if len(rents) < 50:
+            raise RuntimeError(f"only {len(rents)} rent groups parsed")
+        store_save("rent", rents, {"name": res.get("name"), "url": res["url"], "via": via, "fetched": meta["generated"]})
         meta["sources"]["rent"] = {"name": res.get("name"), "url": res["url"], "via": via}
     except Exception as e:
-        ERRORS.append(f"rent: {e}")
         log(traceback.format_exc())
+        data, m = store_load("rent")
+        if data:
+            rents = data
+            meta["sources"]["rent"] = dict(m, stale=True)
+            ERRORS.append(f"rent: 本次下载失败，沿用 {m.get('fetched','')} 的数据")
+        else:
+            ERRORS.append(f"rent: {e}")
 
     log("[abs] ABS Data API")
     absd = load_abs()
+    if absd["sal"] and absd["sa2"]:
+        store_save("abs", {"sal": absd["sal"], "sa2": absd["sa2"], "sa2_by_suburb": dict(absd["sa2_by_suburb"])},
+                   {"fetched": meta["generated"]})
+    else:
+        old, m = store_load("abs")
+        if old:
+            for d in old["sa2"].values():
+                d["erp"] = {int(k): v for k, v in d["erp"].items()}
+                d["dw"] = {int(k): v for k, v in d["dw"].items()}
+            absd = old
+            ERRORS.append(f"ABS: 本次下载不完整，沿用 {m.get('fetched','')} 的数据")
     meta["sources"]["abs"] = {"name": "ABS Data API (Census 2021 G01/G36 SAL, T18 SA2; ERP by SA2)",
                               "url": "https://data.api.abs.gov.au"}
 

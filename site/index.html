@@ -31,6 +31,7 @@ h2{font-size:18px;margin:0 0 12px}
 table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
 td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 td:first-child,th:first-child{text-align:left}
+#tb td:nth-child(2),thead th:nth-child(2){text-align:left;font-weight:600}
 th{font-size:12px;color:var(--muted);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--card)}
 th.on{color:var(--accent)}
 tbody tr{cursor:pointer} tbody tr:hover{background:var(--bg)}
@@ -132,7 +133,7 @@ const RANKS=[
   ["house",-1,"独立屋房价 高→低"],["house",1,"独立屋房价 低→高"],["unit",-1,"单元房价 高→低"],
   ["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],
 ];
-let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0;
+let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0;
 function listView(){
   const all=DB.suburbs, med=k=>{const a=all.map(s=>s.latest[k]).filter(x=>x!=null).sort((a,b)=>a-b);return a.length?a[Math.floor(a.length/2)]:null};
   const c=DB.meta.counts;
@@ -149,12 +150,14 @@ function listView(){
     <div class="controls">
       <input id="q" placeholder="搜索区名，例如 Glen Waverley" value="${esc(Q)}">
       <select id="min"><option value="0">全部价位</option><option value="-600000">屋价 ≤ $600K</option><option value="-800000">屋价 ≤ $800K</option><option value="-1000000">屋价 ≤ $1M</option><option value="1000000">屋价 ≥ $1M</option><option value="2000000">屋价 ≥ $2M</option></select>
-      <select id="ty"><option value="0">全部区</option><option value="1">只看 DFFH 实测租金的区</option></select>
+      <select id="ty"><option value="0">全部租金数据</option><option value="1">只看 DFFH 实测租金</option></select>
+      <select id="pp"><option value="0">全部人口规模</option><option value="1000">人口 ≥ 1,000</option><option value="5000">人口 ≥ 5,000</option><option value="10000">人口 ≥ 10,000</option></select>
     </div>
     <div class="tablewrap"><table><thead><tr><th>#</th>${COLS.map(c=>`<th data-k="${c[0]}" class="${SORT.k==c[0]?"on":""}">${c[1]}${SORT.k==c[0]?(SORT.dir>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody id="tb"></tbody></table></div>
     <p class="note" id="cnt"></p>
   </div>`;
-  const q=document.getElementById("q"), mn=document.getElementById("min"), ty=document.getElementById("ty"); mn.value=MIN; ty.value=MINSALES;
+  const q=document.getElementById("q"), mn=document.getElementById("min"), ty=document.getElementById("ty"), pp=document.getElementById("pp"); mn.value=MIN; ty.value=MINSALES; pp.value=MINPOP;
+  pp.onchange=()=>{MINPOP=+pp.value;rows()};
   q.oninput=()=>{Q=q.value;rows()}; mn.onchange=()=>{MIN=+mn.value;rows()}; ty.onchange=()=>{MINSALES=+ty.value;rows()};
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;SORT={k,dir:SORT.k==k?-SORT.dir:(k=="name"?1:-1)};listView()});
   document.querySelectorAll(".rk button").forEach(b=>b.onclick=()=>{SORT={k:b.dataset.k,dir:+b.dataset.d};listView()});
@@ -162,7 +165,7 @@ function listView(){
 }
 function rows(){
   const col=COLS.find(c=>c[0]==SORT.k), q=Q.trim().toLowerCase();
-  let list=DB.suburbs.filter(s=>(MIN==0||(MIN>0?(s.latest.house||0)>=MIN:(s.latest.house!=null&&s.latest.house<=-MIN))) && (!MINSALES||!isEst(s)));
+  let list=DB.suburbs.filter(s=>(MIN==0||(MIN>0?(s.latest.house||0)>=MIN:(s.latest.house!=null&&s.latest.house<=-MIN))) && (!MINSALES||!isEst(s)) && (!MINPOP||(s.latest.pop||0)>=MINPOP));
   list=list.filter(s=>col[2](s)!=null||SORT.k=="name");
   list.sort((a,b)=>{const x=col[2](a),y=col[2](b); return (x>y?1:x<y?-1:0)*SORT.dir});
   list.forEach((s,i)=>s._rank=i+1);
