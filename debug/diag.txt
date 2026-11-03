@@ -1,118 +1,499 @@
-GET https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Recorded_Offences_Year_Ending_June_2026.xlsx 200 21983501 b'PK\x03\x04'
-=== Contents (26, 3)
-    0    1    2
-0 NaN  NaN  NaN
-1 NaN  NaN  NaN
-2 NaN  NaN  NaN
-3 NaN  NaN  NaN
-4 NaN  NaN  NaN
-5 NaN  NaN  NaN
-=== Footnotes (20, 3)
-    0    1    2
-0 NaN  NaN  NaN
-1 NaN  NaN  NaN
-2 NaN  NaN  NaN
-3 NaN  NaN  NaN
-4 NaN  NaN  NaN
-5 NaN  NaN  NaN
-=== Table 01 (871, 6)
-      0            1                   2                      3              4                            5
-0  Year  Year ending       Police Region  Local Government Area  Offence Count  Rate per 100,000 population
-1  2026         June  1 North West Metro                Banyule          10632                  7978.035302
-2  2026         June  1 North West Metro               Brimbank          18704                  9402.732059
-3  2026         June  1 North West Metro                Darebin          16174                  9941.035496
-4  2026         June  1 North West Metro            Hobsons Bay           7785                  7959.260566
-5  2026         June  1 North West Metro                   Hume          23691                  8169.137486
-=== Table 02 (52810, 10)
-      0            1                    2                      3                            4                                 5                                                                   6              7                                8                                9
-0  Year  Year ending  Police Service Area  Local Government Area             Offence Division               Offence Subdivision                                                    Offence Subgroup  Offence Count  PSA Rate per 100,000 population  LGA Rate per 100,000 population
-1  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                             A211 FV Serious assault            317                       237.883405                        252.92744
-2  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                         A212 Non-FV Serious assault            198                       148.583325                       157.979915
-3  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences  A22 Assault police, emergency services or other authorised officer             80                        60.033667                        63.830269
-4  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                              A231 FV Common assault            342                       256.643926                       272.874399
-5  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                          A232 Non-FV Common assault            277                       207.866571                       221.012305
-=== Table 03 (371542, 9)
-      0            1                      2         3                 4                                     5                                                   6                                  7              8
-0  Year  Year ending  Local Government Area  Postcode  Suburb/Town Name                      Offence Division                                 Offence Subdivision                   Offence Subgroup  Offence Count
-1  2026         June                 Alpine      3691        Coral Bank           A Crimes against the person                    A20 Assault and related offences            A211 FV Serious assault              1
-2  2026         June                 Alpine      3691        Coral Bank     B Property and deception offences                                 B20 Property damage                B21 Criminal damage              1
-3  2026         June                 Alpine      3691          Dederang           A Crimes against the person  A70 Stalking, harassment and threatening behaviour  A732 Non-FV Threatening behaviour              1
-4  2026         June                 Alpine      3691          Dederang     B Property and deception offences                                           B40 Theft     B42 Steal from a motor vehicle              1
-5  2026         June                 Alpine      3691          Dederang  D Public order and security offences                 D10 Weapons and explosives offences              D11 Firearms offences              1
-GW rows:
-          0     1       2     3              4                            5                                                   6                                                                   7   8
-26409  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                             A211 FV Serious assault  42
-26410  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                         A212 Non-FV Serious assault  29
-26411  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences  A22 Assault police, emergency services or other authorised officer   8
-26412  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                              A231 FV Common assault  70
-26413  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                          A232 Non-FV Common assault  57
-26414  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                                         A50 Robbery                                              A51 Aggravated robbery  20
-26415  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                                         A50 Robbery                                          A52 Non-aggravated robbery   4
-26416  2026  June  Monash  3150  Glen Waverley  A Crimes against the person  A70 Stalking, harassment and threatening behaviour                                                    A711 FV Stalking   7
-26417  2026  June  Monash  3150  Glen Waverley  A Crimes against the person  A70 Stalking, harassment and threatening behaviour                                                A712 Non-FV Stalking   1
-26418  2026  June  Monash  3150  Glen Waverley  A Crimes against the person  A70 Stalking, harassment and threatening behaviour                             A721 FV Harassment and private nuisance   9
-=== Table 04 (55839, 7)
-      0            1                      2                  3                           4                        5              6
-0  Year  Year ending  Local Government Area  Location Division        Location Subdivision           Location Group  Offence Count
-1  2026         June                 Alpine      1 Residential       11 Dwelling - private  111 Flat/Unit/Apartment              2
-2  2026         June                 Alpine      1 Residential       11 Dwelling - private                112 House            211
-3  2026         June                 Alpine      1 Residential       11 Dwelling - private  114 Caravan/Mobile Home             10
-4  2026         June                 Alpine      1 Residential       11 Dwelling - private           117 Farm House              6
-5  2026         June                 Alpine      1 Residential  12 Dwelling  - non-private         122 Holiday Home              4
-=== Table 05 (3161, 5)
-      0            1                      2                     3              4
-0  Year  Year ending  Local Government Area  Investigation Status  Offence Count
-1  2026         June                 Alpine        Arrest/Summons            303
-2  2026         June                 Alpine        Not authorised             32
-3  2026         June                 Alpine                 Other             60
-4  2026         June                 Alpine              Unsolved            178
-5  2026         June                 Ararat        Arrest/Summons            889
-=== Table 06 (14986, 7)
-      0            1                      2                                   3                                                      4              5              6
-0  Year  Year ending  Local Government Area                 Offence Subdivision                                          Offence Group  CSA Drug Type  Offence Count
-1  2026         June                 Alpine  C20 Cultivate or manufacture drugs                                    C21 Cultivate drugs       Cannabis              1
-2  2026         June                 Alpine  C20 Cultivate or manufacture drugs  C23 Possess drug manufacturing equipment or precursor      Not Coded              1
-3  2026         June                 Alpine         C30 Drug use and possession                                    C32 Drug possession       Cannabis              7
-4  2026         June                 Alpine         C30 Drug use and possession                                    C32 Drug possession        Cocaine              2
-5  2026         June                 Alpine         C30 Drug use and possession                                    C32 Drug possession        Ecstasy              1
-school https://content.vic.gov.au/DE-School-Locations%20-2026 200 539003 text/csv; charset=utf-8 b'Education_Sector,Entity_Type,School_No,School_Name,School_Type,School_Status,Address_Line_1,Address_Line_2,Address_Town,Address_State,Address_Postcode'
-['Education_Sector', 'Entity_Type', 'School_No', 'School_Name', 'School_Type', 'School_Status', 'Address_Line_1', 'Address_Line_2', 'Address_Town', 'Address_State', 'Address_Postcode', 'Postal_Address_Line_1', 'Postal_Address_Line_2', 'Postal_Town', 'Postal_State', 'Postal_Postcode', 'Full_Phone_No', 'Region', 'Area', 'LGA_ID', 'LGA_Name', 'LGA_TYPE', 'X', 'Y']
-  Education_Sector  Entity_Type  School_No                  School_Name School_Type School_Status       Address_Line_1 Address_Line_2    Address_Town Address_State  Address_Postcode Postal_Address_Line_1 Postal_Address_Line_2     Postal_Town Postal_State  Postal_Postcode Full_Phone_No                  Region                     Area  LGA_ID          LGA_Name LGA_TYPE           X          Y
-0         Catholic            2         20               Parade College   Secondary             O     1436 Plenty Road            NaN        BUNDOORA           VIC              3083      1436 Plenty Road                   NaN        BUNDOORA          VIC             3083  03 9468 3300  NORTH-WESTERN VICTORIA  North Eastern Melbourne      66       Banyule (C)    Metro  145.066978 -37.690178
-1         Catholic            2         25     Simonds Catholic College   Secondary             O  273 Victoria Street            NaN  WEST MELBOURNE           VIC              3003   273 Victoria Street                   NaN  WEST MELBOURNE          VIC             3003  03 9321 9200  SOUTH-WESTERN VICTORIA        Western Melbourne     460     Melbourne (C)    Metro  144.952883 -37.805971
-2         Catholic            2         26  St Marys College Melbourne   Secondary             O   11 Westbury Street            NaN   ST KILDA EAST           VIC              3183            PO Box 258                   NaN        ST KILDA          VIC             3182  03 9529 6611  SOUTH-EASTERN VICTORIA        Bays
-     Education_Sector  Entity_Type  School_No                         School_Name School_Type School_Status                  Address_Line_1 Address_Line_2   Address_Town Address_State  Address_Postcode  Postal_Address_Line_1 Postal_Address_Line_2    Postal_Town Postal_State  Postal_Postcode Full_Phone_No                  Region                     Area  LGA_ID        LGA_Name LGA_TYPE           X          Y
-282          Catholic            2       1596                 St Leonard's School     Primary             O             349 Springvale Road            NaN  GLEN WAVERLEY           VIC              3150    349 Springvale Road                   NaN  GLEN WAVERLEY          VIC             3150  03 9560 8491  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.163894 -37.886803
-284          Catholic            2       1600             St Christopher's School     Primary             O                2-16 Doon Avenue            NaN  GLEN WAVERLEY           VIC              3150       2-16 Doon Avenue                   NaN  GLEN WAVERLEY          VIC             3150  03 9803 0011  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.150197 -37.871098
-548        Government            1        454         Burwood East Primary School     Primary             O  Cnr Blackburn And Highbury Rds            NaN   Burwood East           VIC              3151            P O Box 374                   NaN  GLEN WAVERLEY          VIC             3150  03 9802 8618  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     698  Whitehorse (C)    Metro  145.151807 -37.859734
-1292       Government            1       4923           Mount View Primary School     Primary             O           274-288 Gallaghers Rd            NaN  Glen Waverley           VIC              3150  274-288 Gallaghers Rd                   NaN  GLEN WAVERLEY          VIC             3150  03 9560 0471  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.178805 -37.883485
-1312       Government            1       4968                    Glenallen School     Special             O                  7 Allen Street            NaN  Glen Waverley           VIC              3150         7 Allen Street                   NaN  GLEN WAVERLEY          VIC             3150  03 9561 1966  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.161746 -37.888359
-1323       Government            1       4986             Highvale Primary School     Primary             O                33 Ashton Street            NaN  Glen Waverley           VIC              3150       33 ASHTON STREET                   NaN  GLEN WAVERLEY          VIC             3150  03 9887 8000  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.174068 -37.867021
-1338       Government            1       5010              Glendal Primary School     Primary             O            55 N
-Traceback (most recent call last):
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1043, in _request_once
-    c.perform()
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 633, in perform
-    self._check_error(ret, "perform")
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 353, in _check_error
-    raise error
-curl_cffi.curl.CurlError: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "/home/runner/work/vic-property/vic-property/scripts/diag.py", line 31, in <module>
-    r=cr.get(u,impersonate="chrome",timeout=120); rec("school",u,r.status_code,len(r.content),r.headers.get("content-type"),r.content[:150])
-      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 154, in get
-    return request(method="GET", url=url, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 146, in request
-    return s.request(method=method, url=url, **kwargs)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1117, in request
-    return self._request_once(
-           ^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1050, in _request_once
-    raise error(str(e), e.code, rsp) from e
-curl_cffi.requests.exceptions.ConnectionError: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+FLOW ABS_C16_T22_LGA 1.0.0 Census 2016, Number of Motor Vehicles by Dwelling Records (LGA)
+FLOW ABS_C16_T22_SA 1.0.0 Census 2016, Number of Motor Vehicles by Dwelling Records (SA2+)
+FLOW ABS_C16_T22_TS_LGA 1.0.0 Census Time Series 2016, 2011, 2006: T22 Number of Motor Vehicles by Dwelling records (LGA)
+FLOW ABS_C16_T22_TS_SA 1.0.0 Census Time Series 2016, 2011, 2006: T22 Number of Motor Vehicles by Dwelling records (SA2+)
+FLOW ABS_C16_T24_LGA 1.0.0 Census 2016, Dwelling Structure by Dwelling Type (LGA)
+FLOW ABS_C16_T24_SA 1.0.0 Census 2016, Dwelling Structure by Dwelling Type (SA2+)
+FLOW ABS_C16_T24_TS_LGA 1.0.0 Census Time Series 2016, 2011, 2006: T24 Dwelling Structure by Dwelling Type (LGA)
+FLOW ABS_C16_T24_TS_SA 1.0.0 Census Time Series 2016, 2011, 2006: T24 Dwelling Structure by Dwelling Type (SA2+)
+FLOW ABS_C16_T25_LGA 1.0.0 Census 2016, Mortgage Repayments (monthly) by Dwelling Structure (LGA)
+FLOW ABS_C16_T25_SA 1.0.0 Census 2016, Mortgage Repayments (monthly) by Dwelling Structure (SA2+)
+FLOW ABS_C16_T25_TS_LGA 1.0.0 Census Time Series 2016, 2011, 2006: T25 Mortgage Repayments (monthly) by Dwelling Structure (LGA)
+FLOW ABS_C16_T25_TS_SA 1.0.0 Census Time Series 2016, 2011, 2006: T25 Mortgage Repayments (monthly) by Dwelling Structure (SA2+)
+FLOW ABS_C16_T26_LGA 1.0.0 Census 2016, Rent (weekly) by Dwelling Structure (LGA)
+FLOW ABS_C16_T26_SA 1.0.0 Census 2016, Rent (weekly) by Dwelling Structure (SA2+)
+FLOW ABS_C16_T26_TS_LGA 1.0.0 Census Time Series 2016, 2011, 2006: T26 Rent (weekly) by Dwelling Structure (LGA)
+FLOW ABS_C16_T26_TS_SA 1.0.0 Census Time Series 2016, 2011, 2006: T26 Rent (weekly) by Dwelling Structure (SA2+)
+FLOW ABS_C16_T27_LGA 1.0.0 Census 2016, Dwelling Internet Connection by Dwelling Structure (LGA)
+FLOW ABS_C16_T27_SA 1.0.0 Census 2016, Dwelling Internet Connection by Dwelling Structure (SA2+)
+FLOW ABS_C16_T27_TS_LGA 1.0.0 Census Time Series 2016, 2011, 2006: T27 Dwelling Internet Connection by Dwelling Structure (LGA)
+FLOW ABS_C16_T27_TS_SA 1.0.0 Census Time Series 2016, 2011, 2006: T27 Dwelling Internet Connection by Dwelling Structure (SA2+)
+FLOW ABS_C16_T28_LGA 1.0.0 Census 2016, Dwelling Structure By Number Of Bedrooms in Private Dwelling (LGA)
+FLOW ABS_C16_T28_SA 1.0.0 Census 2016, Dwelling Structure By Number Of Bedrooms in Private Dwelling (SA2+)
+FLOW ABS_C16_T28_TS_LGA 1.0.0 Census Time Series 2016, 2011, 2006: T28 Dwelling Structure By Number Of Bedrooms in Private Dwelling (LGA)
+FLOW ABS_C16_T28_TS_SA 1.0.0 Census Time Series 2016, 2011, 2006: T28 Dwelling Structure By Number Of Bedrooms in Private Dwelling (SA2+)
+FLOW ABS_CENSUS2011_B29 1.0.0 B29 Number of Motor Vehicles by Dwellings
+FLOW ABS_CENSUS2011_B29_LGA 1.0.0 B29 Number of Motor Vehicles by Dwellings (LGA)
+FLOW ABS_CENSUS2011_B29_SA1_SA 1.0.0 B29 Number of Motor Vehicles by Dwellings (SA1 SA)
+FLOW ABS_CENSUS2011_B31 1.0.0 B31 Dwelling Structure
+FLOW ABS_CENSUS2011_B31_LGA 1.0.0 B31 Dwelling Structure (LGA)
+FLOW ABS_CENSUS2011_B31_SA1_SA 1.0.0 B31 Dwelling Structure (SA1 SA)
+FLOW ABS_CENSUS2011_B32 1.0.0 B32 Tenure Type and Landlord Type by Dwelling Structure
+FLOW ABS_CENSUS2011_B32_LGA 1.0.0 B32 Tenure Type and Landlord Type by Dwelling Structure (LGA)
+FLOW ABS_CENSUS2011_B32_SA1_SA 1.0.0 B32 Tenure Type and Landlord Type by Dwelling Structure (SA1 SA)
+FLOW ABS_CENSUS2011_B33 1.0.0 B33 Mortgage Repayment (monthly) by Dwelling Structure
+FLOW ABS_CENSUS2011_B33_LGA 1.0.0 B33 Mortgage Repayment (monthly) by Dwelling Structure (LGA)
+FLOW ABS_CENSUS2011_B33_SA1_SA 1.0.0 B33 Mortgage Repayment (monthly) by Dwelling Structure (SA1 SA)
+FLOW ABS_CENSUS2011_B35 1.0.0 B35 Type of Internet Connection by Dwelling Structure
+FLOW ABS_CENSUS2011_B35_LGA 1.0.0 B35 Type of Internet Connection by Dwelling Structure (LGA)
+FLOW ABS_CENSUS2011_B35_SA1_SA 1.0.0 B35 Type of Internet Connection by Dwelling Structure (SA1 SA)
+FLOW ABS_CENSUS2011_B36 1.0.0 B36 Dwelling Structure by Number of Bedrooms
+FLOW ABS_CENSUS2011_B36_LGA 1.0.0 B36 Dwelling Structure by Number of Bedrooms (LGA)
+FLOW ABS_CENSUS2011_B36_SA1_SA 1.0.0 B36 Dwelling Structure by Number of Bedrooms (SA1 SA)
+FLOW ABS_CENSUS2011_T14 1.0.0 T14 Dwelling Structure by Household Composition and Family Composition
+FLOW ABS_CENSUS2011_T14_LGA 1.0.0 T14 Dwelling Structure by Household Composition and Family Composition (LGA)
+FLOW ABS_CENSUS2011_T15 1.0.0 T15 Dwelling Structure by Number of Persons Usually Resident
+FLOW ABS_CENSUS2011_T15_LGA 1.0.0 T15 Dwelling Structure by Number of Persons Usually Resident (LGA)
+FLOW ABS_CENSUS2011_T16 1.0.0 T16 Dwelling Structure and Number of Bedrooms by Number of Persons Usually Resident for Family Households
+FLOW ABS_CENSUS2011_T16_LGA 1.0.0 T16 Dwelling Structure and Number of Bedrooms by Number of Persons Usually Resident for Family Households (LGA)
+FLOW ABS_CENSUS2011_T17 1.0.0 T17 Dwelling Structure and Number of Bedrooms by Number of Persons Usually Resident for Group Households
+FLOW ABS_CENSUS2011_T17_LGA 1.0.0 T17 Dwelling Structure and Number of Bedrooms by Number of Persons Usually Resident for Group Households (LGA)
+FLOW ABS_CENSUS2011_T18 1.0.0 T18 Tenure Type and Landlord Type by Dwelling Structure
+FLOW ABS_CENSUS2011_T18_LGA 1.0.0 T18 Tenure Type and Landlord Type by Dwelling Structure (LGA)
+FLOW C21_G34_CED 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Commonwealth Electoral Divisions (CED 2021 boundaries)
+FLOW C21_G34_LGA 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_G34_POA 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Postal Areas (POA)
+FLOW C21_G34_RA 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Remoteness Areas (RA)
+FLOW C21_G34_SA2 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_G34_SAL 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Suburbs and Localities (SAL)
+FLOW C21_G34_SED 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, State Electoral Divisions (SED 2021 boundaries)
+FLOW C21_G34_SUA 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Significant Urban Areas (SUA)
+FLOW C21_G34_UCL 1.0.0 Census 2021, G34 Number of motor vehicles by dwellings, Urban Centres, Localities and Section of State (UCL/SOS/SOSR)
+FLOW C21_G36_CED 1.0.0 Census 2021, G36 Dwelling structure, Commonwealth Electoral Divisions (CED 2021 boundaries)
+FLOW C21_G36_LGA 1.0.0 Census 2021, G36 Dwelling structure, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_G36_POA 1.0.0 Census 2021, G36 Dwelling structure, Postal Areas (POA)
+FLOW C21_G36_RA 1.0.0 Census 2021, G36 Dwelling structure, Remoteness Areas (RA)
+FLOW C21_G36_SA2 1.0.0 Census 2021, G36 Dwelling structure, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_G36_SAL 1.0.0 Census 2021, G36 Dwelling structure, Suburbs and Localities (SAL)
+FLOW C21_G36_SED 1.0.0 Census 2021, G36 Dwelling structure, State Electoral Divisions (SED 2021 boundaries)
+FLOW C21_G36_SUA 1.0.0 Census 2021, G36 Dwelling structure, Significant Urban Areas (SUA)
+FLOW C21_G36_UCL 1.0.0 Census 2021, G36 Dwelling structure, Urban Centres, Localities and Section of State (UCL/SOS/SOSR)
+FLOW C21_G37_CED 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Commonwealth Electoral Divisions (CED 2021 boundaries)
+FLOW C21_G37_LGA 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_G37_POA 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Postal Areas (POA)
+FLOW C21_G37_RA 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Remoteness Areas (RA)
+FLOW C21_G37_SA2 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_G37_SAL 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Suburbs and Localities (SAL)
+FLOW C21_G37_SED 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, State Electoral Divisions (SED 2021 boundaries)
+FLOW C21_G37_SUA 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Significant Urban Areas (SUA)
+FLOW C21_G37_UCL 1.0.0 Census 2021, G37 Tenure and landlord type by dwelling structure, Urban Centres, Localities and Section of State (UCL/SOS/SOSR)
+FLOW C21_G38_CED 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Commonwealth Electoral Divisions (CED 2021 boundaries)
+FLOW C21_G38_LGA 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_G38_POA 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Postal Areas (POA)
+FLOW C21_G38_RA 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Remoteness Areas (RA)
+FLOW C21_G38_SA2 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_G38_SAL 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Suburbs and Localities (SAL)
+FLOW C21_G38_SED 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, State Electoral Divisions (SED 2021 boundaries)
+FLOW C21_G38_SUA 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Significant Urban Areas (SUA)
+FLOW C21_G38_UCL 1.0.0 Census 2021, G38 Mortgage repayment (monthly) by dwelling structure, Urban Centres, Localities and Section of State (UCL/SOS/SOSR)
+FLOW C21_G41_CED 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Commonwealth Electoral Divisions (CED 2021 boundaries)
+FLOW C21_G41_LGA 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_G41_POA 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Postal Areas (POA)
+FLOW C21_G41_RA 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Remoteness Areas (RA)
+FLOW C21_G41_SA2 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_G41_SAL 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Suburbs and Localities (SAL)
+FLOW C21_G41_SED 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, State Electoral Divisions (SED 2021 boundaries)
+FLOW C21_G41_SUA 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Significant Urban Areas (SUA)
+FLOW C21_G41_UCL 1.0.0 Census 2021, G41 Dwelling structure by number of bedrooms, Urban Centres, Localities and Section of State (UCL/SOS/SOSR)
+FLOW C21_G42_CED 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Commonwealth Electoral Divisions (CED 2021 boundaries)
+FLOW C21_G42_LGA 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_G42_POA 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Postal Areas (POA)
+FLOW C21_G42_RA 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Remoteness Areas (RA)
+FLOW C21_G42_SA2 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_G42_SAL 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Suburbs and Localities (SAL)
+FLOW C21_G42_SED 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, State Electoral Divisions (SED 2021 boundaries)
+FLOW C21_G42_SUA 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Significant Urban Areas (SUA)
+FLOW C21_G42_UCL 1.0.0 Census 2021, G42 Dwelling structure by household composition and family composition, Urban Centres, Localities and Section of State (UCL/SOS/SOSR)
+FLOW C21_T14_LGA 1.0.0 Census 2021, T14 Dwelling structure by household composition and family composition, Time Series, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_T14_SA2 1.0.0 Census 2021, T14 Dwelling structure by household composition and family composition, Time Series, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_T15_LGA 1.0.0 Census 2021, T15 Dwelling structure by number of persons usually resident, Time Series, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_T15_SA2 1.0.0 Census 2021, T15 Dwelling structure by number of persons usually resident, Time Series, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_T16_LGA 1.0.0 Census 2021, T16 Dwelling structure and number of bedrooms by number of persons usually resident for family households, Time Series, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_T16_SA2 1.0.0 Census 2021, T16 Dwelling structure and number of bedrooms by number of persons usually resident for family households, Time Series, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_T17_LGA 1.0.0 Census 2021, T17 Dwelling structure and number of bedrooms by number of persons usually resident for group households, Time Series, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_T17_SA2 1.0.0 Census 2021, T17 Dwelling structure and number of bedrooms by number of persons usually resident for group households, Time Series, Main Statistical Areas Level 2 and up (SA2+)
+FLOW C21_T18_LGA 1.0.0 Census 2021, T18 Tenure and landlord type by dwelling structure, Time Series, Local Government Area 2021 (LGA 2021 boundaries)
+FLOW C21_T18_SA2 1.0.0 Census 2021, T18 Tenure and landlord type by dwelling structure, Time Series, Main Statistical Areas Level 2 and up (SA2+)
+FLOW RES_DWELL 1.0.0 Residential Dwellings: Unstratified Medians and Transfer Counts by Dwelling Type, GCCSA and Rest of State
+FLOW RES_DWELL_ST 1.0.0 Residential Dwellings: Values, Mean Price and Number by State and Territories
+FLOW RPPI 1.0.0 Residential Property Price Index
+## RES_DWELL 200 163392
+['STRUCTURE', 'STRUCTURE_ID', 'STRUCTURE_NAME', 'ACTION', 'MEASURE', 'Measure', 'REGION', 'Region', 'FREQ', 'Frequency', 'TIME_PERIOD', 'Time Period', 'OBS_VALUE', 'Observation Value', 'UNIT_MEASURE', 'Unit of Measure', 'UNIT_MULT', 'Unit of Multiplier', 'OBS_STATUS', 'Observation Status', 'OBS_COMMENT', 'Observation Comment']
+   STRUCTURE ['DATAFLOW']
+   STRUCTURE_ID ['ABS:RES_DWELL(1.0.0)']
+   STRUCTURE_NAME ['Residential Dwellings: Unstratified Medians and Transfer Counts by Dwelling Type, GCCSA and Rest of State']
+   ACTION ['I']
+   MEASURE [np.int64(1), np.int64(2), np.int64(3), np.int64(4)]
+   Measure ['Number of Established House Transfers', 'Number of Attached Dwelling Transfers', 'Median Price of Established House Transfers', 'Median Price of Attached Dwelling Transfers']
+   REGION ['3RQLD', '3GBRI', '1RNSW', '7GDAR', '5RWAU', '6GHOB', '7RNTE', '4GADE', '6RTAS', '4RSAU', '8ACTE', '2GMEL', '1GSYD', '5GPER', '2RVIC']
+   Region ['Rest of Qld', 'Greater Brisbane', 'Rest of NSW', 'Greater Darwin', 'Rest of WA', 'Greater Hobart', 'Rest of NT', 'Greater Adelaide', 'Rest of Tas.', 'Rest of SA', 'Australian Capital Territory', 'Greater Melbourne', 'Greater Sydney', 'Greater Perth', 'Rest of Vic.']
+   FREQ ['Q']
+   Frequency ['Quarterly']
+   TIME_PERIOD ['2024-Q1', '2024-Q2', '2024-Q3', '2024-Q4', '2025-Q1', '2025-Q2', '2025-Q3', '2025-Q4', '2026-Q1', '2026-Q2']
+   Time Period [np.float64(nan)]
+   Observation Value [np.float64(nan)]
+   UNIT_MEASURE ['NUM', 'AUD']
+   Unit of Measure ['Number', 'Australian Dollars']
+   UNIT_MULT [np.int64(0), np.int64(3)]
+   Unit of Multiplier ['Units', 'Thousands']
+   OBS_STATUS ['r', 'p', nan]
+   Observation Status ['revised', 'preliminary figure or series subject to revision', nan]
+   OBS_COMMENT [np.float64(nan)]
+   Observation Comment [np.float64(nan)]
+## RES_DWELL_ST 200 112457
+['STRUCTURE', 'STRUCTURE_ID', 'STRUCTURE_NAME', 'ACTION', 'MEASURE', 'Measure', 'REGION', 'Region', 'FREQ', 'Frequency', 'TIME_PERIOD', 'Time Period', 'OBS_VALUE', 'Observation Value', 'UNIT_MEASURE', 'Unit of Measure', 'UNIT_MULT', 'Unit of Multiplier', 'OBS_STATUS', 'Observation Status', 'OBS_COMMENT', 'Observation Comment']
+   STRUCTURE ['DATAFLOW']
+   STRUCTURE_ID ['ABS:RES_DWELL_ST(1.0.0)']
+   STRUCTURE_NAME ['Residential Dwellings: Values, Mean Price and Number by State and Territories']
+   ACTION ['I']
+   MEASURE [np.int64(2), np.int64(3), np.int64(1), np.int64(4), np.int64(5)]
+   Measure ['Value of dwelling stock: Owned by households', 'Value of dwelling stock: Owned by non households', 'Value of dwelling stock: Owned by all sectors', 'Number of residential dwellings', 'Mean price of residential dwellings']
+   REGION ['4', '8', '3', 'AUS', '7', '1', '5', '2', '6']
+   Region ['South Australia', 'Australian Capital Territory', 'Queensland', 'Australia', 'Northern Territory', 'New South Wales', 'Western Australia', 'Victoria', 'Tasmania']
+   FREQ ['Q']
+   Frequency ['Quarterly']
+   TIME_PERIOD ['2024-Q1', '2024-Q2', '2024-Q3', '2024-Q4', '2025-Q1', '2025-Q2', '2025-Q3', '2025-Q4', '2026-Q1', '2026-Q2']
+   Time Period [np.float64(nan)]
+   Observation Value [np.float64(nan)]
+   UNIT_MEASURE ['AUD', 'NUM']
+   Unit of Measure ['Australian Dollars', 'Number']
+   UNIT_MULT [np.int64(6), np.int64(3)]
+   Unit of Multiplier ['Millions', 'Thousands']
+   OBS_STATUS [nan, 'r', 'p']
+   Observation Status [nan, 'revised', 'preliminary figure or series subject to revision']
+   OBS_COMMENT [np.float64(nan)]
+   Observation Comment [np.float64(nan)]
+RES victorian-property-sales-report-time-series Year Summary 2025 https://www.land.vic.gov.au/__data/assets/excel_doc/0032/775616/year-summary-2025.xlsx
+RES victorian-property-sales-report-time-series Year Summary 2024 https://www.land.vic.gov.au/__data/assets/excel_doc/0031/756580/year-summary-2024.xlsx
+RES victorian-property-sales-report-time-series Year Summary 2023 https://www.land.vic.gov.au/__data/assets/excel_doc/0028/709750/Year-summary-2023.xlsx
+GET https://www.land.vic.gov.au/__data/assets/excel_doc/0032/775616/year-summary-2025.xlsx 200 2223063 b'PK\x03\x04'
+=== victorian-property-sales-report-time-series :: Table 1 (7822, 46)
+                                           0    1    2     3   4   5    6             7    8    9             10   11   12                                                                                                                                       13   14   15          16   17   18   19            20  21  22   23   24   25            26   27   28   29          30   31   32  33   34   35            36   37   38            39  40   41   42   43          44  45
+0                 Melbourne Metropolitan Area  NaN  NaN   NaN NaN NaN  NaN           NaN  NaN  NaN           NaN  NaN  NaN                                                                                                                                      NaN  NaN  NaN         NaN  NaN  NaN  NaN           NaN NaN NaN  NaN  NaN  NaN           NaN  NaN  NaN  NaN         NaN  NaN  NaN NaN  NaN  NaN           NaN  NaN  NaN           NaN NaN  NaN  NaN  NaN         NaN NaN
+1   Residential price statistics 1995 to 2026  NaN  NaN   NaN NaN NaN  NaN           NaN  NaN  NaN           NaN  NaN  NaN                                                                                                                                      NaN  NaN  NaN         NaN  NaN  NaN  NaN           NaN NaN NaN  NaN  NaN  NaN           NaN  NaN  NaN  NaN         NaN  NaN  NaN NaN  NaN  NaN           NaN  NaN  NaN           NaN NaN  NaN  NaN  NaN         NaN NaN
+2                                         NaN  NaN  NaN   NaN NaN NaN  NaN           NaN  NaN  NaN           NaN  NaN  NaN  Houses                                                        Units/Apartments                                      Vacant House Blocks  NaN  NaN         NaN  NaN  NaN  NaN           NaN NaN NaN  NaN  NaN  NaN           NaN  NaN  NaN  NaN         NaN  NaN  NaN NaN  NaN  NaN           NaN  NaN  NaN           NaN NaN  NaN  NaN  NaN         NaN NaN
+3                                         NaN  NaN  NaN  Year NaN NaN  NaN  No. of Sales  NaN  NaN  Median Price  NaN  NaN                                                                                                                                      NaN  NaN  NaN  Mean Price  NaN  NaN  NaN  No. of Sales N
+=== victorian-property-sales-report-time-series :: Sheet1 (33, 14)
+      0             1             2   3             4             5   6             7             8   9   10  11  12          13
+0   Year  No. of Sales  Median Price NaN  No. of Sales  Median Price NaN  No. of Sales  Median Price NaN NaN NaN NaN  Mean Price
+1   1995         60629        115000 NaN         19275        110000 NaN         17153         46000 NaN NaN NaN NaN       59126
+2   1996         63363        117250 NaN         22299        110000 NaN         16094         46000 NaN NaN NaN NaN       55970
+3   1997         76578        125000 NaN         30366        121000 NaN         22092         50000 NaN NaN NaN NaN       61438
+4   1998         72861        133500 NaN         28633        133500 NaN         22266         53000 NaN NaN NaN NaN       64056
+5   1999         77211        149000 NaN         33681        160000 NaN         28013         57500 NaN NaN NaN NaN       66887
+6   2000         81161        160000 NaN         33778        175000 NaN         22277         57950 NaN NaN NaN NaN       62747
+7   2001         94484        185000 NaN         41793        215000 NaN         35463         65900 NaN NaN NaN NaN       72808
+8   2002         90921        220000 NaN         37136        243000 NaN         34155         77000 NaN NaN NaN NaN       83134
+9   2003         88785        250000 NaN         35248        255900 NaN         34390         99000 NaN NaN NaN NaN      107301
+10  2004         78350        270000 NaN         30343        260500 NaN         21934        114900 NaN NaN NaN NaN      119689
+11  2005         81029        280000 NaN         33366        272000 NaN         21279        121000 NaN NaN NaN NaN      126756
+12  2006         78153        300000 NaN         35160        290000 NaN         22427        126500 NaN NaN NaN NaN      136063
+13  2007         92774        322780 NaN         47386        325000 NaN         28564        135000 NaN NaN NaN NaN      142937
+RES rental-report-quarterly-data-tables  Quarterly Tables Sep 2025 https://www.dffh.vic.gov.au/tables-rental-report-september-quarter-2025-excel
+RES rental-report-quarterly-data-tables  Quarterly Tables Jun 2025 https://www.dffh.vic.gov.au/tables-rental-report-june-quarter-2025-excel
+RES rental-report-quarterly-data-tables Quarterly Tables Mar 2025 https://www.dffh.vic.gov.au/tables-rental-report-march-quarter-2025-excel
+GET https://www.dffh.vic.gov.au/tables-rental-report-september-quarter-2025-excel 200 1156235 b'PK\x03\x04'
+=== rental-report-quarterly-data-tables :: Contents (37, 2)
+                                                        0                                                                                              1
+0   Homes Victoria Rental Report - September Quarter 2025                                                                                            NaN
+1                                                     NaN                                                                                       Contents
+2                                               Worksheet                                                                                          Title
+3                                              Front page                                                                       Rent Indices at a glance
+4                                                 Table 1                     Median rents and metropolitan Melbourne and regional Victoria Rent Indices
+5                                                Figure 1                     Metropolitan Rent Index and Regional Rent Index - annual percentage change
+6                                                 Table 2                                            Median rents for new lettings by statistical region
+7                                                 Table 3                                         Median rents for new lettings by major property types 
+8                                                Figure 2             Moving annual median rents by suburb for two‑bedroom flats, metropolitan Melbourne
+9                                                Figure 3          Moving annual median rents by suburb for three‑bedroom houses, metropolitan Melbourne
+10                                                Table 4  Highest and lowest moving annual median rents in metropolitan Melbourne and regional Victoria
+11                                                Table 5                       New lettings for metropolitan Melbourne, regional Victoria and Victoria 
+12                                                Table 6                                                  New lettings by statistical region, Victoria 
+13                                               Figure 4 
+=== rental-report-quarterly-data-tables :: Front page (6, 6)
+                          0                                                                     1                  2               3   4              5
+0  Rent Indices at a glance                                                                   NaN                NaN             NaN NaN  Contents page
+1                       NaN                                                                   NaN                NaN             NaN NaN            NaN
+2                                                                                     Median Rent  Quarterly Change*  Annual Change* NaN            NaN
+3                 Melbourne                                                                   580           0.010567        0.035266 NaN            NaN
+4         Regional Victoria                                                                   470           0.011245        0.045656 NaN            NaN
+5                       NaN  * percentage change figures are calculated from relevant Rent Index.                NaN             NaN NaN            NaN
+=== rental-report-quarterly-data-tables :: Table 1 (6, 7)
+                                                                                     0                                                                     1           2                  3               4   5              6
+0  Table 1: Median rents and metropolitan Melbourne and regional Victoria Rent Indices                                                                   NaN         NaN                NaN             NaN NaN  Contents page
+1                                                                                  NaN                                                                   NaN         NaN                NaN             NaN NaN            NaN
+2                                                                                                                                                Median Rent  Rent Index  Quarterly Change*  Annual Change* NaN            NaN
+3                                                                            Melbourne                                                                   580  315.753196           0.010567        0.035266 NaN            NaN
+4                                                                    Regional Victoria                                                                   470  342.474426           0.011245        0.045656 NaN            NaN
+5                                                                                  NaN  * percentage change figures are calculated from relevant Rent Index.         NaN                NaN             NaN NaN            NaN
+=== rental-report-quarterly-data-tables :: Figure 1 (3, 8)
+                                                                                      0   1   2   3   4   5   6              7
+0  Figure 1: Metropolitan Rent Index and Regional Rent Index - annual percentage change NaN NaN NaN NaN NaN NaN  Contents page
+1                                                                                   NaN NaN NaN NaN NaN NaN NaN            NaN
+2                                                                                   NaN NaN NaN NaN NaN NaN NaN    Data source
+=== rental-report-quarterly-data-tables :: Table 2 (19, 6)
+                                                               0            1                 2              3   4              5
+0   Table 2: Median rents for new lettings by statistical region          NaN               NaN            NaN NaN  Contents page
+1                                                            NaN          NaN               NaN            NaN NaN            NaN
+2                                                         Region  Median Rent  Quarterly Change  Annual Change NaN            NaN
+3                                         Metropolitan Melbourne          NaN               NaN            NaN NaN            NaN
+4                                                Inner Melbourne          650          0.015625       0.048387 NaN            NaN
+5                                        Inner Eastern Melbourne          650                 0           0.04 NaN            NaN
+6                                             Southern Melbourne          650                 0       0.031746 NaN            NaN
+7                                              Western Melbourne          500                 0              0 NaN            NaN
+8                                        North Western Melbourne          550          0.018519       0.033835 NaN            NaN
+9                                        North Eastern Melbourne          550                 0       0.001821 NaN            NaN
+10                                       Outer Eastern Melbourne          600                 0       0.025641 NaN            NaN
+11                                       South Eastern Melbourne          570                 0       0.017857 NaN            NaN
+12                                          Mornington Peninsula          590          0.026087       0.053571 NaN            NaN
+13                                             Regional Victoria          NaN               NaN            NaN NaN            NaN
+=== rental-report-quarterly-data-tables :: Table 3 (18, 6)
+                                                                  0            1                  2               3   4              5
+0   Table 3: Median rents for new lettings by major property types           NaN                NaN             NaN NaN  Contents page
+1                                                               NaN          NaN                NaN             NaN NaN            NaN
+2                                                     Property Type  Median Rent  Quarterly Change*  Annual Change* NaN            NaN
+3                                            Metropolitan Melbourne          NaN                NaN             NaN NaN            NaN
+4                                                        1 Bed Flat          500           0.012418        0.042999 NaN            NaN
+5                                                        2 Bed Flat          600           0.007686        0.047337 NaN            NaN
+6                                                        3 Bed Flat          690           0.014599        0.022309 NaN            NaN
+7                                                       2 Bed House          575          -0.006974        0.023577 NaN            NaN
+8                                                       3 Bed House          550           0.012535        0.028289 NaN            NaN
+9                                                       4 Bed House          595           0.015192        0.020606 NaN            NaN
+10                                                Regional Victoria          NaN                NaN             NaN NaN            NaN
+11                                                       1 Bed Flat          300          -0.001692        0.068841 NaN            NaN
+12                                                       2 Bed Flat          390           0.019608        0.054054 NaN            NaN
+13                                                       3 Bed Flat          470           0.013736        0.022161 NaN            NaN
+=== rental-report-quarterly-data-tables :: Figure 2 (1, 8)
+                                                                                              0   1   2   3   4   5   6              7
+0  Figure 2: Moving annual median rents by suburb for two‑bedroom flats, metropolitan Melbourne NaN NaN NaN NaN NaN NaN  Contents page
+=== rental-report-quarterly-data-tables :: Figure 3 (1, 8)
+                                                                                                 0   1   2   3   4   5   6              7
+0  Figure 3: Moving annual median rents by suburb for three‑bedroom houses, metropolitan Melbourne NaN NaN NaN NaN NaN NaN  Contents page
+=== rental-report-quarterly-data-tables :: Table 4 (39, 7)
+                                                                                                         0      1   2                          3      4   5              6
+0   Table 4: Highest and lowest moving annual median rents in metropolitan Melbourne and regional Victoria    NaN NaN                        NaN    NaN NaN  Contents page
+1                                                                                                      NaN    NaN NaN                        NaN    NaN NaN            NaN
+2                                                                                     Highest median rents    NaN NaN        Lowest median rents    NaN NaN            NaN
+3                                                                                           2 bedroom flat    NaN NaN             2 bedroom flat    NaN NaN            NaN
+4                                                                                   Metropolitan Melbourne    NaN NaN     Metropolitan Melbourne    NaN NaN            NaN
+5                                                                                                Docklands  763.0 NaN                     Melton  365.0 NaN            NaN
+6                                                                                                  Fitzroy  750.0 NaN  Werribee-Hoppers Crossing  405.0 NaN            NaN
+7                                                                                           Port Melbourne  745.0 NaN                   Sunshine  410.0 NaN            NaN
+8                                                                                          CBD-St Kilda Rd  735.0 NaN        St Albans-Deer Park  420.0 NaN            NaN
+9                                                                                                Southbank  720.0 NaN                Craigieburn  440.0 NaN            NaN
+10                                                                                        Richmond-Burnley  700.0 NaN                    Sunbury  440.0 NaN            NaN
+11                                                                                         South Melbourne  700.0 NaN                 Whittlesea  44
+=== rental-report-quarterly-data-tables :: Table 5 (8, 6)
+                                                                                   0                    1                    2         3   4              5
+0  Table 5: New lettings for metropolitan Melbourne, regional Victoria and Victoria                   NaN                  NaN       NaN NaN  Contents page
+1                                                                                NaN                  NaN                  NaN       NaN NaN            NaN
+2                                                                                     2025-09-01 00:00:00  2024-09-01 00:00:00    Change NaN            NaN
+3                                                             Metropolitan Melbourne                44504                45331 -0.018244 NaN            NaN
+4                                                                  Regional Victoria                 9583                10025  -0.04409 NaN            NaN
+5                                                                           Victoria                54087                55356 -0.022924 NaN            NaN
+6                                                                                NaN                  NaN                  NaN       NaN NaN            NaN
+7                               Proportion of new lettings in metropolitan Melbourne             0.822822             0.818899       NaN NaN            NaN
+=== rental-report-quarterly-data-tables :: Table 6 (25, 6)
+                                                         0                    1                    2         3   4              5
+0   Table 6: New lettings by statistical region, Victoria                   NaN                  NaN       NaN NaN  Contents page
+1                                                      NaN                  NaN                  NaN       NaN NaN            NaN
+2                                                   Region  2025-09-01 00:00:00  2024-09-01 00:00:00    Change NaN            NaN
+3                                   Metropolitan Melbourne                  NaN                  NaN       NaN NaN            NaN
+4                                          Inner Melbourne                12120                12692 -0.045068 NaN            NaN
+5                                  Inner Eastern Melbourne                 4805                 5370 -0.105214 NaN            NaN
+6                                       Southern Melbourne                 3358                 3569  -0.05912 NaN            NaN
+7                                        Western Melbourne                 8335                 8034  0.037466 NaN            NaN
+8                                  North Western Melbourne                 4447                 4285  0.037806 NaN            NaN
+9                                  North Eastern Melbourne                 4034                 4093 -0.014415 NaN            NaN
+10                                 Outer Eastern Melbourne                 1504                 1694 -0.112161 NaN            NaN
+11                                 South Eastern Melbourne                 4185                 3868  0.081954 NaN            NaN
+12                                    Mornington Peninsula                 1716                 1726 -0.005794 NaN            NaN
+13                                       Regional Victoria                  NaN                  NaN       NaN NaN            NaN
+=== rental-report-quarterly-data-tables :: Figure 4 (3, 8)
+                                                                                                        0   1   2   3   4   5   6              7
+0  Figure 4: Total number of dwellings with active residential bonds, Victoria - annual percentage change NaN NaN NaN NaN NaN NaN  Contents page
+1                                                                                                     NaN NaN NaN NaN NaN NaN NaN            NaN
+2                                                                                                     NaN NaN NaN NaN NaN NaN NaN    Data source
+=== rental-report-quarterly-data-tables :: Figure 5a (1, 8)
+                                                                                    0   1   2   3   4   5   6              7
+0  Figure 5a: Number of dwellings with active bonds, metropolitan Melbourne by suburb NaN NaN NaN NaN NaN NaN  Contents page
+=== rental-report-quarterly-data-tables :: Figure 5b (1, 8)
+                                                                                              0   1   2   3   4   5   6              7
+0  Figure 5b: Number of dwellings with active bonds, regional Victoria by Local Government Area NaN NaN NaN NaN NaN NaN  Contents page
+=== rental-report-quarterly-data-tables :: Table 7 (13, 6)
+                                                                                                                                      0                         1                    2                    3   4              5
+0                                                                                                Table 7: Turnover and tenancy duration                       NaN                  NaN                  NaN NaN  Contents page
+1                                                                                                                                   NaN                       NaN                  NaN                  NaN NaN            NaN
+2                                                                                                                                                                  2025-09-01 00:00:00  2024-09-01 00:00:00 NaN            NaN
+3                                                                                                                Metropolitan Melbourne             Turnover rate             0.088919             0.089993 NaN            NaN
+4                                                                                                                                   NaN  Average tenancy duration                   24                   24 NaN            NaN
+5                                                                                                                                   NaN                       NaN                  NaN                  NaN NaN            NaN
+6                                                                                                                                   NaN                       NaN                  NaN                  NaN NaN            NaN
+7                                                                                                                     Regional Victoria             Turnover rate             0.073316             0.078632 NaN            NaN
+8                                                                                                                                   NaN  Average tenancy duration                   23           
+=== rental-report-quarterly-data-tables :: Table 8 (9, 7)
+                                                                 0                       1         2                  3         4   5              6
+0  Table 8: Median tenancy duration and turnover by dwelling size                      NaN       NaN                NaN       NaN NaN  Contents page
+1                                                              NaN                     NaN       NaN                NaN       NaN NaN            NaN
+2                                                              NaN  Metropolitan Melbourne       NaN  Regional Victoria       NaN NaN            NaN
+3                                                              NaN         Median duration  Turnover    Median duration  Turnover NaN            NaN
+4                                                        1 bedroom                      13  0.152672                 17  0.070773 NaN            NaN
+5                                                       2 bedrooms                      24  0.093665                 24  0.067429 NaN            NaN
+6                                                       3 bedrooms                      26  0.080976                 24  0.074465 NaN            NaN
+7                                                      4+ bedrooms                      23  0.085508                 20  0.081454 NaN            NaN
+8                                                   All properties                      24  0.088919                 23  0.073316 NaN            NaN
+=== rental-report-quarterly-data-tables :: Figure 6 (3, 8)
+                                                                                             0   1   2   3   4   5   6              7
+0  Figure 6: Lending to household investors in residential housing, Victoria ($2025 September) NaN NaN NaN NaN NaN NaN  Contents page
+1                                                                                          NaN NaN NaN NaN NaN NaN NaN            NaN
+2                                                                                          NaN NaN NaN NaN NaN NaN NaN    Data source
+=== rental-report-quarterly-data-tables :: Figure 7 (3, 8)
+                               0   1   2   3   4   5   6              7
+0  Figure 7: Rental vacancy rate NaN NaN NaN NaN NaN NaN  Contents page
+1                            NaN NaN NaN NaN NaN NaN NaN            NaN
+2                            NaN NaN NaN NaN NaN NaN NaN    Data source
+=== rental-report-quarterly-data-tables :: Figure 8 (3, 8)
+                                                                        0   1   2   3   4   5   6              7
+0  Figure 8: Affordable rental dwellings as percentage of all new rentals NaN NaN NaN NaN NaN NaN  Contents page
+1                                                                     NaN NaN NaN NaN NaN NaN NaN            NaN
+2                                                                     NaN NaN NaN NaN NaN NaN NaN    Data source
+=== rental-report-quarterly-data-tables :: Table 9 (14, 9)
+                                                                                0                       1                     2                                                3                                    4                                    5      6   7              8
+0   Table 9: Rental affordability for indicative households on Centrelink incomes                     NaN                   NaN                                              NaN                                  NaN                                  NaN    NaN NaN  Contents page
+1                                                                             NaN                     NaN                   NaN                                              NaN                                  NaN                                  NaN    NaN NaN            NaN
+2                                                                  Household type                     NaN  Singles on JobSeeker  Single parent on Parenting Payment with 1 child  Couple on JobSeeker with 2 children  Couple on JobSeeker with 4 children  Total NaN            NaN
+3                                                           Assumed property size                     NaN             1 bedroom                                        2 bedroom                            3 bedroom                           4+ bedroom    NaN NaN            NaN
+4                                                       Weekly income (net of RA)                     NaN                390.55                                           728.39                          1083.900255                          1347.216367    NaN NaN            NaN
+5                                                          Affordable weekly rent                     NaN                   225                                              345                                  450                                  545    NaN NaN            NaN
+6                                                     Affordable rentals (number)                     NaN                   NaN                                              NaN                                  NaN                                  NaN    NaN NaN
+=== rental-report-quarterly-data-tables :: Table 10 (14, 7)
+                                                                                                 0                       1                                  2                                  3   4   5              6
+0   Table 10: Rental affordability for households on the Age Pension or Disability Support Pension                     NaN                                NaN                                NaN NaN NaN  Contents page
+1                                                                                              NaN                     NaN                                NaN                                NaN NaN NaN            NaN
+2                                                                                   Household type                     NaN  Single on age/disability pension   Couple on age/disability pension  NaN NaN            NaN
+3                                                                            Assumed property size                     NaN                    1 or 2 bedrooms                    1 or 2 bedrooms NaN NaN            NaN
+4                                                                        Weekly income (net of RA)                     NaN                             525.65                              792.5 NaN NaN            NaN
+5                                                                           Affordable weekly rent                     NaN                                265                                340 NaN NaN            NaN
+6                                                                      Affordable rentals (number)                     NaN                                NaN                                NaN NaN NaN            NaN
+7                                                                                              NaN  Metropolitan Melbourne                                260                                769 NaN NaN            NaN
+8                                                                                              NaN       Regional Victoria                                204                                761 NaN NaN            NaN
+9                                       
+=== rental-report-quarterly-data-tables :: Table 11 (20, 12)
+                                                                                                 0          1        2          3        4          5        6           7        8        9        10             11
+0   Table 11: Affordable rental dwellings by region for indicative households on Centrelink incomes        NaN      NaN        NaN      NaN        NaN      NaN         NaN      NaN      NaN      NaN  Contents page
+1                                                                                               NaN  1 Bedroom      NaN  2 Bedroom      NaN  3 Bedroom      NaN  4+ Bedroom      NaN    Total      NaN            NaN
+2                                                                                            Region    Number   Percent    Number   Percent    Number   Percent     Number   Percent  Number   Percent            NaN
+3                                                                                   Inner Melbourne         30    0.006         48    0.008         38    0.031          23    0.095      139    0.011            NaN
+4                                                                           Inner Eastern Melbourne         11    0.018         11    0.006         27     0.02          35    0.032       84    0.017            NaN
+5                                                                                Southern Melbourne          3    0.005         14     0.01          8    0.009           8    0.016       33     0.01            NaN
+6                                                                                 Western Melbourne         10    0.028         84    0.063       1164    0.364        1900    0.553     3158    0.379            NaN
+7                                                                           North Western Melbourne         13    0.022         40    0.027        117    0.082         223    0.241      393    0.088            NaN
+8                                                                           North Eastern Melbourne          6    0.013         17    0.014         67    0.048         229    0.246      319    0.079            NaN
+9                                                           
+=== rental-report-quarterly-data-tables :: Figure 9a (1, 8)
+                                                                          0   1   2   3   4   5   6              7
+0  Figure 9a: Affordable rental dwellings, metropolitan Melbourne by Suburb NaN NaN NaN NaN NaN NaN  Contents page
+=== rental-report-quarterly-data-tables :: Figure 9b (1, 8)
+                                                                                    0   1   2   3   4   5   6              7
+0  Figure 9b: Affordable rental dwellings, regional Victoria by Local Government Area NaN NaN NaN NaN NaN NaN  Contents page
+=== rental-report-quarterly-data-tables :: Table 12 (162, 44)
+                                                                                   0                                      1           2       3         4              5              6          7              8           9              10        11             12             13         14             15          16      17        18             19             20         21             22           23      24        25             26             27         28             29           30      31        32             33             34         35             36           37      38        39             40             41         42             43
+0   Table 12: Moving annual median rents for suburbs and towns by major property type                                    NaN         NaN     NaN       NaN            NaN            NaN        NaN            NaN         NaN  Contents page       NaN            NaN            NaN        NaN            NaN         NaN     NaN       NaN            NaN            NaN        NaN            NaN          NaN     NaN       NaN            NaN            NaN        NaN            NaN          NaN     NaN       NaN            NaN            NaN        NaN            NaN          NaN     NaN       NaN            NaN            NaN        NaN            NaN
+1                                                                                 NaN                                    NaN  1 Bed Flat     NaN       NaN            NaN            NaN        NaN            NaN  2 Bed Flat            NaN       NaN            NaN            NaN        NaN            NaN  3 Bed Flat     NaN       NaN            NaN            NaN        NaN            NaN  2 Bed House     NaN       NaN            NaN            NaN        NaN            NaN  3 Bed House     NaN       NaN            NaN            NaN        NaN            NaN  4 Bed House     NaN       NaN            NaN            NaN        NaN            NaN
+2                                                                                 NaN                                    NaN       Count  Median  Ann % Ch  Percentile 25  Percentile 75  5 yr % ch  Ave 5 yr % ch       Count         Median  Ann % Ch
+=== rental-report-quarterly-data-tables :: Table 13 (90, 20)
+                                                                                    0                   1           2       3         4           5       6         7           8       9         10           11             12        13           14      15        16           17      18        19
+0   Table 13: Quarterly median rents for Local Government Areas by major property type                 NaN         NaN     NaN       NaN         NaN     NaN       NaN         NaN     NaN       NaN          NaN  Contents page       NaN          NaN     NaN       NaN          NaN     NaN       NaN
+1                                                                                  NaN                 NaN  1 Bed Flat     NaN       NaN  2 Bed Flat     NaN       NaN  3 Bed Flat     NaN       NaN  2 Bed House            NaN       NaN  3 Bed House     NaN       NaN  4 Bed House     NaN       NaN
+2                                                                                  NaN                 NaN       Count  Median  Ann % ch       Count  Median  Ann % ch       Count  Median  Ann % ch        Count         Median  Ann % ch        Count  Median  Ann % ch        Count  Median  Ann % ch
+3                                                                    Barwon South West         Colac-Otway           -       -         -          13     370 -0.038961           -       -         -            -              -         -           32     475  0.079545           16     530  0.019231
+4                                                                                  NaN         Corangamite           -       -         -           -       -         -           -       -         -           12            350  0.044776           16     420  0.037037            -       -         -
+5                                                                                  NaN             Glenelg           -       -         -          22     305 -0.128571           -       -         -            -              -         -           31     440  0.035294            -       -         -
+6                                                                                  NaN     Greater Geelong         140   
+=== rental-report-quarterly-data-tables :: Table 14 (84, 13)
+                                                                0           1      2           3      4           5      6            7      8           9      10  11             12
+0   Table 14: Affordable rental dwellings by Local Government Area         NaN    NaN         NaN    NaN         NaN    NaN          NaN    NaN         NaN    NaN NaN  Contents page
+1                                                              NaN   1 Bedroom    NaN  2 Bedrooms    NaN  3 Bedrooms    NaN  4+ Bedrooms    NaN       Total    NaN NaN            NaN
+2                                                              NaN  Affordable    NaN  Affordable    NaN  Affordable    NaN   Affordable    NaN  Affordable    NaN NaN            NaN
+3                                                              NaN           #      %           #      %           #      %            #      %           #      % NaN       Metro/RV
+4                                                           Alpine           3    0.6           3  0.188          10  0.417            4  0.571          20  0.385 NaN              R
+5                                                           Ararat           0      0          12    0.6          24  0.686           13  0.867          49   0.69 NaN              R
+6                                                         Ballarat           6  0.128          43  0.265         388  0.892          317  0.857         754  0.744 NaN              R
+7                                                          Banyule           0      0           1  0.003          11  0.032            9  0.068          21  0.022 NaN              M
+8                                                       Bass Coast           0      0           7  0.137          52  0.468           25  0.338          84  0.349 NaN              R
+9                                                          Baw Baw           3   0.25           2  0.044          24  0.218           12  0.099          41  0.142 NaN              R
+10                                                         Bayside           0      0           0      0           0      0            0      0           0      0 NaN              M
+11              
+=== rental-report-quarterly-data-tables :: Table 15 (83, 21)
+                                                                          0         1         2         3         4         5         6         7              8         9         10        11        12        13        14        15        16        17        18  19        20
+0   Table 15: Number of dwellings with active bonds by Local Government Area       NaN       NaN       NaN       NaN       NaN       NaN       NaN  Contents page       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN NaN       NaN
+1                                                                        NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN            NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN       NaN  % change       NaN NaN       NaN
+2                                                                        NaN  Sep 2010  Sep 2011  Sep 2012  Sep 2013  Sep 2014  Sep 2015  Sep 2016       Sep 2017  Sep 2018  Sep 2019  Sep 2020  Sep 2021  Sep 2022  Sep 2023  Sep 2024  Sep 2025    1 year    5 year NaN  Metro/RV
+3                                                                     Alpine       677       707       776       793       801       820       841            829       802       830       872       877       862       854       849       846 -0.003534 -0.029817 NaN         R
+4                                                                     Ararat       557       620       636       717       717       726       751            733       774       744       764       779       777       778       807       809  0.002478  0.058901 NaN         R
+5                                                                   Ballarat      8112      8635      9237      9724     10337     10811     11142          11394     11642     11889     12558     12914     13220     13596     13696     14041   0.02519  0.118092 NaN         R
+6                                                                    Banyule      8284      8973      9469      9847     10225     10682     11174          11959     12463     12926     12935     12695     13357     13660     13588     12971 -0.045408  0.002783 NaN   
+=== rental-report-quarterly-data-tables :: Fig 1 source (104, 9)
+                                                                                              0                 1                 2                                  3                                  4   5   6   7              8
+0   Figure 1 source: Metropolitan Rent Index and Regional Rent Index - annual percentage change               NaN               NaN                                NaN                                NaN NaN NaN NaN  Contents page
+1                                                                                           NaN  MRI ann % change  RRI ann % change  MRI long-term average\n(10 years)  RRI long-term average\n(10 years) NaN NaN NaN            NaN
+2                                                                           2000-06-01 00:00:00          0.069882          0.044849                                NaN                                NaN NaN NaN NaN       Figure 1
+3                                                                           2000-09-01 00:00:00          0.056551          0.046113                                NaN                                NaN NaN NaN NaN            NaN
+4                                                                           2000-12-01 00:00:00          0.048372          0.055539                                NaN                                NaN NaN NaN NaN            NaN
+5                                                                           2001-03-01 00:00:00          0.056612          0.041397                                NaN                                NaN NaN NaN NaN            NaN
+6                                                                           2001-06-01 00:00:00          0.059913          0.033783                                NaN                                NaN NaN NaN NaN            NaN
+7                                                                           2001-09-01 00:00:00          0.048617          0.059163                                NaN                                NaN NaN NaN NaN            NaN
+8                                                                           2001-12-01 00:00:00          0.053435          0.041033        
+=== rental-report-quarterly-data-tables :: Fig 4 source (110, 13)
+                                                                                                               0         1                2                               3                                4   5       6                7   8         9                10         11             12
+0   Figure 4 source: Total number of dwellings with active residential bonds, Victoria - annual percentage change       NaN              NaN                             NaN                              NaN NaN     NaN              NaN NaN       NaN              NaN        NaT  Contents page
+1                                                                                                             NaN  Victoria              NaN                             NaN                              NaN NaN   Metro              NaN NaN  Regional              NaN        NaT            NaN
+2                                                                                                             NaN         #  Annual % change  5 year average annual % change  10 year average annual % change NaN       #  Annual % change NaN         #  Annual % change        NaT       Figure 4
+3                                                                                             1999-03-01 00:00:00    248703              NaN                             NaN                              NaN NaN  197082              NaN NaN     51621              NaN        NaT            NaN
+4                                                                                             1999-06-01 00:00:00    252810              NaN                             NaN                              NaN NaN  200224              NaN NaN     52586              NaN        NaT            NaN
+5                                                                                             1999-09-01 00:00:00    254653              NaN                             NaN                              NaN NaN  201876              NaN NaN     52777              NaN        NaT            NaN
+6                                                                                             1999-12-01 00:00:00    256443              NaN                
+=== rental-report-quarterly-data-tables :: Fig 6 source (31, 7)
+                                                                                                     0                          1                                        2   3   4   5              6
+0   Figure 6 source: Lending to household investors in residential housing, Victoria ($2025 September)                        NaN                                      NaN NaN NaN NaN  Contents page
+1                                                                                                  NaN                        NaN                                      NaN NaN NaN NaN            NaN
+2                                                                                              Quarter  Lending to investors ($m)  Investor share of all housing loans (%) NaN NaN NaN       Figure 6
+3                                                                                  2019-09-01 00:00:00                5303.451769                                 0.289762 NaN NaN NaN            NaN
+4                                                                                  2019-12-01 00:00:00                  5936.2787                                 0.277133 NaN NaN NaN            NaN
+5                                                                                  2020-03-01 00:00:00                4946.426486                                 0.270335 NaN NaN NaN            NaN
+6                                                                                  2020-06-01 00:00:00                4982.109075                                 0.269103 NaN NaN NaN            NaN
+7                                                                                  2020-09-01 00:00:00                4833.130249                                  0.25416 NaN NaN NaN            NaN
+8                                                                                  2020-12-01 00:00:00                4745.873142                                 0.223787 NaN NaN NaN            NaN
+9                                                                                  2021-03-01 00:00:00                5952.362374                                 0.234153 NaN NaN NaN            NaN
+10                    
+=== rental-report-quarterly-data-tables :: Fig 7 source (317, 8)
+                                       0                             1         2   3                               4    5   6              7
+0   Figure 7 source: Rental vacancy rate                           NaN       NaN NaN                             NaN  NaN NaN  Contents page
+1                                    NaN                           NaN       NaN NaN                             NaN  NaN NaN            NaN
+2                                    NaN  Metro Melbourne vacancy rate       NaN NaN  Regional Victoria vacancy rate  NaN NaN       Figure 7
+3                                  Month           13 term henderson %       NaN NaN             13 term henderson %  NaN NaN            NaN
+4                    1999-09-01 00:00:00                      0.040757  4.075700 NaN                           0.045  4.5 NaN            NaN
+5                    1999-10-01 00:00:00                      0.040854  4.085400 NaN                             NaN  NaN NaN            NaN
+6                    1999-11-01 00:00:00                      0.040629  4.062867 NaN                             NaN  NaN NaN            NaN
+7                    1999-12-01 00:00:00                      0.040394  4.039367 NaN                           0.034  3.4 NaN            NaN
+8                    2000-01-01 00:00:00                      0.040197  4.019733 NaN                             NaN  NaN NaN            NaN
+9                    2000-02-01 00:00:00                       0.03991  3.990967 NaN                             NaN  NaN NaN            NaN
+10                   2000-03-01 00:00:00                       0.03938  3.938033 NaN                           0.028  2.8 NaN            NaN
+11                   2000-04-01 00:00:00                       0.03851  3.851000 NaN                             NaN  NaN NaN            NaN
+12                   2000-05-01 00:00:00                      0.037363  3.736300 NaN                             NaN  NaN NaN            NaN
+13                   2000-06-01 00:00:00                      0.036205  3.620533 NaN                           0.032  3.2 NaN            NaN
+=== rental-report-quarterly-data-tables :: Fig 8 source (24, 8)
+                                                                                 0            1         2            3   4   5   6              7
+0   Figure 8 source:  Affordable rental dwellings as percentage of all new rentals          NaN       NaN          NaN NaN NaN NaN  Contents page
+1                                                                              NaN          NaN       NaN          NaN NaN NaN NaN            NaN
+2                                                                              NaN  Victoria\n%  Metro\n%  Regional\n% NaN NaN NaN       Figure 8
+3                                                              2020-09-01 00:00:00        0.147     0.079        0.419 NaN NaN NaN            NaN
+4                                                              2020-12-01 00:00:00        0.116     0.071        0.352 NaN NaN NaN            NaN
+5                                                              2021-03-01 00:00:00        0.099     0.062        0.325 NaN NaN NaN            NaN
+6                                                              2021-06-01 00:00:00         0.13     0.093        0.337 NaN NaN NaN            NaN
+7                                                              2021-09-01 00:00:00        0.147     0.109        0.339 NaN NaN NaN            NaN
+8                                                              2021-12-01 00:00:00        0.135     0.103        0.306 NaN NaN NaN            NaN
+9                                                              2022-03-01 00:00:00        0.109     0.083        0.267 NaN NaN NaN            NaN
+10                                                             2022-06-01 00:00:00         0.11     0.085        0.245 NaN NaN NaN            NaN
+11                                                             2022-09-01 00:00:00        0.109      0.08        0.258 NaN NaN NaN            NaN
+12                                                             2022-12-01 00:00:00        0.123     0.092        0.274 NaN NaN NaN            NaN
+13                                                             2023-03-01 00:00:00          0.1     0.071        0.248 NaN NaN NaN            NaN
