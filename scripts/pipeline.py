@@ -584,8 +584,10 @@ def load_postcodes(state="VIC"):
         cands = []
         for pcode in dict.fromkeys(d["postcode"]):
             row = d[d["postcode"] == pcode].iloc[0]
-            cands.append({"pc": pcode, "lat": float(row["lat"]) if pd.notna(row["lat"]) else None,
-                          "lng": float(row["long"]) if pd.notna(row["long"]) else None,
+            la = row.get("Lat_precise") if pd.notna(row.get("Lat_precise")) else row["lat"]
+            lo = row.get("Long_precise") if pd.notna(row.get("Long_precise")) else row["long"]
+            cands.append({"pc": pcode, "lat": float(la) if pd.notna(la) else None,
+                          "lng": float(lo) if pd.notna(lo) else None,
                           "lga": row.get("lgaregion") if pd.notna(row.get("lgaregion")) else None,
                           "_ctx": norm(" ".join(str(row.get(c, "")) for c in ("lgaregion", "dc")))})
         out[norm(loc)] = cands

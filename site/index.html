@@ -43,6 +43,13 @@ tbody tr{cursor:pointer} tbody tr:hover{background:var(--bg)}
 .card.fs{position:fixed;inset:0;z-index:100;border-radius:0;border:none;padding:18px 24px;display:flex;flex-direction:column;overflow:hidden}
 .card.fs .tablewrap{max-height:none;flex:1}
 body.noscroll{overflow:hidden}
+.three{grid-template-columns:repeat(3,1fr)}@media(max-width:1100px){.three{grid-template-columns:1fr}}
+.score{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:50%;font-weight:700;font-size:17px;color:#fff;vertical-align:middle}
+.sbar{display:grid;grid-template-columns:120px 1fr 40px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.sbar .t{height:10px;background:var(--bg);border-radius:5px;overflow:hidden}.sbar .f{height:100%;background:var(--accent);border-radius:5px}
+.chip{display:inline-block;font-size:11px;padding:1px 7px;border-radius:999px;border:1px solid var(--line);color:var(--muted);margin-left:4px}
+.kv td{padding:7px 4px}
+.schools{max-height:300px;overflow:auto}
 @media(max-width:1440px){#tb td,thead th{padding:7px 4px;font-size:13px}.wrap{padding:20px 14px 50px}#rkcard:not(.fs){padding:14px}}
 .muted{color:var(--muted)} .note{font-size:12.5px;color:var(--muted)}
 .back{display:inline-block;margin-bottom:10px;text-decoration:none;font-size:14px}
@@ -107,7 +114,9 @@ fetch("data/"+STATE.toLowerCase()+".json",{cache:"no-cache"}).then(r=>r.json()).
     ${src.unit?`<a href="${esc(src.unit.url)}">${esc(src.unit.name)}</a>（单元中位价）；`:""}
     ${src.houseq?`<a href="${esc(src.houseq.url)}">VGV ${esc(src.houseq.name)}</a>${src.unitq?` / <a href="${esc(src.unitq.url)}">${esc(src.unitq.name)}</a>`:""}（最新季度中位价）；`:""}
     ${src.rent?`<a href="${esc(src.rent.url)}">DFFH ${esc(src.rent.name)}</a>（租金中位数，按 DFFH 区组）；`:""}
-    ${src.abs?`<a href="${esc(src.abs.url)}">${esc(src.abs.name)}</a>（人口、住宅结构）。`:""}
+    ${src.abs?`<a href="${esc(src.abs.url)}">${esc(src.abs.name)}</a>（人口、收入、住宅结构）；`:""}
+    ${src.crime?`<a href="${esc(src.crime.url)}">Crime Statistics Agency · ${esc(src.crime.name)}</a>（治安）；`:""}
+    ${src.schools?`<a href="${esc(src.schools.url)}">Dept of Education · ${esc(src.schools.name)}</a>（学校）。`:""}
     ${(src.house&&src.house.via||"").startsWith("wayback")?"房价文件因源站拦截自动化下载，取自 Internet Archive 存档副本。":""}
     收益率 = 年末季度移动年租金中位数 × 52 ÷ 当年中位价（独立屋用 3 房 house 租金，单元用 2 房 flat 租金），为毛收益率估算。仅供参考，不构成财务建议。`;
   window.addEventListener("hashchange",route); route();
@@ -140,11 +149,14 @@ const COLS=[
   ["pop","人口(2021)",s=>s.latest.pop,nf],
   ["popGrowth5","人口5年年化",s=>s.latest.popGrowth5,v=>fmtP(v,1)],
   ["unitShare","单元+联排占比",s=>s.latest.unitShare,v=>fmtP(v,1)],
+  ["crimeRate","犯罪/千人",s=>s.latest.crimeRate,v=>v==null?"–":v.toFixed(0)],
+  ["schools","学校数",s=>s.latest.schools||null,v=>v==null?"–":v],
+  ["score","投资评分",s=>s.latest.score,v=>v==null?"–":`<b>${v}</b>`],
 ];
 const RANKS=[
-  ["yieldHouse",-1,"独立屋收益率 高→低"],["yieldUnit",-1,"单元收益率 高→低"],
+  ["score",-1,"投资评分"],["yieldHouse",-1,"独立屋收益率 高→低"],["yieldUnit",-1,"单元收益率 高→低"],
   ["house",-1,"独立屋房价 高→低"],["house",1,"独立屋房价 低→高"],["unit",-1,"单元房价 高→低"],
-  ["gqq",-1,"季度涨幅"],["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],
+  ["gqq",-1,"季度涨幅"],["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],["crimeRate",1,"犯罪率 低→高"],["schools",-1,"学校数"],
 ];
 let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0, FS=false;
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&FS){document.getElementById("fsbtn")?.click()}});
@@ -200,7 +212,7 @@ function suburbView(s){
   const rankOf=k=>{const a=DB.suburbs.map(x=>x.latest[k]).filter(x=>x!=null).sort((a,b)=>b-a);const v=L[k];return v==null?"":` · 全州第 ${a.indexOf(v)+1}/${a.length}`};
   document.getElementById("app").innerHTML=`
   <a class="back" href="#">← 返回排行榜</a>
-  <h2 style="font-size:26px;margin-bottom:4px">${s.postcode?`<span style="color:var(--muted);font-weight:500">${s.postcode}</span> `:""}${esc(s.name)}${s.lga?` <span class="tag" style="font-size:12px;vertical-align:middle">${esc(s.lga)}</span>`:""}</h2>
+  <h2 style="font-size:26px;margin-bottom:4px">${s.postcode?`<span style="color:var(--muted);font-weight:500">${s.postcode}</span> `:""}${esc(s.name)}${s.lga?` <span class="tag" style="font-size:12px;vertical-align:middle">${esc(s.lga)}</span>`:""}${L.score!=null?` <span class="score" title="投资评分" style="background:${scoreColor(L.score)};width:38px;height:38px;font-size:15px">${L.score}</span>`:""}</h2>
   <p class="note" style="margin-top:0">${s.rentGroup?`租金数据：DFFH 区组「${esc(s.rentGroup)}」${s.rentMatch=="approx"?"（按邻近区名近似匹配）":""}`:isEst(s)?"租金为估算值：该区不在 DFFH 租金区组内，用 2021 年普查租金中位数按全州租金指数推算（所有房型）":"该区没有租金数据"}</p>
   <section class="grid kpis">
     <div class="card kpi"><div class="l">独立屋中位价 · ${L.houseAsOf||""}</div><div class="v">${L.houseQLow?"*":""}${fmtK(L.house)}</div><div class="s">${L.houseQN?`成交 ${L.houseQN} 套`:""}${L.gqq!=null?` · 环比 ${L.gqq>0?"+":""}${L.gqq}%`:""}${(L.gq1??L.g1)!=null?` · 同比 ${(L.gq1??L.g1)>0?"+":""}${L.gq1??L.g1}%`:""}${rankOf("house")}</div></div>
@@ -218,8 +230,11 @@ function suburbView(s){
     <div class="card"><h2>人口走势</h2><div class="chartbox"><canvas id="cPop"></canvas></div><p class="note">${s.sa2&&s.sa2.length?`ABS 每年估计常住人口（ERP），统计区域 SA2：${esc(s.sa2.join("、"))}（可能比该区略大）。`:"该区未匹配到 SA2，只显示 2021 年普查人口。"}</p></div>
     <div class="card"><h2>小户型 / 单元比例走势</h2><div class="chartbox"><canvas id="cDw"></canvas></div><p class="note">占已入住私人住宅比例。走势线为 SA2 级普查数据（2011/2016/2021）${dw21?`；该区 2021 年准确值：公寓 ${dw21.flat}%、联排 ${dw21.semi}%`:""}。</p></div>
   </section>
+  ${extraHTML(s)}
   <section class="grid two mt">${calcHTML()}</section>`;
   charts(s); calcInit(s);
+  document.querySelectorAll("tr[data-id]").forEach(tr=>tr.onclick=()=>location.hash=tr.dataset.id);
+  if(s.crime){const ys=Object.keys(s.crime.years).sort();line("cCrime",ys,[{label:"犯罪记录数",data:ys.map(y=>s.crime.years[y]),borderColor:css("--warn"),backgroundColor:css("--warn")}],v=>v==null?"":Math.round(v).toLocaleString());}
 }
 
 function line(id,labels,sets,yfmt){
@@ -261,6 +276,48 @@ function qtable(s){
     <tr><td>独立屋</td>${qs.map(q=>`<td>${fmtK((s.houseQ||{})[q])}</td>`).join("")}</tr>
     <tr><td>单元</td>${qs.map(q=>`<td>${fmtK((s.unitQ||{})[q])}</td>`).join("")}</tr></tbody></table>
     <p class="note">年度点为全年中位价；${qs.length?"季度点来自 Valuer-General 季度报告。":""}</p>`;
+}
+
+const scoreColor=v=>v==null?"var(--muted)":v>=70?"#1f6f5c":v>=50?"#c08a1e":"#b4542d";
+const CONF={high:"高（季度成交 ≥30 套）",medium:"中（季度成交 10–29 套）",low:"低（季度成交 <10 套，数字波动大）"};
+const DIV={A:"人身侵害",B:"财产与欺诈",C:"毒品",D:"公共秩序与安全",E:"司法程序",F:"其他"};
+const SPART={yieldHouse:"租金收益率",g5:"5年房价增长",popGrowth5:"人口增长",crimeRate:"治安（犯罪率低）",houseQN:"成交活跃度",gq1:"近1年房价"};
+function extraHTML(s){
+  const L=s.latest, M=DB.meta.vicMedian||{}, d=s.demo||{}, t=s.tenure, c=s.crime;
+  const W=DB.meta.scoreWeights||{};
+  const score=`<div class="card"><h2>投资评分 <span class="score" style="background:${scoreColor(L.score)}">${L.score??"–"}</span></h2>
+    ${L.scoreParts?Object.entries(L.scoreParts).map(([k,v])=>`<div class="sbar"><span>${SPART[k]} <span class="muted">${Math.round((W[k]||0)*100)}%</span></span><div class="t"><div class="f" style="width:${v}%;background:${scoreColor(v)}"></div></div><span style="text-align:right">${v}</span></div>`).join(""):'<p class="note">数据不足，无法评分</p>'}
+    <p class="note">每项是该区在全州的百分位（0–100），按括号内权重加权平均。仅为基于公开数据的相对排名，不构成投资建议。</p>
+    <p style="font-size:14px;margin:10px 0 0">数据可信度：<b>${L.confidence?CONF[L.confidence]:"–"}</b></p></div>`;
+  const demo=`<div class="card"><h2>区域概况（2021 普查）</h2><table class="kv">
+    <tr><td>人口</td><td>${s.pop2021?s.pop2021.toLocaleString():"–"}</td></tr>
+    <tr><td>住宅总数</td><td>${s.dw2021&&s.dw2021.total?s.dw2021.total.toLocaleString():"–"}</td></tr>
+    <tr><td>家庭收入中位数</td><td>${d.hhInc?fmt$(d.hhInc*52)+" / 年":"–"}</td></tr>
+    <tr><td>个人收入中位数</td><td>${d.persInc?fmt$(d.persInc*52)+" / 年":"–"}</td></tr>
+    <tr><td>年龄中位数</td><td>${d.age?d.age+" 岁":"–"}</td></tr>
+    <tr><td>平均每户人数</td><td>${d.hhSize??"–"}</td></tr>
+    <tr><td>完全自有 / 按揭 / 出租</td><td>${t?`${t.outright}% / ${t.mortgage}% / <b>${t.rented}%</b>`:"–"}</td></tr>
+    <tr><td>月供中位数</td><td>${d.mortgage?fmt$(d.mortgage)+" / 月":"–"}</td></tr>
+    <tr><td>普查周租中位数</td><td>${d.rent2021?fmt$(d.rent2021)+" / 周":"–"}</td></tr>
+    <tr><td>空置率</td><td class="muted">暂无免费区级数据</td></tr></table></div>`;
+  const safety=`<div class="card"><h2>治安</h2>${c?`
+    <div class="out" style="grid-template-columns:1fr 1fr"><div><div class="l">犯罪率（每千人）· ${c.latestYear}</div><div class="v" style="color:${c.rate!=null&&M.crimeRate!=null&&c.rate>M.crimeRate?"var(--warn)":"var(--accent)"}">${c.rate??"–"}</div></div>
+    <div><div class="l">全州各区中位数</div><div class="v">${M.crimeRate!=null?M.crimeRate.toFixed(0):"–"}</div></div></div>
+    <div class="chartbox" style="height:170px"><canvas id="cCrime"></canvas></div>
+    <table class="mt" style="font-size:13px">${Object.entries(c.div).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${DIV[k]||k}</td><td>${v.toLocaleString()} 起</td></tr>`).join("")}</table>
+    <p class="note">维州犯罪统计署（CSA）记录的犯罪数，截至 ${DB.meta.sources.crime?.yearEnding||""} ${c.latestYear}；犯罪率按 2021 年普查人口计算。商业区和交通枢纽的犯罪数往往偏高。</p>`:'<p class="note">该区没有犯罪统计数据。</p>'}</div>`;
+  const sch=s.schools||[], cnt=t=>sch.filter(x=>(x.t||"").toLowerCase().includes(t)).length;
+  const schools=`<div class="card"><h2>学校 <span class="muted" style="font-size:14px;font-weight:500">${sch.length} 所</span></h2>
+    ${sch.length?`<p class="note" style="margin-top:-6px">小学 ${cnt("primary")} · 中学 ${cnt("secondary")} · 中小学一贯制 ${cnt("pri/sec")} · 特殊 ${cnt("special")}</p>
+    <div class="schools"><table style="font-size:13.5px">${sch.map(x=>`<tr><td>${esc(x.n)}</td><td><span class="chip">${esc(x.t||"")}</span><span class="chip">${esc(x.s||"")}</span></td></tr>`).join("")}</table></div>
+    <p class="note">按学校地址所在区统计，来自维州教育部学校名录。</p>`:'<p class="note">名录中没有地址在该区的学校。</p>'}</div>`;
+  const nb=(s.nearby||[]).map(n=>({...n,s:DB.byId[n.id]})).filter(n=>n.s);
+  const near=`<div class="card"><h2>邻近区对比</h2>${nb.length?`<div style="overflow:auto"><table style="font-size:13.5px"><thead><tr><th>区</th><th>距离</th><th>独立屋价</th><th>屋收益率</th><th>单元收益率</th><th>5年年化</th><th>犯罪/千人</th><th>评分</th></tr></thead><tbody>
+    <tr style="background:var(--accent-soft)"><td><b>${esc(label(s))}</b></td><td>–</td><td>${fmtK(L.house)}</td><td>${fmtP(L.yieldHouse)}</td><td>${fmtP(L.yieldUnit)}</td><td>${fmtP(L.g5,1)}</td><td>${L.crimeRate??"–"}</td><td><b>${L.score??"–"}</b></td></tr>
+    ${nb.map(n=>{const x=n.s.latest;return `<tr data-id="${n.id}" style="cursor:pointer"><td>${esc(label(n.s))}</td><td>${n.km} km</td><td>${fmtK(x.house)}</td><td>${est(n.s,fmtP(x.yieldHouse))}</td><td>${fmtP(x.yieldUnit)}</td><td>${fmtP(x.g5,1)}</td><td>${x.crimeRate??"–"}</td><td>${x.score??"–"}</td></tr>`}).join("")}
+    <tr class="muted"><td>维州各区中位数</td><td></td><td>${fmtK(M.house)}</td><td>${fmtP(M.yieldHouse)}</td><td>${fmtP(M.yieldUnit)}</td><td>${fmtP(M.g5,1)}</td><td>${M.crimeRate!=null?M.crimeRate.toFixed(0):"–"}</td><td></td></tr>
+    </tbody></table></div><p class="note">25 公里内最近的区，按距离排序；点击可跳转。</p>`:'<p class="note">没有坐标数据。</p>'}</div>`;
+  return `<section class="grid three mt">${score}${demo}${safety}</section><section class="grid two mt">${near}${schools}</section>`;
 }
 
 /* ---------------- calculator ---------------- */
