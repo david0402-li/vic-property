@@ -33,6 +33,8 @@
   "2024": 880000,
   "2025": 905500
  },
+ "houseQ": null,
+ "unitQ": null,
  "rent": {
   "f1": {
    "2010-03": 285,
@@ -571,6 +573,10 @@
  "latest": {
   "house": 1722000,
   "unit": 905500,
+  "houseAsOf": "2025",
+  "unitAsOf": "2025",
+  "houseAnnual": 1722000,
+  "unitAnnual": 905500,
   "year": 2025,
   "rentH3": 640,
   "rentF2": 640,
@@ -580,6 +586,7 @@
   "rentQ": "2025-09",
   "yieldHouse": 1.93,
   "yieldUnit": 3.68,
+  "gq1": null,
   "g1": 4.3,
   "g5": 5.7,
   "g10": 3.6,

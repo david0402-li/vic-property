@@ -4,6 +4,20 @@
 [unit] CKAN victorian-property-sales-report-median-unit-by-suburb-time-series
   downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx -> vpsr_unit.xlsx (81 KB) via direct
   unit: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 463 suburbs
+[houseq] CKAN victorian-property-sales-report-median-house-by-suburb
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls -> vpsr_houseq.xls (255 KB) via direct
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 658, in main
+    raise RuntimeError(f"only {len(data)} suburbs parsed")
+RuntimeError: only 0 suburbs parsed
+
+[unitq] CKAN victorian-property-sales-report-median-unit-by-suburb
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via direct
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 658, in main
+    raise RuntimeError(f"only {len(data)} suburbs parsed")
+RuntimeError: only 0 suburbs parsed
+
 [rent] CKAN rental-report-quarterly-moving-annual-rents-by-suburb
   downloaded https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel -> dffh_rents.xlsx (1109 KB) via direct
   rents: sheet '1 bedroom flat' -> f1: 145 suburb groups, 103 quarters
@@ -29,3 +43,5 @@
 counts: {'suburbs': 803, 'rentGroups': 146, 'withRent': 272, 'withRentEst': 500, 'withYield': 768, 'withCensus': 763, 'withErp': 458, 'withPostcode': 797}
 
 ERRORS:
+houseq: only 0 suburbs parsed
+unitq: only 0 suburbs parsed

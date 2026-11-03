@@ -1,0 +1,10 @@
+('2026-03-31', '2026-09-09', '2026-09-29T01:22:44.672146') | March 2026 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls
+('2025-12-31', '', '2026-06-11T23:20:52.989589') |  December 2025 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0031/773743/median-unit-q4-2025.xls
+('2025-09-30', '', '2026-06-11T23:16:21.639805') | September 2025 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0028/766720/median-unit-q3-2025.xls
+('2025-06-30', '2025-12-02', '2026-01-20T04:06:53.288739') | June 2025 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0025/762145/median-unit-q2-2025.xls
+('2025-03-31', '2025-09-09', '2025-09-10T03:30:54.351337') | March 2025 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0038/758495/median-unit-q1-2025.xls
+('2024-12-31', '', '2026-06-11T23:28:15.142716') |  December 2024 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0025/752704/median-unit-q4-2024.xls
+('2024-09-30', '2025-03-05', '2025-04-22T03:07:08.506528') | September 2024 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0036/739296/vpsr-median-unit-q3-2024.xls
+('2024-06-30', '2024-12-06', '2025-02-27T00:49:02.572518') | June 2024 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0028/728056/Median-Unit-2nd-Qtr-2024.xls
+('2024-03-31', '', '2024-09-06T03:19:42.498637') | March 2024 Quarter | XLS | https://www.land.vic.gov.au/__data/assets/excel_doc/0023/716054/Median-Unit-1st-qtr-2024.xls
+('2023-12-31', '2024-06-30', '2024-07-24T04:53:33.995362') | December 2023 Quarter | XLS | https://web.archive.org/web/20240718210312/https://www.land.vic.gov.au/__data/assets/excel_doc/0024/706335/median-unit-q4-2023.xls
