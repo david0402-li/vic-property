@@ -476,10 +476,29 @@ def load_abs():
             if occ > 0:
                 out["sal"].setdefault(clean_sal(reg), {})["dw2021"] = {
                     "flat": round(f("3") / occ * 100, 1), "semi": round(f("2") / occ * 100, 1),
-                    "house": round(f("11") / occ * 100, 1), "n": int(occ)}
+                    "house": round(f("11") / occ * 100, 1), "n": int(occ), "total": int(f("_T")) or None}
         log(f"  SAL dwelling structure: {len(piv)} suburbs")
     except Exception as e:
         ERRORS.append(f"ABS SAL dwellings: {e}"); log(traceback.format_exc())
+
+    # SAL 2021 tenure (G37: TENLLD.STRD.REGION.REGION_TYPE.STATE) -> owner / renter shares
+    try:
+        df = abs_csv("C21_G37_SAL", f"._T..SAL.{STATE_CODE}")
+        df = df[(df["STATE"] == STATE_CODE)]
+        if "STRD" in df:
+            df = df[df["STRD"] == "_T"]
+        debug_write("abs_g37_codes.txt", str(sorted(set(zip(df["TENLLD"], df.get("Tenure and landlord type", df["TENLLD"]))))))
+        piv = df.pivot_table(index="Region", columns="TENLLD", values="OBS_VALUE", aggfunc=lambda x: float(x.iloc[0]))
+        for reg, r in piv.iterrows():
+            g = lambda c: float(r[c]) if c in r and pd.notna(r[c]) else 0.0  # noqa
+            tot = g("_T")
+            if tot > 0:
+                out["sal"].setdefault(clean_sal(reg), {})["tenure"] = {
+                    "outright": round(g("1") / tot * 100, 1), "mortgage": round(g("2") / tot * 100, 1),
+                    "rented": round(g("R_T") / tot * 100, 1)}
+        log(f"  SAL tenure: {len(piv)} suburbs")
+    except Exception as e:
+        ERRORS.append(f"ABS SAL tenure: {e}"); log(traceback.format_exc())
 
     # SAL 2021 median weekly rent (G02 selected medians)
     try:
@@ -487,12 +506,20 @@ def load_abs():
         df = df[df["STATE"] == STATE_CODE]
         labcol = [c for c in df.columns if not c.isupper() and df[c].astype(str).str.contains("rent", case=False).any()]
         if labcol:
-            df = df[df[labcol[0]].str.contains("rent", case=False, na=False)]
+            lc = labcol[0]
+            debug_write("abs_g02_labels.txt", "\n".join(sorted(df[lc].dropna().unique())))
+            pats = {"rent2021": r"median rent", "age": r"median age", "hhInc": r"median total household income",
+                    "persInc": r"median total personal income", "mortgage": r"median mortgage",
+                    "hhSize": r"average household size"}
             for _, r in df.iterrows():
                 v = float(r["OBS_VALUE"]) if pd.notna(r["OBS_VALUE"]) else 0
-                if v > 0:
-                    out["sal"].setdefault(clean_sal(r["Region"]), {})["rent2021"] = v
-            log(f"  SAL census median rent: {len(df)} rows via label col {labcol[0]}")
+                if v <= 0:
+                    continue
+                lab = str(r[lc]).lower()
+                for k, pat in pats.items():
+                    if re.search(pat, lab):
+                        out["sal"].setdefault(clean_sal(r["Region"]), {})[k] = v
+            log(f"  SAL census medians via label col {lc}")
     except Exception as e:
         ERRORS.append(f"ABS SAL rent: {e}"); log(traceback.format_exc())
 
@@ -584,6 +611,89 @@ def postcode_for(key, pcs):
     if m and m.group(1) in pcs:
         return dict(pcs[m.group(1)][0], lat=None, lng=None)
     return {}
+
+
+# ---------------------------------------------------------------- crime (Crime Statistics Agency)
+PKG_CRIME = "data-tables-recorded-offences"
+
+
+def load_crime():
+    r = get(CKAN + PKG_CRIME)
+    res = [x for x in r.json()["result"]["resources"] if "lga" in (x.get("name") or "").lower()
+           and re.search(r"xlsx", (x.get("format") or "") + x.get("url", ""), re.I)]
+    res.sort(key=lambda x: (x.get("created") or ""), reverse=True)
+    if not res:
+        raise RuntimeError("no LGA recorded offences resource")
+    url = res[0]["url"]
+    path, via = download_cached(url, "crime.xlsx")
+    df = pd.read_excel(path, sheet_name="Table 03")
+    df.columns = [str(c).strip() for c in df.columns]
+    ycol = "Year"
+    ncol = [c for c in df.columns if "suburb" in c.lower()][0]
+    pcol = [c for c in df.columns if "postcode" in c.lower()][0]
+    dcol = [c for c in df.columns if "division" in c.lower()][0]
+    ccol = [c for c in df.columns if "count" in c.lower()][0]
+    df["_k"] = df[ncol].map(norm)
+    df["_div"] = df[dcol].astype(str).str[0]
+    tot = df.groupby(["_k", ycol])[ccol].sum()
+    latest_year = int(df[ycol].max())
+    div = df[df[ycol] == latest_year].groupby(["_k", "_div"])[ccol].sum()
+    out = defaultdict(lambda: {"years": {}, "div": {}})
+    for (k, y), v in tot.items():
+        out[k]["years"][int(y)] = int(v)
+    for (k, d), v in div.items():
+        out[k]["div"][d] = int(v)
+    log(f"  crime: {len(out)} suburbs, years {int(df[ycol].min())}-{latest_year} ({res[0].get('name')})")
+    return dict(out), {"name": res[0].get("name"), "url": url, "via": via, "latestYear": latest_year,
+                       "yearEnding": str(df["Year ending"].iloc[0]) if "Year ending" in df else ""}
+
+
+# ---------------------------------------------------------------- schools (Dept of Education)
+def load_schools():
+    r = get("https://discover.data.vic.gov.au/api/3/action/package_search?rows=20&q=name:school-locations-*")
+    pk = [p for p in r.json()["result"]["results"] if re.fullmatch(r"school-locations-\d{4}", p["name"])]
+    if not pk:
+        r = get("https://discover.data.vic.gov.au/api/3/action/package_search?rows=20&q=school%20locations")
+        pk = [p for p in r.json()["result"]["results"] if re.fullmatch(r"school-locations-\d{4}", p["name"])]
+    pk.sort(key=lambda p: p["name"], reverse=True)
+    last = None
+    for p in pk[:3]:
+        for res in p["resources"]:
+            try:
+                rr = get(res["url"], tries=2, timeout=120)
+                df = pd.read_csv(io.BytesIO(rr.content), encoding="latin1", dtype=str)
+                if "School_Name" not in df:
+                    continue
+                out = defaultdict(list)
+                if "School_Status" in df:
+                    df = df[df["School_Status"].fillna("O") == "O"]
+                for _, x in df.iterrows():
+                    out[norm(x["Address_Town"])].append({
+                        "n": x["School_Name"], "t": x.get("School_Type"), "s": x.get("Education_Sector"),
+                        "pc": x.get("Address_Postcode")})
+                log(f"  schools: {len(df)} schools in {len(out)} towns ({p['name']})")
+                return dict(out), {"name": p["title"], "url": res["url"]}
+            except Exception as e:
+                last = e
+                log(f"  schools {res['url']} failed: {e}")
+    raise RuntimeError(f"schools unavailable: {last}")
+
+
+# ---------------------------------------------------------------- scoring helpers
+def pct_rank(values):
+    """value -> percentile (0..100) among non-null values"""
+    vs = sorted(v for v in values if v is not None)
+    n = len(vs)
+    import bisect
+    return lambda v: None if v is None or n < 2 else round(bisect.bisect_left(vs, v) / (n - 1) * 100)
+
+
+def haversine(a, b):
+    import math
+    R = 6371
+    la1, lo1, la2, lo2 = map(math.radians, (a[0], a[1], b[0], b[1]))
+    h = math.sin((la2 - la1) / 2) ** 2 + math.cos(la1) * math.cos(la2) * math.sin((lo2 - lo1) / 2) ** 2
+    return 2 * R * math.asin(math.sqrt(h))
 
 
 # ---------------------------------------------------------------- last-good store
@@ -724,6 +834,27 @@ def main():
         pcs = pcs or {}
         ERRORS.append(f"postcodes: {e}")
 
+    crime, schools = {}, {}
+    for name, fn in (("crime", load_crime), ("schools", load_schools)):
+        try:
+            log(f"[{name}]")
+            data, m = fn()
+            store_save(name, data, dict(m, fetched=meta["generated"]))
+            meta["sources"][name] = m
+        except Exception as e:
+            log(traceback.format_exc())
+            data, m = store_load(name)
+            if data:
+                meta["sources"][name] = dict(m, stale=True)
+                ERRORS.append(f"{name}: 本次下载失败，沿用 {m.get('fetched','')} 的数据")
+            else:
+                data = {}
+                ERRORS.append(f"{name}: {e}")
+        if name == "crime":
+            crime = {k: {"years": {int(y): v for y, v in d["years"].items()}, "div": d["div"]} for k, d in data.items()}
+        else:
+            schools = data
+
     gidx = rent_group_index(rents.keys())
     # statewide rent index: median across DFFH groups of 'all properties' per quarter
     qs = defaultdict(list)
@@ -791,6 +922,9 @@ def main():
             "erp": dict(sorted(erp.items())) or None,
             "dwTs": dw_ts or None,
             "pop2021": sal.get("pop2021"), "dw2021": dw21,
+            "demo": {k: sal.get(k) for k in ("age", "hhInc", "persInc", "mortgage", "hhSize", "rent2021")},
+            "tenure": sal.get("tenure"),
+            "crime": None, "schools": None,
             "latest": {
                 "house": hNow, "unit": uNow, "houseAsOf": hAsOf, "unitAsOf": uAsOf,
                 "houseAnnual": latest(h), "unitAnnual": latest(u),
@@ -809,8 +943,50 @@ def main():
                 "unitShare": round(dw21["flat"] + dw21["semi"], 1) if dw21 else None,
             },
         }
+        # crime: match by name (+ strip parentheses)
+        ck = key if key in crime else re.sub(r"\s*\(.*?\)", "", key).strip()
+        c = crime.get(ck)
+        if c:
+            pop = sal.get("pop2021")
+            ly = max(c["years"])
+            rec["crime"] = {"years": c["years"], "div": c["div"], "latestYear": ly,
+                            "rate": round(c["years"][ly] / pop * 1000, 1) if pop and pop >= 200 else None}
+            rec["latest"]["crimeRate"] = rec["crime"]["rate"]
+        sc = schools.get(ck)
+        if sc:
+            rec["schools"] = sorted(sc, key=lambda x: (str(x.get("t")), x["n"]))
+        rec["latest"]["schools"] = len(sc) if sc else 0
         suburbs.append(rec)
 
+    # ---- nearby suburbs (by postcode-list coordinates)
+    pts = [(s_, (s_["lat"], s_["lng"])) for s_ in suburbs if s_.get("lat") and s_.get("lng")]
+    for s_ in suburbs:
+        if not s_.get("lat"):
+            continue
+        d = sorted(((haversine((s_["lat"], s_["lng"]), p), o["id"]) for o, p in pts if o is not s_), key=lambda x: x[0])
+        s_["nearby"] = [{"id": i, "km": round(km, 1)} for km, i in d[:8] if km < 25]
+
+    # ---- investment score: transparent percentile blend
+    L = [s_["latest"] for s_ in suburbs]
+    pr = {k: pct_rank([x.get(k) for x in L]) for k in ("yieldHouse", "g5", "popGrowth5", "crimeRate", "houseQN", "gq1")}
+    W = {"yieldHouse": 0.30, "g5": 0.25, "popGrowth5": 0.15, "crimeRate": 0.15, "houseQN": 0.10, "gq1": 0.05}
+    for s_ in suburbs:
+        x = s_["latest"]
+        parts = {}
+        for k in W:
+            v = pr[k](x.get(k))
+            if v is not None:
+                parts[k] = 100 - v if k == "crimeRate" else v
+        if len(parts) >= 3:
+            wsum = sum(W[k] for k in parts)
+            x["score"] = round(sum(parts[k] * W[k] for k in parts) / wsum)
+            x["scoreParts"] = parts
+        n = x.get("houseQN")
+        x["confidence"] = None if n is None else ("high" if n >= 30 else "medium" if n >= 10 else "low")
+
+    meta["vicMedian"] = {k: (lambda a: a[len(a) // 2] if a else None)(sorted(v for v in (s_["latest"].get(k) for s_ in suburbs) if v is not None))
+                         for k in ("yieldHouse", "yieldUnit", "house", "unit", "crimeRate", "g5")}
+    meta["scoreWeights"] = W
     meta["errors"] = ERRORS
     meta["counts"] = {"suburbs": len(suburbs), "rentGroups": len(rents),
                       "withRent": sum(1 for s in suburbs if s["rentGroup"]),
@@ -818,7 +994,9 @@ def main():
                       "withYield": sum(1 for s in suburbs if s["latest"]["yieldHouse"] is not None),
                       "withCensus": sum(1 for s in suburbs if s["pop2021"]),
                       "withErp": sum(1 for s in suburbs if s["erp"]),
-                      "withPostcode": sum(1 for s in suburbs if s["postcode"])}
+                      "withPostcode": sum(1 for s in suburbs if s["postcode"]),
+                      "withCrime": sum(1 for s in suburbs if s["crime"]),
+                      "withSchools": sum(1 for s in suburbs if s["schools"])}
     log("counts:", meta["counts"])
     with open(os.path.join(OUT, "vic.json"), "w", encoding="utf-8") as f:
         json.dump({"meta": meta, "suburbs": suburbs}, f, ensure_ascii=False, separators=(",", ":"))
