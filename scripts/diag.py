@@ -1,21 +1,20 @@
-import os, re, io, json
+import os, io
 from curl_cffi import requests as cr
 import pandas as pd
 out=[]
 def rec(*a):
     s=" ".join(map(str,a)); print(s,flush=True); out.append(s)
-def get(u,t=90): return cr.get(u,impersonate="chrome",timeout=t)
-for q in ["school locations","crime suburb recorded offences","crime statistics postcode suburb"]:
-    r=get("https://discover.data.vic.gov.au/api/3/action/package_search?rows=8&q="+q.replace(" ","%20"))
-    for p in r.json()["result"]["results"]:
-        rec("## pkg",p["name"],"|",p["title"],"|",p.get("organization",{}).get("title"))
-        for x in sorted(p["resources"],key=lambda x:x.get("created") or "",reverse=True)[:4]:
-            rec("    ",x.get("format"),x.get("name"),x.get("url"))
-# try crime stats site
-for u in ["https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data",
-          "https://files.crimestatistics.vic.gov.au/"]:
+u="https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Recorded_Offences_Year_Ending_June_2026.xlsx"
+r=cr.get(u,impersonate="chrome",timeout=180); rec("crime",r.status_code,len(r.content),r.content[:4])
+x=pd.read_excel(io.BytesIO(r.content),sheet_name=None,header=None)
+for sn,df in x.items():
+    rec(f"=== {sn} {df.shape}"); rec(df.head(8).to_string()[:2500])
+    m=df.apply(lambda row: row.astype(str).str.contains("Glen Waverley",case=False).any(),axis=1)
+    if m.any(): rec("GW rows:\n"+df[m].head(12).to_string()[:3000])
+for u in ["https://content.vic.gov.au/DE-School-Locations%20-2026","https://www.education.vic.gov.au/Documents/about/research/datavic/dv402-SchoolLocations2025.csv"]:
+    r=cr.get(u,impersonate="chrome",timeout=120); rec("school",u,r.status_code,len(r.content),r.headers.get("content-type"),r.content[:200])
     try:
-        r=get(u); rec("##",u,r.status_code,len(r.content)); 
-        for m in re.findall(r'href="([^"]+\.(?:xlsx|zip|csv))"',r.text)[:30]: rec("   link",m)
-    except Exception as e: rec(u,"ERR",e)
-os.makedirs("debug",exist_ok=True); open("debug/diag.txt","w").write("\n".join(out))
+        df=pd.read_csv(io.BytesIO(r.content),encoding="latin1"); rec(list(df.columns)); rec(df.head(3).to_string()[:1500])
+        rec(df[df.apply(lambda row: row.astype(str).str.contains("Glen Waverley",case=False).any(),axis=1)].to_string()[:3000])
+    except Exception as e: rec("ERR",e)
+open("debug/diag.txt","w").write("\n".join(out))
