@@ -461,6 +461,56 @@ def load_abs():
     return out
 
 
+# ---------------------------------------------------------------- postcodes
+POSTCODE_URL = "https://raw.githubusercontent.com/matthewproctor/australianpostcodes/master/australian_postcodes.csv"
+POSTCODE_MANUAL = {  # VPSR sub-localities that aren't official localities in the postcode list
+    "WESTGARTH": "3070", "JOLIMONT": "3002", "FISHERMANS BEND": "3207", "SANCTUARY LAKES": "3030",
+    "WESTALL": "3169", "LARA LAKE": "3212", "WOOLAMAI WATERS": "3925", "COWES WEST": "3922",
+    "HASTINGS WEST": "3915", "ROSEBUD SOUTH": "3939", "WENDOUREE WEST": "3355",
+    "KANGAROO GROUND SOUTH": "3097",
+}
+
+
+def load_postcodes(state="VIC"):
+    r = get(POSTCODE_URL, tries=3, timeout=120)
+    df = pd.read_csv(io.BytesIO(r.content), dtype=str)
+    df = df[df["state"] == state]
+    out = {}
+    for loc, g in df.groupby("locality"):
+        da = g["type"].fillna("").str.contains("Delivery Area")
+        d = pd.concat([g[da], g[~da]])
+        cands = []
+        for pcode in dict.fromkeys(d["postcode"]):
+            row = d[d["postcode"] == pcode].iloc[0]
+            cands.append({"pc": pcode, "lat": float(row["lat"]) if pd.notna(row["lat"]) else None,
+                          "lng": float(row["long"]) if pd.notna(row["long"]) else None,
+                          "lga": row.get("lgaregion") if pd.notna(row.get("lgaregion")) else None,
+                          "_ctx": norm(" ".join(str(row.get(c, "")) for c in ("lgaregion", "dc")))})
+        out[norm(loc)] = cands
+    log(f"  postcodes: {len(out)} {state} localities")
+    return out
+
+
+def postcode_for(key, pcs):
+    k = re.sub(r"\s*\(.*?\)", "", key).strip()
+    qual = re.search(r"\((.*?)\)", key)
+    for c in (key, k):
+        if c in pcs:
+            cands = pcs[c]
+            if qual and len(cands) > 1:
+                words = [w for w in qual.group(1).split() if len(w) > 2]
+                for x in cands:
+                    if any(w in x.get("_ctx", "") for w in words if w != "GREATER"):
+                        return x
+            return cands[0]
+    if k in POSTCODE_MANUAL:
+        return {"pc": POSTCODE_MANUAL[k], "lat": None, "lng": None, "lga": None}
+    m = re.match(rf"^(.*?)\s+{COMPASS}$", k)
+    if m and m.group(1) in pcs:
+        return dict(pcs[m.group(1)][0], lat=None, lng=None)
+    return {}
+
+
 # ---------------------------------------------------------------- last-good store
 def store_save(name, obj, meta):
     with open(os.path.join(STORE, name + ".json"), "w", encoding="utf-8") as f:
@@ -562,6 +612,17 @@ def main():
     meta["sources"]["abs"] = {"name": "ABS Data API (Census 2021 G01/G36 SAL, T18 SA2; ERP by SA2)",
                               "url": "https://data.api.abs.gov.au"}
 
+    try:
+        log("[postcodes]")
+        pcs = load_postcodes()
+        store_save("postcodes", pcs, {"fetched": meta["generated"]})
+        meta["sources"]["postcode"] = {"name": "matthewproctor/australianpostcodes", "url": POSTCODE_URL}
+    except Exception as e:
+        log(traceback.format_exc())
+        pcs, _ = store_load("postcodes")
+        pcs = pcs or {}
+        ERRORS.append(f"postcodes: {e}")
+
     gidx = rent_group_index(rents.keys())
     # statewide rent index: median across DFFH groups of 'all properties' per quarter
     qs = defaultdict(list)
@@ -604,8 +665,10 @@ def main():
 
         latest = lambda s: s[max(s)] if s else None  # noqa
         dw21 = sal.get("dw2021")
+        pcinfo = {k: v for k, v in postcode_for(key, pcs).items() if not k.startswith("_")}
         rec = {
-            "id": slug(key), "name": title(key), "rentGroup": g, "rentMatch": how,
+            "id": slug(key), "name": title(key), "postcode": pcinfo.get("pc"),
+            "lat": pcinfo.get("lat"), "lng": pcinfo.get("lng"), "lga": pcinfo.get("lga"), "rentGroup": g, "rentMatch": how,
             "house": h, "unit": u, "rent": {t: {q: v for q, v in ser.items() if q >= "2010"} for t, ser in rq.items()},
             "yieldHouse": yh, "yieldUnit": yu,
             "sa2": [d["name"] for d in sa2s],
@@ -632,7 +695,8 @@ def main():
                       "withRentEst": sum(1 for s in suburbs if s["rentMatch"] == "census-est"),
                       "withYield": sum(1 for s in suburbs if s["latest"]["yieldHouse"] is not None),
                       "withCensus": sum(1 for s in suburbs if s["pop2021"]),
-                      "withErp": sum(1 for s in suburbs if s["erp"])}
+                      "withErp": sum(1 for s in suburbs if s["erp"]),
+                      "withPostcode": sum(1 for s in suburbs if s["postcode"])}
     log("counts:", meta["counts"])
     with open(os.path.join(OUT, "vic.json"), "w", encoding="utf-8") as f:
         json.dump({"meta": meta, "suburbs": suburbs}, f, ensure_ascii=False, separators=(",", ":"))

@@ -114,9 +114,10 @@ function route(){
 /* ---------------- list view (rankings) ---------------- */
 const nf=v=>v==null?"–":Math.round(v).toLocaleString();
 const isEst=s=>s.rentMatch=="census-est";
+const label=s=>(s.postcode?s.postcode+" ":"")+s.name;
 const est=(s,txt)=>isEst(s)&&txt!="–"?`<span title="估算：2021 普查租金 × 全州租金指数" style="color:var(--muted)">≈</span>${txt}`:txt;
 const COLS=[
-  ["name","区",s=>s.name],
+  ["name","区号 · 区",s=>label(s)],
   ["yieldHouse","屋收益率",s=>s.latest.yieldHouse,fmtP,1],
   ["yieldUnit","单元收益率",s=>s.latest.yieldUnit,fmtP,1],
   ["house","独立屋中位价",s=>s.latest.house,fmtK],
@@ -150,7 +151,7 @@ function listView(){
     <h2>排行榜</h2>
     <div class="rk">${RANKS.map(([k,d,l])=>`<button data-k="${k}" data-d="${d}" class="${SORT.k==k&&SORT.dir==d?"on":""}">${l}</button>`).join("")}</div>
     <div class="controls">
-      <input id="q" placeholder="搜索区名，例如 Glen Waverley" value="${esc(Q)}">
+      <input id="q" placeholder="搜索区名或邮编，例如 Glen Waverley 或 3150" value="${esc(Q)}">
       <select id="min"><option value="0">全部价位</option><option value="-600000">屋价 ≤ $600K</option><option value="-800000">屋价 ≤ $800K</option><option value="-1000000">屋价 ≤ $1M</option><option value="1000000">屋价 ≥ $1M</option><option value="2000000">屋价 ≥ $2M</option></select>
       <select id="ty"><option value="0">全部租金数据</option><option value="1">只看 DFFH 实测租金</option></select>
       <select id="pp"><option value="0">全部人口规模</option><option value="1000">人口 ≥ 1,000</option><option value="5000">人口 ≥ 5,000</option><option value="10000">人口 ≥ 10,000</option></select>
@@ -167,11 +168,12 @@ function listView(){
 }
 function rows(){
   const col=COLS.find(c=>c[0]==SORT.k), q=Q.trim().toLowerCase();
+  const key=SORT.k=="name"?(s=>s.name):col[2];
   let list=DB.suburbs.filter(s=>(MIN==0||(MIN>0?(s.latest.house||0)>=MIN:(s.latest.house!=null&&s.latest.house<=-MIN))) && (!MINSALES||!isEst(s)) && (!MINPOP||(s.latest.pop||0)>=MINPOP));
   list=list.filter(s=>col[2](s)!=null||SORT.k=="name");
-  list.sort((a,b)=>{const x=col[2](a),y=col[2](b); return (x>y?1:x<y?-1:0)*SORT.dir});
+  list.sort((a,b)=>{const x=key(a),y=key(b); return (x>y?1:x<y?-1:0)*SORT.dir});
   list.forEach((s,i)=>s._rank=i+1);
-  const shown=q?list.filter(s=>s.name.toLowerCase().includes(q)):list;
+  const shown=q?list.filter(s=>label(s).toLowerCase().includes(q)):list;
   const medal=r=>r<=3?`<span class="medal m${r}">${r}</span>`:r;
   document.getElementById("tb").innerHTML=shown.slice(0,500).map(s=>`<tr data-id="${s.id}"><td class="rank">${medal(s._rank)}</td>${COLS.map(c=>{const t=c[3]?c[3](c[2](s)):esc(c[2](s));return `<td>${c[4]?est(s,t):t}</td>`}).join("")}</tr>`).join("");
   document.getElementById("cnt").textContent=`按「${col[1]}」排名，共 ${list.length} 个有数据的区${q?`，搜索结果 ${shown.length} 个（名次为全州排名）`:""}${shown.length>500?"，仅显示前 500 名":""}。带 ≈ 的为估算租金/收益率（该区不在 DFFH 租金区组内）。点击某一行查看详情和走势图。`;
@@ -184,7 +186,7 @@ function suburbView(s){
   const rankOf=k=>{const a=DB.suburbs.map(x=>x.latest[k]).filter(x=>x!=null).sort((a,b)=>b-a);const v=L[k];return v==null?"":` · 全州第 ${a.indexOf(v)+1}/${a.length}`};
   document.getElementById("app").innerHTML=`
   <a class="back" href="#">← 返回排行榜</a>
-  <h2 style="font-size:26px;margin-bottom:4px">${esc(s.name)}</h2>
+  <h2 style="font-size:26px;margin-bottom:4px">${s.postcode?`<span style="color:var(--muted);font-weight:500">${s.postcode}</span> `:""}${esc(s.name)}${s.lga?` <span class="tag" style="font-size:12px;vertical-align:middle">${esc(s.lga)}</span>`:""}</h2>
   <p class="note" style="margin-top:0">${s.rentGroup?`租金数据：DFFH 区组「${esc(s.rentGroup)}」${s.rentMatch=="approx"?"（按邻近区名近似匹配）":""}`:isEst(s)?"租金为估算值：该区不在 DFFH 租金区组内，用 2021 年普查租金中位数按全州租金指数推算（所有房型）":"该区没有租金数据"}</p>
   <section class="grid kpis">
     <div class="card kpi"><div class="l">独立屋中位价</div><div class="v">${fmtK(L.house)}</div><div class="s">${L.year||""}${L.g1!=null?` · 1年 ${L.g1>0?"+":""}${L.g1}%`:""}${rankOf("house")}</div></div>
