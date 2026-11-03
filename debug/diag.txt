@@ -1,82 +1,118 @@
-## pkg school-locations-2025 | School Locations 2025 | Department of Education - Performance and Evaluation Division
-     CSV School Locations 2025 https://www.education.vic.gov.au/Documents/about/research/datavic/dv402-SchoolLocations2025.csv
-## pkg school-locations-2026 | School Locations 2026 | Department of Education - Performance and Evaluation Division
-     CSV School Locations 2026 https://content.vic.gov.au/DE-School-Locations%20-2026
-## pkg school-locations-time-series | School Locations 2019 | Department of Education
-     CSV School locations 2019 https://www.education.vic.gov.au/Documents/about/research/datavic/dv279-schoollocations2019.csv
-     CSV school locations 2017 https://www.education.vic.gov.au/Documents/about/research/datavic/dv244-allschoolslist2017.csv
-     CSV school locations 2016 https://www.education.vic.gov.au/Documents/about/research/datavic/dv212-allschoolslist2016.csv
-     CSV school locations 2015 https://www.education.vic.gov.au/Documents/about/research/datavic/dv165-allschoolslocationlist2015.csv
-## pkg school-locations-2020 | School Locations 2020 | Department of Education
-     CSV School Location 2020 https://www.education.vic.gov.au/Documents/about/research/datavic/dv296-schoollocations2020.csv
-## pkg school-locations-2021 | School Locations 2021 | Department of Education
-     CSV School Locations - 2021 https://www.education.vic.gov.au/Documents/about/research/datavic/dv309_schoollocations2021.csv
-## pkg school-locations-2023 | School Locations 2023 | Department of Education
-     CSV School Locations 2023 https://www.education.vic.gov.au/Documents/about/research/datavic/dv346-schoollocations2023.csv
-## pkg school-locations-2024 | School Locations 2024 | Department of Education
-     CSV School Locations 2024 https://www.education.vic.gov.au/Documents/about/research/datavic/dv378_DataVic-SchoolLocations-2024.csv
-## pkg school-crossing-locations-in-city-of-casey | School Crossing Locations in City of Casey | City of Casey
-     XLS School Crossing Locations in City of Casey XLS https://data.casey.vic.gov.au/api/v2/catalog/datasets/school-crossings/exports/xls
-     SHP School Crossing Locations in City of Casey SHP https://data.casey.vic.gov.au/api/v2/catalog/datasets/school-crossings/exports/shp
-     KML School Crossing Locations in City of Casey KML https://data.casey.vic.gov.au/api/v2/catalog/datasets/school-crossings/exports/kml
-     GeoJSON School Crossing Locations in City of Casey GEOJSON https://data.casey.vic.gov.au/api/v2/catalog/datasets/school-crossings/exports/geojson
-## pkg data-tables-recorded-offences | Crime Statistics Agency Data tables - Recorded offences | Crime Statistics Agency
-     XLSX Recorded offences by LGA - Year ending Jun 2026 https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Recorded_Offences_Year_Ending_June_2026.xlsx
-     XLSX Recorded offences - Year ending Jun 2026 https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Recorded_Offences_Visualisation_Year_Ending_June_2026.xlsx
-     .xlsx Recorded offences by LGA - Year Ending Mar 2026 https://files.crimestatistics.vic.gov.au/2026-06/Data_Tables_LGA_Recorded_Offences_Year_Ending_March_2026.xlsx
-     .xlsx Recorded offences - Year ending Mar 2026 https://files.crimestatistics.vic.gov.au/2026-06/Data_Tables_Recorded_Offences_Visualisation_Year_Ending_March_2026.xlsx
-## pkg crimes-statistics-agency-data-tables-sexual-offences-spotlight | Crime Statistics Agency Data Tables - Sexual Offences Spotlight | Department of Justice and Community Safety
-     XLSX Sexual Offences Spotlight https://files.crimestatistics.vic.gov.au/2021-07/Sexual%20offences%20spotlight%20Year%20ending%2031%20December%202016.xlsx
-## pkg police-recorded-crime-trends-in-victoria-during-the-covid-19-pandemic | Police recorded crime trends in Victoria during the COVID-19 pandemic | Crime Statistics Agency
-     DOC Research Paper https://www.crimestatistics.vic.gov.au/sites/default/files/embridge_cache/emshare/original/public/2020/09/3d/983fd5fcb/Crime%20Statistics%20Agency%20-%20Police-recorded%20crime%20trends%20in%20Victoria%20during%20the%20COVID-19%20pandemic.docx
-     PDF Research paper https://www.crimestatistics.vic.gov.au/sites/default/files/embridge_cache/emshare/original/public/2020/09/9f/9eb39c433/Crime%20Statistics%20Agency%20-%20Police-recorded%20crime%20trends%20in%20Victoria%20during%20the%20COVID-19%20pandemic.pdf
-     XLSX Family Incidents by Month and LGA https://www.crimestatistics.vic.gov.au/sites/default/files/embridge_cache/emshare/original/public/2020/09/81/3387b4ea2/2020-09-24%20-%20Crime%20Statistics%20Agency%20-%20Family%20Incidents%20by%20Month%20and%20LGA.xlsx
-     XLSX COVID Offenders by Sex and Age https://www.crimestatistics.vic.gov.au/sites/default/files/embridge_cache/emshare/original/public/2020/09/8d/38ceb594d/2020-09-24%20-%20Crime%20Statistics%20Agency%20-%20COVID%20Offenders%20by%20sex%20and%20age.xlsx
-## pkg data-tables-deception-spotlight | Crime Statistics Agency Data tables - Deception spotlight | Crime Statistics Agency
-     XLSX Data tables - Deception spotlight https://files.crimestatistics.vic.gov.au/2021-07/spotlight%20data%20table%20year%20ending%2030%20september%202015.xlsx
-## pkg crime-statistics-agency-data-tables-harm-caused | Crime Statistics Agency Data Tables - Harm Caused | Crime Statistics Agency
-     XLSX Harm Caused by LGA - Year ending Jun 2026 https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Harm_Caused_Visualisation_Year_Ending_June_2026.xlsx
-     XLSX Harm Caused - Year ending Jun 2026 https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Harm_Caused_Visualisation_Year_Ending_June_2026.xlsx
-     .xlsx Harm Caused by LGA - Year Ending Dec 2025 https://files.crimestatistics.vic.gov.au/2026-03/Data_Tables_LGA_Harm_Caused_Visualisation_Year_Ending_December_2025.xlsx
-     .xlsx Harm Caused - Year ending Dec 2025 https://files.crimestatistics.vic.gov.au/2026-03/Data_Tables_Harm_Caused_Visualisation_Year_Ending_December_2025.xlsx
-## pkg crime-statistics-agency-data-tables-location-type-classifications | Crime Statistics Agency Data Tables - Location Type Classifications | Crime Statistics Agency
-     XLSX Location type classification - Sept 2022 https://files.crimestatistics.vic.gov.au/2023-01/LocationTypeClassificationSep2022.xlsx
-## pkg crime-statistics-agency-data-tables-residential-burglarly-spotlight | Crime Statistics Agency Data Tables - Residential Burglarly spotlight | Crime Statistics Agency
-     XLS Crime Statistics Agency Data Tables - Residential Burglarly spotlight https://files.crimestatistics.vic.gov.au/2021-07/residentialburglaryspotlight%20yearending31march2015_0.xls
-## pkg crime-statistics-agency-data-tables-motor-vehicle-theft-spotlight | Crime Statistics Agency Data Tables - Motor vehicle theft spotlight | Crime Statistics Agency
-     XLS Crime Statistics Agency Data Tables - Motor vehicle theft spotlight Year Ending Dec 2014 https://files.crimestatistics.vic.gov.au/2021-07/yearending31dec2014%20motorvehicletheftspotlight.xls
-## pkg crime-statistics-agency-data-tables-geographical-classifications | Crime Statistics Agency Data Tables - Geographical Classifications | Crime Statistics Agency
-     XLSX Geographic classification - Sept 2024 https://files.crimestatistics.vic.gov.au/2024-09/geographicclassification_Sept2024.xlsx
-     XLSX Geographic classification - July 2021 https://files.crimestatistics.vic.gov.au/2021-07/geographicclassification.xlsx
-## https://www.crimestatistics.vic.gov.au/crime-statistics/latest-victorian-crime-data/download-data 200 56933
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Alleged_Offender_Incidents_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Criminal_Incidents_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Family_Incidents_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Harm_Caused_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Alleged_Offenders_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Criminal_Incidents_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Family_Incidents_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Harm_Caused_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Recorded_Offences_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Victim_Reports_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Property_Items_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Recorded_Offences_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Unique_Alleged_Offenders_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Unique_Victims_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_Victim_Reports_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_Alleged_Offender_Incidents_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_Family_Incidents_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_LGA_Alleged_Offenders_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_LGA_Family_Incidents_AFMs_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_LGA_Family_Incidents_OTHs_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_LGA_Family_Incidents_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_LGA_Victim_Reports_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_Unique_Alleged_Offenders_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_Unique_Victim_Reports_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Indigenous_Data_Tables_Victim_Reports_Visualisation_Year_Ending_June_2026.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Bail_Justice_Data_Tables_Bail_Visualisation_Year_Ending_June_2026_1.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Children%27s_Court_Data_Tables_Bail_Visualisation_Year_Ending_June_2026_1.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Corrections_Victoria_Data_Tables_Bail_Visualisation_Year_Ending_June_2026_0.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/County_Court_Data_Tables_Bail_Visualisation_Year_Ending_June_2026_0.xlsx
-   link https://files.crimestatistics.vic.gov.au/2026-09/Magistrates%27_Court_Data_Tables_Bail_Visualisation_Year_Ending_June_2026_1.xlsx
-## https://files.crimestatistics.vic.gov.au/ 403 263
+GET https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Recorded_Offences_Year_Ending_June_2026.xlsx 200 21983501 b'PK\x03\x04'
+=== Contents (26, 3)
+    0    1    2
+0 NaN  NaN  NaN
+1 NaN  NaN  NaN
+2 NaN  NaN  NaN
+3 NaN  NaN  NaN
+4 NaN  NaN  NaN
+5 NaN  NaN  NaN
+=== Footnotes (20, 3)
+    0    1    2
+0 NaN  NaN  NaN
+1 NaN  NaN  NaN
+2 NaN  NaN  NaN
+3 NaN  NaN  NaN
+4 NaN  NaN  NaN
+5 NaN  NaN  NaN
+=== Table 01 (871, 6)
+      0            1                   2                      3              4                            5
+0  Year  Year ending       Police Region  Local Government Area  Offence Count  Rate per 100,000 population
+1  2026         June  1 North West Metro                Banyule          10632                  7978.035302
+2  2026         June  1 North West Metro               Brimbank          18704                  9402.732059
+3  2026         June  1 North West Metro                Darebin          16174                  9941.035496
+4  2026         June  1 North West Metro            Hobsons Bay           7785                  7959.260566
+5  2026         June  1 North West Metro                   Hume          23691                  8169.137486
+=== Table 02 (52810, 10)
+      0            1                    2                      3                            4                                 5                                                                   6              7                                8                                9
+0  Year  Year ending  Police Service Area  Local Government Area             Offence Division               Offence Subdivision                                                    Offence Subgroup  Offence Count  PSA Rate per 100,000 population  LGA Rate per 100,000 population
+1  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                             A211 FV Serious assault            317                       237.883405                        252.92744
+2  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                         A212 Non-FV Serious assault            198                       148.583325                       157.979915
+3  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences  A22 Assault police, emergency services or other authorised officer             80                        60.033667                        63.830269
+4  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                              A231 FV Common assault            342                       256.643926                       272.874399
+5  2026         June             Ballarat               Ballarat  A Crimes against the person  A20 Assault and related offences                                          A232 Non-FV Common assault            277                       207.866571                       221.012305
+=== Table 03 (371542, 9)
+      0            1                      2         3                 4                                     5                                                   6                                  7              8
+0  Year  Year ending  Local Government Area  Postcode  Suburb/Town Name                      Offence Division                                 Offence Subdivision                   Offence Subgroup  Offence Count
+1  2026         June                 Alpine      3691        Coral Bank           A Crimes against the person                    A20 Assault and related offences            A211 FV Serious assault              1
+2  2026         June                 Alpine      3691        Coral Bank     B Property and deception offences                                 B20 Property damage                B21 Criminal damage              1
+3  2026         June                 Alpine      3691          Dederang           A Crimes against the person  A70 Stalking, harassment and threatening behaviour  A732 Non-FV Threatening behaviour              1
+4  2026         June                 Alpine      3691          Dederang     B Property and deception offences                                           B40 Theft     B42 Steal from a motor vehicle              1
+5  2026         June                 Alpine      3691          Dederang  D Public order and security offences                 D10 Weapons and explosives offences              D11 Firearms offences              1
+GW rows:
+          0     1       2     3              4                            5                                                   6                                                                   7   8
+26409  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                             A211 FV Serious assault  42
+26410  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                         A212 Non-FV Serious assault  29
+26411  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences  A22 Assault police, emergency services or other authorised officer   8
+26412  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                              A231 FV Common assault  70
+26413  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                    A20 Assault and related offences                                          A232 Non-FV Common assault  57
+26414  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                                         A50 Robbery                                              A51 Aggravated robbery  20
+26415  2026  June  Monash  3150  Glen Waverley  A Crimes against the person                                         A50 Robbery                                          A52 Non-aggravated robbery   4
+26416  2026  June  Monash  3150  Glen Waverley  A Crimes against the person  A70 Stalking, harassment and threatening behaviour                                                    A711 FV Stalking   7
+26417  2026  June  Monash  3150  Glen Waverley  A Crimes against the person  A70 Stalking, harassment and threatening behaviour                                                A712 Non-FV Stalking   1
+26418  2026  June  Monash  3150  Glen Waverley  A Crimes against the person  A70 Stalking, harassment and threatening behaviour                             A721 FV Harassment and private nuisance   9
+=== Table 04 (55839, 7)
+      0            1                      2                  3                           4                        5              6
+0  Year  Year ending  Local Government Area  Location Division        Location Subdivision           Location Group  Offence Count
+1  2026         June                 Alpine      1 Residential       11 Dwelling - private  111 Flat/Unit/Apartment              2
+2  2026         June                 Alpine      1 Residential       11 Dwelling - private                112 House            211
+3  2026         June                 Alpine      1 Residential       11 Dwelling - private  114 Caravan/Mobile Home             10
+4  2026         June                 Alpine      1 Residential       11 Dwelling - private           117 Farm House              6
+5  2026         June                 Alpine      1 Residential  12 Dwelling  - non-private         122 Holiday Home              4
+=== Table 05 (3161, 5)
+      0            1                      2                     3              4
+0  Year  Year ending  Local Government Area  Investigation Status  Offence Count
+1  2026         June                 Alpine        Arrest/Summons            303
+2  2026         June                 Alpine        Not authorised             32
+3  2026         June                 Alpine                 Other             60
+4  2026         June                 Alpine              Unsolved            178
+5  2026         June                 Ararat        Arrest/Summons            889
+=== Table 06 (14986, 7)
+      0            1                      2                                   3                                                      4              5              6
+0  Year  Year ending  Local Government Area                 Offence Subdivision                                          Offence Group  CSA Drug Type  Offence Count
+1  2026         June                 Alpine  C20 Cultivate or manufacture drugs                                    C21 Cultivate drugs       Cannabis              1
+2  2026         June                 Alpine  C20 Cultivate or manufacture drugs  C23 Possess drug manufacturing equipment or precursor      Not Coded              1
+3  2026         June                 Alpine         C30 Drug use and possession                                    C32 Drug possession       Cannabis              7
+4  2026         June                 Alpine         C30 Drug use and possession                                    C32 Drug possession        Cocaine              2
+5  2026         June                 Alpine         C30 Drug use and possession                                    C32 Drug possession        Ecstasy              1
+school https://content.vic.gov.au/DE-School-Locations%20-2026 200 539003 text/csv; charset=utf-8 b'Education_Sector,Entity_Type,School_No,School_Name,School_Type,School_Status,Address_Line_1,Address_Line_2,Address_Town,Address_State,Address_Postcode'
+['Education_Sector', 'Entity_Type', 'School_No', 'School_Name', 'School_Type', 'School_Status', 'Address_Line_1', 'Address_Line_2', 'Address_Town', 'Address_State', 'Address_Postcode', 'Postal_Address_Line_1', 'Postal_Address_Line_2', 'Postal_Town', 'Postal_State', 'Postal_Postcode', 'Full_Phone_No', 'Region', 'Area', 'LGA_ID', 'LGA_Name', 'LGA_TYPE', 'X', 'Y']
+  Education_Sector  Entity_Type  School_No                  School_Name School_Type School_Status       Address_Line_1 Address_Line_2    Address_Town Address_State  Address_Postcode Postal_Address_Line_1 Postal_Address_Line_2     Postal_Town Postal_State  Postal_Postcode Full_Phone_No                  Region                     Area  LGA_ID          LGA_Name LGA_TYPE           X          Y
+0         Catholic            2         20               Parade College   Secondary             O     1436 Plenty Road            NaN        BUNDOORA           VIC              3083      1436 Plenty Road                   NaN        BUNDOORA          VIC             3083  03 9468 3300  NORTH-WESTERN VICTORIA  North Eastern Melbourne      66       Banyule (C)    Metro  145.066978 -37.690178
+1         Catholic            2         25     Simonds Catholic College   Secondary             O  273 Victoria Street            NaN  WEST MELBOURNE           VIC              3003   273 Victoria Street                   NaN  WEST MELBOURNE          VIC             3003  03 9321 9200  SOUTH-WESTERN VICTORIA        Western Melbourne     460     Melbourne (C)    Metro  144.952883 -37.805971
+2         Catholic            2         26  St Marys College Melbourne   Secondary             O   11 Westbury Street            NaN   ST KILDA EAST           VIC              3183            PO Box 258                   NaN        ST KILDA          VIC             3182  03 9529 6611  SOUTH-EASTERN VICTORIA        Bays
+     Education_Sector  Entity_Type  School_No                         School_Name School_Type School_Status                  Address_Line_1 Address_Line_2   Address_Town Address_State  Address_Postcode  Postal_Address_Line_1 Postal_Address_Line_2    Postal_Town Postal_State  Postal_Postcode Full_Phone_No                  Region                     Area  LGA_ID        LGA_Name LGA_TYPE           X          Y
+282          Catholic            2       1596                 St Leonard's School     Primary             O             349 Springvale Road            NaN  GLEN WAVERLEY           VIC              3150    349 Springvale Road                   NaN  GLEN WAVERLEY          VIC             3150  03 9560 8491  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.163894 -37.886803
+284          Catholic            2       1600             St Christopher's School     Primary             O                2-16 Doon Avenue            NaN  GLEN WAVERLEY           VIC              3150       2-16 Doon Avenue                   NaN  GLEN WAVERLEY          VIC             3150  03 9803 0011  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.150197 -37.871098
+548        Government            1        454         Burwood East Primary School     Primary             O  Cnr Blackburn And Highbury Rds            NaN   Burwood East           VIC              3151            P O Box 374                   NaN  GLEN WAVERLEY          VIC             3150  03 9802 8618  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     698  Whitehorse (C)    Metro  145.151807 -37.859734
+1292       Government            1       4923           Mount View Primary School     Primary             O           274-288 Gallaghers Rd            NaN  Glen Waverley           VIC              3150  274-288 Gallaghers Rd                   NaN  GLEN WAVERLEY          VIC             3150  03 9560 0471  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.178805 -37.883485
+1312       Government            1       4968                    Glenallen School     Special             O                  7 Allen Street            NaN  Glen Waverley           VIC              3150         7 Allen Street                   NaN  GLEN WAVERLEY          VIC             3150  03 9561 1966  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.161746 -37.888359
+1323       Government            1       4986             Highvale Primary School     Primary             O                33 Ashton Street            NaN  Glen Waverley           VIC              3150       33 ASHTON STREET                   NaN  GLEN WAVERLEY          VIC             3150  03 9887 8000  NORTH-EASTERN VICTORIA  Inner Eastern Melbourne     497      Monash (C)    Metro  145.174068 -37.867021
+1338       Government            1       5010              Glendal Primary School     Primary             O            55 N
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1043, in _request_once
+    c.perform()
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 633, in perform
+    self._check_error(ret, "perform")
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/curl.py", line 353, in _check_error
+    raise error
+curl_cffi.curl.CurlError: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/diag.py", line 31, in <module>
+    r=cr.get(u,impersonate="chrome",timeout=120); rec("school",u,r.status_code,len(r.content),r.headers.get("content-type"),r.content[:150])
+      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 154, in get
+    return request(method="GET", url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/__init__.py", line 146, in request
+    return s.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1117, in request
+    return self._request_once(
+           ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.12.15/x64/lib/python3.12/site-packages/curl_cffi/requests/session.py", line 1050, in _request_once
+    raise error(str(e), e.code, rsp) from e
+curl_cffi.requests.exceptions.ConnectionError: Failed to perform, curl: (56) Connection closed abruptly. See https://curl.se/libcurl/c/libcurl-errors.html first for more details.
