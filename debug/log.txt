@@ -1,10 +1,8 @@
 [house] CKAN victorian-property-sales-report-median-house-by-suburb-time-series
-  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx -> vpsr_house.xlsx (135 KB) via wayback:20261020232915
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx -> vpsr_house.xlsx (135 KB) via direct
   house: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 797 suburbs
 [unit] CKAN victorian-property-sales-report-median-unit-by-suburb-time-series
-  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx -> vpsr_unit.xlsx (81 KB) via wayback:20261020233355
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx -> vpsr_unit.xlsx (81 KB) via direct
   unit: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 463 suburbs
 [rent] CKAN rental-report-quarterly-moving-annual-rents-by-suburb
   downloaded https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel -> dffh_rents.xlsx (1109 KB) via direct
