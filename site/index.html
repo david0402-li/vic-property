@@ -158,12 +158,59 @@ const RANKS=[
   ["house",-1,"独立屋房价 高→低"],["house",1,"独立屋房价 低→高"],["unit",-1,"单元房价 高→低"],
   ["gqq",-1,"季度涨幅"],["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],["crimeRate",1,"犯罪率 低→高"],["schools",-1,"学校数"],
 ];
+let NAT=null, NV={type:"house",area:"G",rent:"metro"};
+fetch("data/national.json",{cache:"no-cache"}).then(r=>r.json()).then(d=>{NAT=d; if(!location.hash.slice(1)) natRender();}).catch(()=>{});
+const STATE_CODES=[["1","新州 NSW","SYD"],["2","维州 VIC","MEL"],["3","昆州 QLD","BRI"],["4","南澳 SA","ADE"],["5","西澳 WA","PER"],["6","塔州 TAS","HOB"],["7","北领地 NT","DAR"],["8","首都领地 ACT","ACT"]];
+const SCOL=["#3b6fb6","#1f6f5c","#b4542d","#c08a1e","#7a4fb0","#2a9d8f","#d1495b","#6c757d"];
+function natRegion(st,area){ if(!NAT) return null; const R=NAT.regions; if(st=="8") return R["8ACTE"];
+  return Object.entries(R).find(([k])=>k[0]==st&&k[1]==(area=="G"?"G":"R"))?.[1]; }
+function natHTML(){
+  return `<section class="grid two" style="margin-bottom:16px">
+   <div class="card"><div class="rkhead"><h2>各州房价走势</h2>
+     <div class="rk" style="margin:0"><button data-nt="house">独立屋</button><button data-nt="unit">单元</button><span style="width:8px"></span><button data-na="G">首府城市</button><button data-na="R">州内其他地区</button></div></div>
+     <div class="chartbox" style="height:300px"><canvas id="cNat"></canvas></div>
+     <div style="overflow:auto"><table class="mt" style="font-size:13px" id="natTbl"></table></div>
+     <p class="note">ABS 已成交住宅中位价（季度，非分层中位数），独立屋 = established house，单元 = attached dwelling（公寓、联排）。ABS 不按卧室数统计房价。</p></div>
+   <div class="card"><div class="rkhead"><h2>维州租金走势（按卧室数）</h2>
+     <div class="rk" style="margin:0"><button data-nr="metro">墨尔本</button><button data-nr="regional">维州其他</button><button data-nr="vic">全州</button></div></div>
+     <div class="chartbox" style="height:300px"><canvas id="cRentB"></canvas></div>
+     <h2 class="mt" style="font-size:16px">墨尔本毛收益率走势</h2>
+     <div class="chartbox" style="height:200px"><canvas id="cYieldB"></canvas></div>
+     <p class="note">租金为 DFFH 各区组新签租约年度移动中位数，按成交量加权平均（单元多集中于内城，所以 3 房单元可能高于 3 房独立屋）。收益率 = 墨尔本 3 房屋 / 2 房单元租金 × 52 ÷ ABS 大墨尔本独立屋 / 单元中位价。其他州的分卧室租金将随该州一起上线。</p></div>
+  </section>`;
+}
+function natRender(){
+  if(!NAT||!document.getElementById("cNat")) return;
+  ["cNat","cRentB","cYieldB"].forEach(id=>{const c=Chart.getChart(id); if(c){c.destroy(); CHARTS=CHARTS.filter(x=>x!==c)}});
+  document.querySelectorAll("[data-nt]").forEach(b=>{b.classList.toggle("on",b.dataset.nt==NV.type);b.onclick=()=>{NV.type=b.dataset.nt;natRender()}});
+  document.querySelectorAll("[data-na]").forEach(b=>{b.classList.toggle("on",b.dataset.na==NV.area);b.onclick=()=>{NV.area=b.dataset.na;natRender()}});
+  document.querySelectorAll("[data-nr]").forEach(b=>{b.classList.toggle("on",b.dataset.nr==NV.rent);b.onclick=()=>{NV.rent=b.dataset.nr;natRender()}});
+  const regs=STATE_CODES.map(([c,n],i)=>({c,n,i,r:natRegion(c,NV.area)})).filter(x=>x.r&&x.r[NV.type]);
+  const qs=[...new Set(regs.flatMap(x=>Object.keys(x.r[NV.type])))].sort();
+  const ql=q=>q.slice(0,4)+"Q"+(+q.slice(5)/3);
+  line("cNat",qs.map(ql),regs.map(x=>({label:(NV.area=="G"||x.c=="8")?x.r.name:x.n,data:qs.map(q=>x.r[NV.type][q]??null),borderColor:SCOL[x.i],backgroundColor:SCOL[x.i],pointRadius:0,borderWidth:x.c=="2"?3:1.6})),fmtK);
+  const last=qs[qs.length-1], yago=qs[qs.length-5];
+  document.getElementById("natTbl").innerHTML=`<thead><tr><th>地区（${ql(last||"")}）</th><th>独立屋</th><th>同比</th><th>单元</th><th>同比</th><th>独立屋成交量</th></tr></thead><tbody>`+
+    STATE_CODES.map(([c,n])=>{const r=natRegion(c,NV.area); if(!r) return ""; const h=r.house||{},u=r.unit||{};
+      const ch=(o)=>o[last]&&o[yago]?((o[last]/o[yago]-1)*100):null;
+      return `<tr><td>${esc(r.name)}</td><td>${fmtK(h[last])}</td><td class="${ch(h)<0?"neg":"pos"}">${ch(h)==null?"–":(ch(h)>0?"+":"")+ch(h).toFixed(1)+"%"}</td><td>${fmtK(u[last])}</td><td class="${ch(u)<0?"neg":"pos"}">${ch(u)==null?"–":(ch(u)>0?"+":"")+ch(u).toFixed(1)+"%"}</td><td>${r.nHouse&&r.nHouse[last]?Math.round(r.nHouse[last]).toLocaleString():"–"}</td></tr>`}).join("")+"</tbody>";
+  const vr=(NAT.vicRents||{})[NV.rent]||{};
+  const types=[["f1","1房单元","#c08a1e"],["f2","2房单元","#e0b04a"],["f3","3房单元","#8a6a1a"],["h2","2房独立屋","#5cc2a6"],["h3","3房独立屋","#1f6f5c"],["h4","4房独立屋","#3b6fb6"]];
+  const rq=[...new Set(types.flatMap(([t])=>Object.keys(vr[t]||{})))].sort();
+  line("cRentB",rq.map(ql),types.filter(([t])=>vr[t]).map(([t,l,c])=>({label:l,data:rq.map(q=>vr[t][q]??null),borderColor:c,backgroundColor:c,pointRadius:0})),v=>"$"+Math.round(v));
+  const mel=NAT.regions["2GMEL"]||{}, mr=(NAT.vicRents||{}).metro||{};
+  const yq=Object.keys(mel.house||{}).filter(q=>(mr.h3||{})[q]).sort();
+  line("cYieldB",yq.map(ql),[{label:"独立屋（3房）",data:yq.map(q=>+(mr.h3[q]*52/mel.house[q]*100).toFixed(2)),borderColor:"#1f6f5c",backgroundColor:"#1f6f5c",pointRadius:0},
+    {label:"单元（2房）",data:yq.map(q=>mel.unit&&mel.unit[q]&&mr.f2[q]?+(mr.f2[q]*52/mel.unit[q]*100).toFixed(2):null),borderColor:"#c08a1e",backgroundColor:"#c08a1e",pointRadius:0}],v=>v==null?"":(+v).toFixed(1)+"%");
+}
 let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0, FS=false;
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&FS){document.getElementById("fsbtn")?.click()}});
 function listView(){
   const all=DB.suburbs, med=k=>{const a=all.map(s=>s.latest[k]).filter(x=>x!=null).sort((a,b)=>a-b);return a.length?a[Math.floor(a.length/2)]:null};
   const c=DB.meta.counts;
-  document.getElementById("app").innerHTML=`
+  CHARTS.forEach(c=>c.destroy()); CHARTS=[];
+  document.getElementById("app").innerHTML=natHTML()+`
+  <h2 style="font-size:20px;margin:6px 0 12px">维州各区</h2>
   <section class="grid kpis">
     <div class="card kpi"><div class="l">覆盖区数</div><div class="v">${all.length}</div><div class="s">可算收益率 ${c.withYield}</div></div>
     <div class="card kpi hl"><div class="l">独立屋收益率中位数</div><div class="v">${fmtP(med("yieldHouse"))}</div><div class="s">单元 ${fmtP(med("yieldUnit"))}</div></div>
@@ -190,7 +237,7 @@ function listView(){
   const setFs=on=>{FS=on;card.classList.toggle("fs",on);document.body.classList.toggle("noscroll",on);fb.innerHTML=on?"✕ 退出全屏":"⛶ 全屏"};
   fb.onclick=()=>setFs(!FS); if(FS) setFs(true);
   document.querySelectorAll(".rk button").forEach(b=>b.onclick=()=>{SORT={k:b.dataset.k,dir:+b.dataset.d};listView()});
-  rows();
+  rows(); natRender();
 }
 function rows(){
   const col=COLS.find(c=>c[0]==SORT.k), q=Q.trim().toLowerCase();

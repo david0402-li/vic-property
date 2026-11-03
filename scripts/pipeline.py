@@ -318,10 +318,39 @@ def parse_qdate(v):
     return None
 
 
+RENT_COUNTS, RENT_REGION = {}, {}
+METRO_REGIONS = {"Inner Melbourne", "Inner Eastern Melbourne", "Southern Melbourne", "Outer Western Melbourne",
+                 "North Western Melbourne", "North Eastern Melbourne", "Outer Eastern Melbourne",
+                 "South Eastern Melbourne", "Mornington Peninsula"}
+
+
+def state_rents(rents):
+    """Count-weighted average of DFFH group medians per bedroom type: VIC, metro, regional."""
+    out = {}
+    for area, sel in (("vic", lambda g: True), ("metro", lambda g: RENT_REGION.get(g) in METRO_REGIONS),
+                      ("regional", lambda g: RENT_REGION.get(g) and RENT_REGION.get(g) not in METRO_REGIONS)):
+        res = {}
+        for t in ("f1", "f2", "f3", "h2", "h3", "h4", "all"):
+            acc = defaultdict(lambda: [0.0, 0.0])
+            for g, types in rents.items():
+                if not sel(g) or t not in types:
+                    continue
+                cnts = RENT_COUNTS.get(g, {}).get(t, {})
+                for q, v in types[t].items():
+                    w = cnts.get(q, 0)
+                    if w:
+                        acc[q][0] += v * w
+                        acc[q][1] += w
+            res[t] = {q: round(a / b) for q, (a, b) in sorted(acc.items()) if b and q >= "2005"}
+        out[area] = res
+    return out
+
+
 def parse_rents(path):
     sheets = read_all_sheets(path)
     dump_sheets(sheets, "raw_rents.txt", rows=8)
     out = defaultdict(dict)  # group -> type -> {"YYYY-MM": median}
+    RENT_COUNTS.clear(); RENT_REGION.clear()
     for sn, df in sheets.items():
         t = None
         for k, code in RENT_TYPES.items():
@@ -350,15 +379,28 @@ def parse_rents(path):
             filled.append(cur)
         med_cols = [(j, filled[j]) for j, x in enumerate(df.iloc[med_row].tolist())
                     if str(x).strip().lower() == "median" and filled[j]]
+        cnt_cols = [(j, filled[j]) for j, x in enumerate(df.iloc[med_row].tolist())
+                    if str(x).strip().lower() == "count" and filled[j]]
+        region = None
         name_col = 1 if df.shape[1] > 1 else 0
         n = 0
         for i in range(med_row + 1, len(df)):
+            r0 = df.iat[i, 0]
+            if isinstance(r0, str) and r0.strip():
+                region = r0.strip()
             nm = df.iat[i, name_col]
             if not isinstance(nm, str) or not nm.strip():
                 continue
             g = nm.strip()
             if g.lower() in ("group total", "total") or g.lower().startswith("source"):
                 continue
+            RENT_REGION[g] = region
+            cser = {}
+            for j, (y, m) in cnt_cols:
+                cv = num(df.iat[i, j])
+                if cv:
+                    cser[f"{y}-{m:02d}"] = cv
+            RENT_COUNTS.setdefault(g, {})[t] = cser
             ser = {}
             for j, (y, m) in med_cols:
                 val = num(df.iat[i, j])
@@ -613,6 +655,30 @@ def postcode_for(key, pcs):
     if m and m.group(1) in pcs:
         return dict(pcs[m.group(1)][0], lat=None, lng=None)
     return {}
+
+
+# ---------------------------------------------------------------- ABS national medians
+def load_national():
+    df = abs_csv("RES_DWELL")
+    out = {}
+    for _, r in df.iterrows():
+        try:
+            v = float(r["OBS_VALUE"]) * (10 ** int(float(r.get("UNIT_MULT") or 0)))
+        except (TypeError, ValueError):
+            continue
+        m = str(r["MEASURE"])
+        key = {"3": "house", "4": "unit", "1": "nHouse", "2": "nUnit"}.get(m)
+        if not key:
+            continue
+        reg = out.setdefault(r["REGION"], {"name": r["Region"]})
+        y, q = str(r["TIME_PERIOD"]).split("-Q")
+        reg.setdefault(key, {})[f"{y}-{int(q) * 3:02d}"] = round(v)
+    for reg in out.values():
+        for k in ("house", "unit", "nHouse", "nUnit"):
+            if k in reg:
+                reg[k] = dict(sorted(reg[k].items()))
+    log(f"  ABS RES_DWELL: {len(out)} regions, latest {max(max(r.get('house', {'': 0})) for r in out.values())}")
+    return out
 
 
 # ---------------------------------------------------------------- crime (Crime Statistics Agency)
@@ -1007,6 +1073,26 @@ def main():
     debug_write("log.txt", "\n".join(LOG) + "\n\nERRORS:\n" + "\n".join(ERRORS))
     debug_write("sample_glen_waverley.json",
                 json.dumps(next((s for s in suburbs if s["id"] == "glen-waverley"), {}), indent=1, ensure_ascii=False))
+    # ---- national / state-level overview file
+    nat = {"generated": meta["generated"], "regions": {}, "vicRents": {}, "errors": []}
+    try:
+        nat["regions"] = load_national()
+        store_save("national", nat["regions"], {"fetched": meta["generated"]})
+    except Exception as e:
+        log(traceback.format_exc())
+        old, m = store_load("national")
+        nat["regions"] = old or {}
+        nat["errors"].append(f"ABS RES_DWELL: {e}")
+    try:
+        nat["vicRents"] = state_rents(rents) if RENT_COUNTS else {}
+    except Exception as e:
+        log(traceback.format_exc())
+        nat["errors"].append(f"VIC rents by bedroom: {e}")
+    nat["sources"] = {"abs": "https://data.api.abs.gov.au/rest/data/RES_DWELL",
+                      "rent": meta["sources"].get("rent", {}).get("url")}
+    with open(os.path.join(OUT, "national.json"), "w", encoding="utf-8") as f:
+        json.dump(nat, f, ensure_ascii=False, separators=(",", ":"))
+
     import shutil
     os.makedirs(os.path.join(DEBUG, "raw"), exist_ok=True)
     for fn in os.listdir(CACHE):
