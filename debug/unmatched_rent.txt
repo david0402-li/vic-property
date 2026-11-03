@@ -6,9 +6,7 @@ Albanvale
 Albion
 Alexandra
 Allansford
-Altona East
 Altona Meadows
-Altona North
 Anglesea
 Apollo Bay
 Ararat
@@ -26,18 +24,13 @@ Badger Creek
 Balaclava
 Balcombe
 Ballan
-Ballarat Central
-Ballarat East
-Ballarat North
 Balnarring
 Balnarring Beach
-Balwyn North
 Bandiana
 Bannockburn
 Baranduda
 Barnawartha
 Baxter
-Bayswater North
 Beaconsfield
 Beaconsfield Upper
 Beaufort
@@ -47,15 +40,12 @@ Belgrave Heights
 Bell Park
 Bell Post Hill
 Bellfield (banyule)
-Bentleigh East
 Beveridge
 Birchip
 Birregurra
 Bittern
 Black Hill
 Black Rock
-Blackburn North
-Blackburn South
 Blackwood
 Blairgowrie
 Blind Bight
@@ -65,8 +55,6 @@ Bonshaw
 Boolarra
 Boort
 Botanic Ridge
-Box Hill North
-Box Hill South
 Braybrook
 Breakwater
 Briagolong
@@ -76,8 +64,6 @@ Broadford
 Brookfield
 Brooklyn
 Brown Hill
-Brunswick East
-Brunswick West
 Bruthen
 Bunyip
 Burnside
@@ -96,22 +82,15 @@ Cardigan Village
 Carisbrook
 Caroline Springs
 Casterton
-Caulfield East
-Caulfield North
-Caulfield South
 Charlemont
 Charlton
 Chelsea Heights
-Cheltenham East
-Cheltenham North
 Chewton
 Chiltern
 Chirnside Park
 Chum Creek
 Churchill
 Clarinda
-Clayton North
-Clayton South
 Clematis
 Clifton Springs
 Clunes
@@ -120,7 +99,6 @@ Clyde North
 Cobblebank
 Cobden
 Cobram
-Coburg East
 Cockatoo
 Cohuna
 Colac
@@ -135,16 +113,10 @@ Coronet Bay
 Corryong
 Cowes
 Cowes West
-Cranbourne East
-Cranbourne North
-Cranbourne South
-Cranbourne West
 Cremorne
 Creswick
 Crib Point
 Croydon Hills
-Croydon North
-Croydon South
 Curlewis
 Dallas
 Dalyston
@@ -171,9 +143,6 @@ Dunolly
 Eagle Point
 Eaglehawk
 Eaglemont
-East Bairnsdale
-East Bendigo
-East Geelong
 East Warburton
 Eastwood
 Edenhope
@@ -181,11 +150,8 @@ Edithvale
 Eildon
 Elliminyt
 Elmore
-Eltham North
 Emerald
 Epsom
-Essendon North
-Essendon West
 Eumemmerring
 Eureka
 Euroa
@@ -197,8 +163,6 @@ Fishermans Bend
 Fiveways
 Flowerdale
 Foster
-Frankston North
-Frankston South
 Fraser Rise
 Fyansford
 Garden City
@@ -222,11 +186,8 @@ Hadfield
 Hallam
 Halls Gap
 Hamlyn Heights
-Hampton East
 Harcourt
 Harkness
-Hastings West
-Hawthorn East
 Healesville
 Heathcote
 Heatherton
@@ -270,8 +231,6 @@ Keilor Lodge
 Keilor Park
 Kennington
 Kerang
-Kew East
-Kew North
 Keysborough
 Kialla
 Killara (wodonga)
@@ -298,6 +257,47 @@ Lake Wendouree
 Lakes Entrance
 Lancefield
 Lang Lang
+Langwarrin
+Lara Lake
+Launching Place
+Laverton
+Laverton South
+Leitchville
+Leneva
+Leongatha
+Leopold
+Lindenow
+Loch Sport
+Long Gully
+Longwarry
+Lorne
+Lovely Banks
+Lower Plenty
+Lucas
+Lucknow
+Lynbrook
+Lyndhurst
+Lysterfield
+Lysterfield South
+Macedon
+Macleod
+Maddingley
+Maiden Gully
+Maidstone
+Maldon
+Mallacoota
+Malmsbury
+Mambourin
+Manifold Heights
+Manor Lakes
+Mansfield
+Maribyrnong
+Marlo
+Marong
+Marshall
+Maryborough
+Marysville
+Mccrae
 
 RENT GROUPS:
 Albert Park-Middle Park-West St Kilda

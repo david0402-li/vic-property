@@ -2,6 +2,7 @@
  "id": "glen-waverley",
  "name": "Glen Waverley",
  "rentGroup": "Glen Waverley-Mulgrave",
+ "rentMatch": "exact",
  "house": {
   "2015": 1212500,
   "2016": 1221000,
@@ -808,16 +809,16 @@
  },
  "dwTs": {
   "2011": {
-   "flat": 0.0,
-   "semi": 0.0
+   "flat": 5.9,
+   "semi": 13.1
   },
   "2016": {
-   "flat": 0.0,
-   "semi": 0.0
+   "flat": 6.6,
+   "semi": 10.2
   },
   "2021": {
-   "flat": 0.0,
-   "semi": 0.0
+   "flat": 10.9,
+   "semi": 10.6
   }
  },
  "pop2021": 42642,
@@ -834,6 +835,8 @@
   "rentH3": 640,
   "rentF2": 640,
   "rentAll": 695,
+  "rentEst": null,
+  "rentMatch": "exact",
   "rentQ": "2025-09",
   "yieldHouse": 1.93,
   "yieldUnit": 3.68,
