@@ -1,0 +1,8 @@
+Average household size
+Average number of persons per bedroom
+Median age of persons
+Median mortgage repayment ($/monthly)
+Median rent ($/weekly)
+Median total family income ($/weekly)
+Median total household income ($/weekly)
+Median total personal income ($/weekly)

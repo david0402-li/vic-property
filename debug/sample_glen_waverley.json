@@ -580,8 +580,126 @@
   "flat": 10.2,
   "semi": 10.6,
   "house": 79.1,
-  "n": 14445
+  "n": 14445,
+  "total": 16042
  },
+ "demo": {
+  "age": 40.0,
+  "hhInc": 1918.0,
+  "persInc": 707.0,
+  "mortgage": 2500.0,
+  "hhSize": 2.8,
+  "rent2021": 480.0
+ },
+ "tenure": {
+  "outright": 41.0,
+  "mortgage": 28.3,
+  "rented": 27.1
+ },
+ "crime": {
+  "years": {
+   "2017": 1935,
+   "2018": 1851,
+   "2019": 1679,
+   "2020": 2166,
+   "2021": 2331,
+   "2022": 2083,
+   "2023": 2237,
+   "2024": 2441,
+   "2025": 2820,
+   "2026": 2870
+  },
+  "div": {
+   "A": 367,
+   "B": 1994,
+   "C": 110,
+   "D": 164,
+   "E": 234,
+   "F": 1
+  },
+  "latestYear": 2026,
+  "rate": 67.3
+ },
+ "schools": [
+  {
+   "n": "Camelot Rise Primary School",
+   "t": "Primary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Glen Waverley Primary School",
+   "t": "Primary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Glen Waverley South Primary School",
+   "t": "Primary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Glendal Primary School",
+   "t": "Primary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Highvale Primary School",
+   "t": "Primary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Mount View Primary School",
+   "t": "Primary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "St Christopher's School",
+   "t": "Primary",
+   "s": "Catholic",
+   "pc": "3150"
+  },
+  {
+   "n": "St Leonard's School",
+   "t": "Primary",
+   "s": "Catholic",
+   "pc": "3150"
+  },
+  {
+   "n": "Brentwood Secondary College",
+   "t": "Secondary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Glen Waverley Secondary College",
+   "t": "Secondary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Highvale Secondary College",
+   "t": "Secondary",
+   "s": "Government",
+   "pc": "3150"
+  },
+  {
+   "n": "Cheshire School",
+   "t": "Special",
+   "s": "Independent",
+   "pc": "3150"
+  },
+  {
+   "n": "Glenallen School",
+   "t": "Special",
+   "s": "Government",
+   "pc": "3150"
+  }
+ ],
  "latest": {
   "house": 1702500,
   "unit": 885000,
@@ -612,6 +730,52 @@
   "erp": 46237,
   "popGrowth5": 0.8,
   "flatShare": 10.2,
-  "unitShare": 20.8
- }
+  "unitShare": 20.8,
+  "crimeRate": 67.3,
+  "schools": 13,
+  "score": 45,
+  "scoreParts": {
+   "yieldHouse": 7,
+   "g5": 60,
+   "popGrowth5": 61,
+   "crimeRate": 49,
+   "houseQN": 92,
+   "gq1": 42
+  },
+  "confidence": "high"
+ },
+ "nearby": [
+  {
+   "id": "wheelers-hill",
+   "km": 0.0
+  },
+  {
+   "id": "burwood-east",
+   "km": 3.0
+  },
+  {
+   "id": "vermont",
+   "km": 3.7
+  },
+  {
+   "id": "vermont-south",
+   "km": 3.7
+  },
+  {
+   "id": "mount-waverley",
+   "km": 3.8
+  },
+  {
+   "id": "syndal",
+   "km": 3.8
+  },
+  {
+   "id": "studfield",
+   "km": 4.7
+  },
+  {
+   "id": "wantirna",
+   "km": 4.7
+  }
+ ]
 }

@@ -24,14 +24,21 @@
   SAL population: 2946 suburbs
   ABS C21_G36_SAL key=.D..SAL.2: 55955 rows
   SAL dwelling structure: 2945 suburbs
+  ABS C21_G37_SAL key=._T..SAL.2: 35340 rows
+  SAL tenure: 2945 suburbs
   ABS C21_G02_SAL key=all: 122762 rows
-  SAL census median rent: 2945 rows via label col Median/Average
+  SAL census medians via label col Median/Average
   ABS ABS_ANNUAL_ERP_ASGS2021 key=ERP.SA2..A: 61350 rows
   SA2 ERP: 522 SA2s
   ABS C21_T18_SA2 key=all: 636120 rows
   SA2 dwelling TS: 1569 region-years, categories ['flat', 'house', 'semi', 'tot']
 [postcodes]
   postcodes: 3344 VIC localities
-counts: {'suburbs': 803, 'rentGroups': 146, 'withRent': 272, 'withRentEst': 500, 'withYield': 768, 'withCensus': 763, 'withErp': 458, 'withPostcode': 797}
+[crime]
+  downloaded https://files.crimestatistics.vic.gov.au/2026-09/Data_Tables_LGA_Recorded_Offences_Year_Ending_June_2026.xlsx -> crime.xlsx (21468 KB) via direct
+  crime: 2866 suburbs, years 2017-2026 (Recorded offences by LGA - Year ending Jun 2026)
+[schools]
+  schools: 2318 schools in 940 towns (school-locations-2026)
+counts: {'suburbs': 803, 'rentGroups': 146, 'withRent': 272, 'withRentEst': 500, 'withYield': 768, 'withCensus': 763, 'withErp': 458, 'withPostcode': 797, 'withCrime': 771, 'withSchools': 642}
 
 ERRORS:
