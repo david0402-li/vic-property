@@ -19,8 +19,8 @@ recorded in vic.json -> meta.errors (and in debug/log.txt).
 import io, json, os, re, sys, time, zipfile, datetime, traceback
 from collections import defaultdict
 
-import requests
 import pandas as pd
+from curl_cffi import requests as cr
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CACHE = os.path.join(ROOT, "cache")
@@ -36,7 +36,7 @@ CKAN = "https://discover.data.vic.gov.au/api/3/action/package_show?id="
 PKG_HOUSE = "victorian-property-sales-report-median-house-by-suburb-time-series"
 PKG_UNIT = "victorian-property-sales-report-median-unit-by-suburb-time-series"
 PKG_RENT = "rental-report-quarterly-moving-annual-rents-by-suburb"
-ABS_TSP_URLS = [
+ABS_TSP_URLS_UNUSED = [
     "https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_TSP_SAL_for_VIC_short-header.zip",
     "https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_TSP_all_for_VIC_short-header.zip",
 ]
@@ -61,8 +61,9 @@ def get(url, tries=3, timeout=120):
     last = None
     for i in range(tries):
         try:
-            r = requests.get(url, headers=UA, timeout=timeout, allow_redirects=True)
-            r.raise_for_status()
+            r = cr.get(url, impersonate="chrome", timeout=timeout, allow_redirects=True)
+            if r.status_code >= 400:
+                raise RuntimeError(f"HTTP {r.status_code} for {url}")
             return r
         except Exception as e:  # noqa
             last = e
@@ -85,13 +86,43 @@ def ckan_latest(pkg):
     return files[0], res
 
 
-def download_cached(url, fname):
+def is_excel(b):
+    return b[:2] == b"PK" or b[:4] == bytes.fromhex("D0CF11E0")
+
+
+def wayback(url):
+    bare = re.sub(r"^https?://", "", url)
+    j = get("https://archive.org/wayback/available?url=" + bare, tries=2, timeout=60).json()
+    snap = (j.get("archived_snapshots") or {}).get("closest")
+    if not snap:
+        raise RuntimeError("no wayback snapshot for " + url)
+    raw = re.sub(r"/web/(\d+)/", r"/web/\1id_/", snap["url"]).replace("http://", "https://", 1)
+    return raw, snap.get("timestamp")
+
+
+def download_cached(url, fname, allow_wayback=True):
+    """Download url; if blocked (e.g. Cloudflare challenge) fall back to the Internet Archive copy.
+    Returns (path, via) where via is 'direct' or 'wayback:<timestamp>'."""
     path = os.path.join(CACHE, fname)
-    r = get(url)
+    via = "direct"
+    try:
+        r = get(url, tries=2, timeout=90)
+        if not is_excel(r.content):
+            raise RuntimeError(f"not an Excel file ({r.headers.get('content-type')}): likely bot challenge")
+        content = r.content
+    except Exception as e:
+        if not allow_wayback:
+            raise
+        log(f"  direct download failed ({e}); trying Wayback Machine")
+        raw, ts = wayback(url)
+        r = get(raw, tries=3, timeout=120)
+        if not is_excel(r.content):
+            raise RuntimeError("wayback copy is not an Excel file")
+        content, via = r.content, f"wayback:{ts}"
     with open(path, "wb") as f:
-        f.write(r.content)
-    log(f"  downloaded {url} -> {fname} ({len(r.content)/1024:.0f} KB, {r.headers.get('content-type')})")
-    return path
+        f.write(content)
+    log(f"  downloaded {url} -> {fname} ({len(content)/1024:.0f} KB) via {via}")
+    return path, via
 
 
 def read_all_sheets(path):
@@ -277,88 +308,131 @@ def rent_group_index(groups):
     return idx
 
 
-# ---------------------------------------------------------------- ABS census TSP
-def parse_census():
-    zpath = None
-    for url in ABS_TSP_URLS:
+# ---------------------------------------------------------------- ABS Data API
+ABS_API = "https://data.api.abs.gov.au/rest/data/"
+STATE_CODE = "2"  # Victoria
+
+
+def abs_csv(flow, key="all"):
+    """Fetch an ABS SDMX dataflow as CSV-with-labels. Falls back to 'all' if the filtered key fails."""
+    for k in ([key, "all"] if key != "all" else ["all"]):
+        url = f"{ABS_API}{flow}/{k}?format=csvfilewithlabels"
         try:
-            zpath = download_cached(url, "abs_tsp_vic.zip")
-            break
+            r = get(url, tries=2, timeout=300)
+            df = pd.read_csv(io.BytesIO(r.content), low_memory=False, dtype=str)
+            log(f"  ABS {flow} key={k}: {len(df)} rows")
+            return df
         except Exception as e:
-            log(f"  ABS url failed {url}: {e}")
-    if not zpath:
-        raise RuntimeError("could not download ABS TSP datapack")
-    z = zipfile.ZipFile(zpath)
-    names = z.namelist()
-    debug_write("abs_zip_listing.txt", "\n".join(names))
+            log(f"  ABS {flow} key={k} failed: {e}")
+    raise RuntimeError(f"ABS {flow} unavailable")
 
-    # SAL code -> name from metadata workbook
-    sal_names = {}
-    meta = [n for n in names if re.search(r"geog_desc.*\.xlsx$", n, re.I)]
-    for m in meta:
-        sheets = pd.read_excel(io.BytesIO(z.read(m)), sheet_name=None, header=None)
-        for sn, df in sheets.items():
-            for _, row in df.iterrows():
-                vals = [str(x) for x in row.tolist()]
-                for k, v in enumerate(vals):
-                    if re.fullmatch(r"SAL\d{5}", v) and k + 1 < len(vals):
-                        sal_names[v] = vals[k + 1]
-    log(f"  ABS: {len(sal_names)} SAL names from metadata")
 
-    csvs = [n for n in names if n.lower().endswith(".csv") and "_sal" in n.lower()]
-    pop, dw = {}, {}
-    hdr_dump = []
-    for c in csvs:
-        df = pd.read_csv(io.BytesIO(z.read(c)), dtype={0: str})
-        cols = list(df.columns)
-        hdr_dump.append(f"{c}: {cols[:80]}")
-        code_col = cols[0]
-        # population: Tot_P_C11 style or Tot_persons_C11_P
-        pcols = {}
-        for col in cols:
-            m = re.fullmatch(r"Tot(?:al)?_(?:P|persons|Persons)_C(\d{2})(?:_P)?", col) or \
-                re.fullmatch(r"Tot_persons_C(\d{2})_P", col)
-            if m:
-                pcols[2000 + int(m.group(1))] = col
-        if len(pcols) >= 2 and not pop:
-            for _, r in df.iterrows():
-                pop[r[code_col]] = {y: int(r[c_]) for y, c_ in pcols.items() if pd.notna(r[c_])}
-            log(f"  ABS: population from {c} cols {pcols}")
-        # dwelling structure: look for flat/apartment + separate house + total per census year
-        if not dw and any(re.search(r"flat|apart", col, re.I) for col in cols):
-            groups = defaultdict(dict)
-            for col in cols:
-                m = re.search(r"C(11|16|21)", col)
-                if not m:
-                    continue
-                y = 2000 + int(m.group(1))
-                lc = col.lower()
-                if re.search(r"sep_?house|separate", lc):
-                    groups[y].setdefault("sep", col)
-                elif re.search(r"semi|sd_r_t|row|terr|townh", lc):
-                    groups[y].setdefault("semi", col)
-                elif re.search(r"flat|apart", lc):
-                    groups[y].setdefault("flat", col)
-                elif re.search(r"^tot|total", lc):
-                    groups[y].setdefault("tot", col)
-            if len(groups) >= 2 and all("flat" in g for g in groups.values()):
-                for _, r in df.iterrows():
-                    d = {}
-                    for y, g in groups.items():
-                        vals = {k: (float(r[v]) if pd.notna(r[v]) else 0) for k, v in g.items()}
-                        tot = vals.get("tot") or sum(vals.get(k, 0) for k in ("sep", "semi", "flat"))
-                        if tot > 0:
-                            d[y] = {"flat": round(vals.get("flat", 0) / tot * 100, 1),
-                                    "semi": round(vals.get("semi", 0) / tot * 100, 1),
-                                    "n": int(tot)}
-                    dw[r[code_col]] = d
-                log(f"  ABS: dwelling structure from {c} cols {dict(groups)}")
-    debug_write("abs_csv_headers.txt", "\n".join(hdr_dump))
-    by_name = {}
-    for code, nm in sal_names.items():
-        key = norm(nm)
-        by_name[key] = {"pop": pop.get(code), "dw": dw.get(code), "sal": code}
-    return by_name
+def clean_sal(name):
+    return norm(re.sub(r"\s*\((Vic\.?|VIC)\)\s*$", "", str(name)))
+
+
+def sa2_base(name):
+    """'Glen Waverley - West' -> ['GLEN WAVERLEY']; 'Ashburton (Vic.)' -> ['ASHBURTON'];
+    'Brunswick East' -> ['BRUNSWICK EAST']; 'Albert Park' -> ['ALBERT PARK']"""
+    n = re.sub(r"\s*\((Vic\.?|VIC)\)", "", name)
+    parts = [p.strip() for p in re.split(r"\s+-\s+", n)]
+    base = parts[0]
+    # 'A - B' where B is a compass/qualifier -> base A ; 'A - B' where B is another place -> both
+    quals = {"NORTH", "SOUTH", "EAST", "WEST", "CENTRAL", "INNER", "OUTER", "NORTH EAST", "NORTH WEST",
+             "SOUTH EAST", "SOUTH WEST", "UPPER", "LOWER", "TOWNSHIP", "BUSHLAND", "RURAL", "ESTATE"}
+    out = [norm(base)]
+    for q in parts[1:]:
+        if norm(q) not in quals and not re.match(r"^(NORTH|SOUTH|EAST|WEST)", norm(q)):
+            out.append(norm(q))
+    return out
+
+
+def load_abs():
+    """Returns dict with:
+       sal: {SUBURB: {"pop2021": int, "dw2021": {...}}}
+       sa2: {code: {"name":..., "erp": {year: n}, "dw": {year: {...}}}}
+       sa2_by_suburb: {SUBURB: [codes]}"""
+    out = {"sal": {}, "sa2": {}, "sa2_by_suburb": defaultdict(list)}
+
+    # SAL 2021 population (G01: SEXP.PCHAR.REGION.REGION_TYPE.STATE)
+    try:
+        df = abs_csv("C21_G01_SAL", f"3.P_1..SAL.{STATE_CODE}")
+        df = df[(df["STATE"] == STATE_CODE) & (df["PCHAR"] == "P_1") & (df["SEXP"] == "3")]
+        for _, r in df.iterrows():
+            out["sal"].setdefault(clean_sal(r["Region"]), {})["pop2021"] = int(float(r["OBS_VALUE"]))
+        log(f"  SAL population: {len(df)} suburbs")
+    except Exception as e:
+        ERRORS.append(f"ABS SAL population: {e}"); log(traceback.format_exc())
+
+    # SAL 2021 dwelling structure (G36: DWTSTRD.SUM.REGION.REGION_TYPE.STATE)
+    try:
+        df = abs_csv("C21_G36_SAL", f".D..SAL.{STATE_CODE}")
+        df = df[(df["STATE"] == STATE_CODE) & (df["SUM"] == "D")]
+        piv = df.pivot_table(index="Region", columns="DWTSTRD", values="OBS_VALUE", aggfunc="first")
+        for reg, r in piv.iterrows():
+            f = lambda c: float(r[c]) if c in r and pd.notna(r[c]) else 0.0  # noqa
+            occ = f("OCC")
+            if occ > 0:
+                out["sal"].setdefault(clean_sal(reg), {})["dw2021"] = {
+                    "flat": round(f("3") / occ * 100, 1), "semi": round(f("2") / occ * 100, 1),
+                    "house": round(f("11") / occ * 100, 1), "n": int(occ)}
+        log(f"  SAL dwelling structure: {len(piv)} suburbs")
+    except Exception as e:
+        ERRORS.append(f"ABS SAL dwellings: {e}"); log(traceback.format_exc())
+
+    # SA2 ERP annual (MEASURE.REGION_TYPE.ASGS_2021.FREQ)
+    try:
+        df = abs_csv("ABS_ANNUAL_ERP_ASGS2021", "ERP.SA2..A")
+        df = df[(df["REGION_TYPE"] == "SA2") & df["ASGS_2021"].str.startswith(STATE_CODE)]
+        for _, r in df.iterrows():
+            d = out["sa2"].setdefault(r["ASGS_2021"], {"name": r["Region"], "erp": {}, "dw": {}})
+            d["erp"][int(r["TIME_PERIOD"])] = int(float(r["OBS_VALUE"]))
+        log(f"  SA2 ERP: {len(out['sa2'])} SA2s")
+    except Exception as e:
+        ERRORS.append(f"ABS ERP: {e}"); log(traceback.format_exc())
+
+    # SA2 dwelling structure time series 2011/2016/2021 (T18: tenure x dwelling structure)
+    try:
+        df = abs_csv("C21_T18_SA2")
+        debug_write("abs_t18_columns.txt", str(list(df.columns)) + "\n\n" +
+                    "\n".join(f"{c}: {sorted(df[c].dropna().unique().tolist())[:40]}"
+                              for c in df.columns if df[c].nunique() < 80))
+        if "REGION_TYPE" in df:
+            df = df[df["REGION_TYPE"] == "SA2"]
+        df = df[df["REGION"].astype(str).str.startswith(STATE_CODE)]
+        lab = [c for c in df.columns if "dwelling structure" in c.lower() and not c.isupper()]
+        ten = [c for c in df.columns if "tenure" in c.lower() and not c.isupper()]
+        if lab and ten:
+            dl, tl = lab[0], ten[0]
+            df = df[df[tl].str.contains("Total", case=False, na=False)]
+            def cat(s):
+                s = str(s).lower()
+                if "total" in s and ":" not in s and ("dwelling" in s or s.strip() == "total"):
+                    return "tot"
+                if s.startswith("separate house"):
+                    return "house"
+                if s.startswith("semi-detached") and "total" in s:
+                    return "semi"
+                if s.startswith("flat") and "total" in s:
+                    return "flat"
+                return None
+            df = df.assign(_c=df[dl].map(cat)).dropna(subset=["_c"])
+            g = df.groupby(["REGION", "TIME_PERIOD", "_c"])["OBS_VALUE"].apply(lambda x: float(x.iloc[0])).unstack("_c")
+            for (reg, yr), r in g.iterrows():
+                tot = r.get("tot") if pd.notna(r.get("tot")) else sum(r.get(k, 0) or 0 for k in ("house", "semi", "flat"))
+                if tot and reg in out["sa2"]:
+                    out["sa2"][reg]["dw"][int(yr)] = {"flat": float(r.get("flat") or 0), "semi": float(r.get("semi") or 0),
+                                                     "tot": float(tot)}
+            log(f"  SA2 dwelling TS: {g.shape[0]} region-years, categories {list(g.columns)}")
+        else:
+            log(f"  T18: couldn't identify label columns {list(df.columns)}")
+    except Exception as e:
+        ERRORS.append(f"ABS T18: {e}"); log(traceback.format_exc())
+
+    for code, d in out["sa2"].items():
+        for b in sa2_base(d["name"]):
+            out["sa2_by_suburb"][b].append(code)
+    return out
 
 
 # ---------------------------------------------------------------- build
@@ -370,24 +444,32 @@ def annual_from_quarterly(ser):
     return out
 
 
-def main():
-    meta = {"generated": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%MZ"), "sources": {}, "errors": []}
+def growth(series, n):
+    if not series:
+        return None
+    last = max(series)
+    if last - n in series and series[last - n]:
+        return round(((series[last] / series[last - n]) ** (1 / n) - 1) * 100, 1)
+    return None
 
-    house = unit = {}
-    rents = {}
-    census = {}
+
+def main():
+    meta = {"generated": datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%MZ"), "state": "VIC",
+            "sources": {}, "errors": []}
+    house, unit, rents = {}, {}, {}
+    absd = {"sal": {}, "sa2": {}, "sa2_by_suburb": {}}
 
     for label, pkg in (("house", PKG_HOUSE), ("unit", PKG_UNIT)):
         try:
             log(f"[{label}] CKAN {pkg}")
             res, _ = ckan_latest(pkg)
-            p = download_cached(res["url"], f"vpsr_{label}" + os.path.splitext(res["url"].split("?")[0])[1])
+            p, via = download_cached(res["url"], f"vpsr_{label}.xlsx")
             data = parse_vpsr(p, label)
             if label == "house":
                 house = data
             else:
                 unit = data
-            meta["sources"][label] = {"name": res.get("name"), "url": res["url"], "period_end": res.get("period_end")}
+            meta["sources"][label] = {"name": res.get("name"), "url": res["url"], "via": via}
         except Exception as e:
             ERRORS.append(f"{label}: {e}")
             log(traceback.format_exc())
@@ -395,73 +477,80 @@ def main():
     try:
         log("[rent] CKAN " + PKG_RENT)
         res, _ = ckan_latest(PKG_RENT)
-        p = download_cached(res["url"], "dffh_rents.xlsx")
+        p, via = download_cached(res["url"], "dffh_rents.xlsx")
         rents = parse_rents(p)
-        meta["sources"]["rent"] = {"name": res.get("name"), "url": res["url"], "period_end": res.get("period_end")}
+        meta["sources"]["rent"] = {"name": res.get("name"), "url": res["url"], "via": via}
     except Exception as e:
         ERRORS.append(f"rent: {e}")
         log(traceback.format_exc())
 
-    try:
-        log("[census] ABS TSP")
-        census = parse_census()
-        meta["sources"]["census"] = {"name": "ABS 2021 Census Time Series Profile (SAL, VIC)", "url": ABS_TSP_URLS[0]}
-    except Exception as e:
-        ERRORS.append(f"census: {e}")
-        log(traceback.format_exc())
+    log("[abs] ABS Data API")
+    absd = load_abs()
+    meta["sources"]["abs"] = {"name": "ABS Data API (Census 2021 G01/G36 SAL, T18 SA2; ERP by SA2)",
+                              "url": "https://data.api.abs.gov.au"}
 
     gidx = rent_group_index(rents.keys())
     names = set(house) | set(unit)
     suburbs = []
-    unmatched_rent = 0
     for key in sorted(names):
-        h = house.get(key, {})
-        u = unit.get(key, {})
+        h, u = house.get(key, {}), unit.get(key, {})
         g = gidx.get(key)
-        r = rents.get(g, {}) if g else {}
-        if not g:
-            unmatched_rent += 1
-        rq = {t: s for t, s in r.items()}
-        rh = annual_from_quarterly(rq.get("h3", {}))
-        ru = annual_from_quarterly(rq.get("f2", {}))
+        rq = rents.get(g, {}) if g else {}
+        rh = annual_from_quarterly(rq.get("h3", {}) or rq.get("all", {}))
+        ru = annual_from_quarterly(rq.get("f2", {}) or rq.get("all", {}))
         yh = {y: round(rh[y] * 52 / h[y] * 100, 2) for y in h if y in rh and h[y]}
         yu = {y: round(ru[y] * 52 / u[y] * 100, 2) for y in u if y in ru and u[y]}
-        c = census.get(key) or {}
+
+        sal = absd["sal"].get(key, {})
+        codes = absd["sa2_by_suburb"].get(key, [])
+        sa2s = [absd["sa2"][c] for c in codes]
+        erp = defaultdict(int)
+        for d in sa2s:
+            for y, v in d["erp"].items():
+                erp[y] += v
+        dws = defaultdict(lambda: {"flat": 0.0, "semi": 0.0, "tot": 0.0})
+        for d in sa2s:
+            for y, v in d["dw"].items():
+                for k in ("flat", "semi", "tot"):
+                    dws[y][k] += v[k]
+        dw_ts = {y: {"flat": round(v["flat"] / v["tot"] * 100, 1), "semi": round(v["semi"] / v["tot"] * 100, 1)}
+                 for y, v in sorted(dws.items()) if v["tot"]}
+
         latest = lambda s: s[max(s)] if s else None  # noqa
+        dw21 = sal.get("dw2021")
         rec = {
             "id": slug(key), "name": title(key), "rentGroup": g,
-            "house": h, "unit": u,
-            "rent": {t: s for t, s in rq.items()},
+            "house": h, "unit": u, "rent": rq,
             "yieldHouse": yh, "yieldUnit": yu,
-            "pop": c.get("pop"), "dw": c.get("dw"),
+            "sa2": [d["name"] for d in sa2s],
+            "erp": dict(sorted(erp.items())) or None,
+            "dwTs": dw_ts or None,
+            "pop2021": sal.get("pop2021"), "dw2021": dw21,
             "latest": {
-                "house": latest(h), "unit": latest(u),
-                "houseYear": max(h) if h else None,
-                "rentH3": latest(rq.get("h3", {})), "rentF2": latest(rq.get("f2", {})),
-                "rentAll": latest(rq.get("all", {})),
+                "house": latest(h), "unit": latest(u), "year": max(h) if h else (max(u) if u else None),
+                "rentH3": latest(rq.get("h3", {})), "rentF2": latest(rq.get("f2", {})), "rentAll": latest(rq.get("all", {})),
+                "rentQ": max(rq.get("all", rq.get("h3", {})) or {"": 0}) or None,
                 "yieldHouse": latest(yh), "yieldUnit": latest(yu),
-                "pop": latest(c.get("pop") or {}),
-                "flatShare": (c.get("dw") or {}).get(2021, {}).get("flat") if c.get("dw") else None,
+                "g1": growth(h, 1), "g5": growth(h, 5), "g10": growth(h, 10), "gu5": growth(u, 5),
+                "pop": sal.get("pop2021"), "erp": latest(erp) if erp else None,
+                "popGrowth5": growth(dict(erp), 5) if erp else None,
+                "flatShare": dw21["flat"] if dw21 else None,
+                "unitShare": round(dw21["flat"] + dw21["semi"], 1) if dw21 else None,
             },
         }
-        # 5y / 10y growth
-        if len(h) >= 2:
-            ys = sorted(h)
-            last = ys[-1]
-            for n in (1, 5, 10):
-                if last - n in h and h[last - n]:
-                    rec["latest"][f"g{n}"] = round((h[last] / h[last - n]) ** (1 / n) * 100 - 100, 1) if n > 1 \
-                        else round(h[last] / h[last - n] * 100 - 100, 1)
         suburbs.append(rec)
 
-    log(f"suburbs: {len(suburbs)}; with rent group: {len(suburbs)-unmatched_rent}; "
-        f"with census: {sum(1 for s in suburbs if s['pop'])}")
     meta["errors"] = ERRORS
     meta["counts"] = {"suburbs": len(suburbs), "rentGroups": len(rents),
-                      "withRent": len(suburbs) - unmatched_rent,
-                      "withCensus": sum(1 for s in suburbs if s["pop"])}
+                      "withRent": sum(1 for s in suburbs if s["rentGroup"]),
+                      "withYield": sum(1 for s in suburbs if s["latest"]["yieldHouse"] is not None),
+                      "withCensus": sum(1 for s in suburbs if s["pop2021"]),
+                      "withErp": sum(1 for s in suburbs if s["erp"])}
+    log("counts:", meta["counts"])
     with open(os.path.join(OUT, "vic.json"), "w", encoding="utf-8") as f:
         json.dump({"meta": meta, "suburbs": suburbs}, f, ensure_ascii=False, separators=(",", ":"))
+    unmatched = [s["name"] for s in suburbs if not s["rentGroup"]][:300]
+    debug_write("unmatched_rent.txt", "\n".join(unmatched) + "\n\nRENT GROUPS:\n" + "\n".join(sorted(rents)))
     debug_write("log.txt", "\n".join(LOG) + "\n\nERRORS:\n" + "\n".join(ERRORS))
     debug_write("sample_glen_waverley.json",
                 json.dumps(next((s for s in suburbs if s["id"] == "glen-waverley"), {}), indent=1, ensure_ascii=False))
