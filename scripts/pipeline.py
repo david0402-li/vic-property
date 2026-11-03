@@ -245,40 +245,44 @@ def quarter_label(v):
 
 
 def parse_vpsr_quarterly(path, label):
+    """VPSR quarterly file: header split over two rows ('Jan-Mar' / '2026'); '^' marks <10 sales.
+    Returns {SUBURB: {"q": {"YYYY-MM": price}, "n": sales_latest, "low": bool}}"""
     sheets = read_all_sheets(path)
     dump_sheets(sheets, f"raw_{label}_q.txt", rows=14)
     result = {}
     for sn, df in sheets.items():
-        hdr_idx, qcols = None, {}
-        for i in range(min(25, len(df))):
+        hdr_idx, cols, ncol = None, {}, None
+        for i in range(min(25, len(df) - 1)):
             q = {}
-            for j, v in enumerate(df.iloc[i].tolist()):
-                if isinstance(v, str) and re.search(r"(?:19|20)\d{2}", v) and quarter_label(v):
-                    q[j] = quarter_label(v)
-                elif isinstance(v, (pd.Timestamp, datetime.datetime)):
-                    q[j] = quarter_label(v)
+            for j in range(df.shape[1]):
+                a_, b_ = df.iat[i, j], df.iat[i + 1, j]
+                txt = f"{'' if pd.isna(a_) else a_} {'' if pd.isna(b_) else b_}"
+                if re.search(r"(JAN|APR|JUL|OCT)", str(a_).upper()) and "SALE" not in str(a_).upper() \
+                        and re.search(r"(?:19|20)\d{2}", txt):
+                    lab = quarter_label(txt)
+                    if lab and lab not in q.values():
+                        q[j] = lab
+                if ncol is None and "SALES" in str(a_).upper():
+                    ncol = j
             if len(q) >= 3:
-                hdr_idx, qcols = i, q
+                hdr_idx, cols = i, q
                 break
         if hdr_idx is None:
             continue
-        # keep first occurrence of each quarter label (later columns tend to be counts/changes)
-        seen, cols = set(), {}
-        for j in sorted(qcols):
-            if qcols[j] not in seen:
-                seen.add(qcols[j]); cols[j] = qcols[j]
         first = min(cols)
         best, best_cnt = 0, -1
         for j in range(first):
             cnt = sum(isinstance(x, str) and len(x.strip()) > 2 for x in df.iloc[hdr_idx + 1:, j])
             if cnt > best_cnt:
                 best, best_cnt = j, cnt
-        for i in range(hdr_idx + 1, len(df)):
+        lastq = max(cols, key=lambda j: cols[j])
+        for i in range(hdr_idx + 2, len(df)):
             nm = df.iat[i, best]
             if not isinstance(nm, str) or not nm.strip():
                 continue
             key = norm(nm)
-            if key in ("LOCALITY", "SUBURB", "VICTORIA") or key.startswith("SOURCE") or "TOTAL" in key:
+            if key in ("LOCALITY", "SUBURB", "VICTORIA") or key.startswith("SOURCE") or "TOTAL" in key \
+                    or "METROPOLITAN" in key or key.startswith("COUNTRY"):
                 continue
             ser = {}
             for j, q in cols.items():
@@ -286,9 +290,11 @@ def parse_vpsr_quarterly(path, label):
                 if val and val > 10000:
                     ser[q] = round(val)
             if ser:
-                result[key] = ser
-        log(f"  {label} quarterly: sheet '{sn}' header row {hdr_idx}, quarters {sorted(set(cols.values()))}, "
-            f"suburb col {best}, parsed {len(result)}")
+                low = lastq + 1 < df.shape[1] and str(df.iat[i, lastq + 1]).strip() == "^"
+                n = num(df.iat[i, ncol]) if ncol is not None else None
+                result[key] = {"q": ser, "n": int(n) if n else None, "low": low}
+        log(f"  {label}: sheet '{sn}' header row {hdr_idx}, quarters {sorted(cols.values())}, "
+            f"sales col {ncol}, parsed {len(result)}")
     return result
 
 
@@ -760,7 +766,8 @@ def main():
 
         latest = lambda s: s[max(s)] if s else None  # noqa
         dw21 = sal.get("dw2021")
-        hq, uq = houseq.get(key, {}), unitq.get(key, {})
+        hqr, uqr = houseq.get(key, {}), unitq.get(key, {})
+        hq, uq = hqr.get("q", {}), uqr.get("q", {})
         def now(ann, q):
             """most recent price: latest quarter if it is newer than the last annual median"""
             if q:
@@ -787,12 +794,14 @@ def main():
             "latest": {
                 "house": hNow, "unit": uNow, "houseAsOf": hAsOf, "unitAsOf": uAsOf,
                 "houseAnnual": latest(h), "unitAnnual": latest(u),
+                "houseQN": hqr.get("n"), "houseQLow": hqr.get("low"), "unitQN": uqr.get("n"), "unitQLow": uqr.get("low"),
                 "year": max(h) if h else (max(u) if u else None),
                 "rentH3": latest(rq.get("h3", {})), "rentF2": latest(rq.get("f2", {})), "rentAll": latest(rq.get("all", {})), "rentEst": latest(rq.get("est", {})), "rentMatch": how,
                 "rentQ": max(rq.get("all", rq.get("h3", {})) or {"": 0}) or None,
                 "yieldHouse": round(rH * 52 / hNow * 100, 2) if rH and hNow else None,
                 "yieldUnit": round(rU * 52 / uNow * 100, 2) if rU and uNow else None,
                 "gq1": (round((hq[max(hq)] / hq[sorted(hq)[-5]] - 1) * 100, 1) if len(hq) >= 5 else None),
+                "gqq": (round((hq[max(hq)] / hq[sorted(hq)[-2]] - 1) * 100, 1) if len(hq) >= 2 else None),
                 "g1": growth(h, 1), "g5": growth(h, 5), "g10": growth(h, 10), "gu5": growth(u, 5),
                 "pop": sal.get("pop2021"), "erp": latest(erp) if erp else None,
                 "popGrowth5": growth(dict(erp), 5) if erp else None,

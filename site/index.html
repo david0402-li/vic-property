@@ -105,6 +105,7 @@ fetch("data/"+STATE.toLowerCase()+".json",{cache:"no-cache"}).then(r=>r.json()).
   document.getElementById("foot").innerHTML=`数据来源：
     ${src.house?`<a href="${esc(src.house.url)}">Valuer-General Victoria · ${esc(src.house.name)}</a>（独立屋中位价）；`:""}
     ${src.unit?`<a href="${esc(src.unit.url)}">${esc(src.unit.name)}</a>（单元中位价）；`:""}
+    ${src.houseq?`<a href="${esc(src.houseq.url)}">VGV ${esc(src.houseq.name)}</a>${src.unitq?` / <a href="${esc(src.unitq.url)}">${esc(src.unitq.name)}</a>`:""}（最新季度中位价）；`:""}
     ${src.rent?`<a href="${esc(src.rent.url)}">DFFH ${esc(src.rent.name)}</a>（租金中位数，按 DFFH 区组）；`:""}
     ${src.abs?`<a href="${esc(src.abs.url)}">${esc(src.abs.name)}</a>（人口、住宅结构）。`:""}
     ${(src.house&&src.house.via||"").startsWith("wayback")?"房价文件因源站拦截自动化下载，取自 Internet Archive 存档副本。":""}
@@ -128,11 +129,12 @@ const COLS=[
   ["name","区号 · 区",s=>label(s)],
   ["yieldHouse","屋收益率",s=>s.latest.yieldHouse,fmtP,1],
   ["yieldUnit","单元收益率",s=>s.latest.yieldUnit,fmtP,1],
-  ["house","独立屋中位价",s=>s.latest.house,fmtK],
-  ["unit","单元中位价",s=>s.latest.unit,fmtK],
+  ["house","独立屋中位价",s=>s.latest.house,fmtK,0,s=>s.latest.houseQLow],
+  ["unit","单元中位价",s=>s.latest.unit,fmtK,0,s=>s.latest.unitQLow],
   ["rentH3","3房屋周租",s=>s.latest.rentH3??s.latest.rentEst,fmt$,1],
   ["rentF2","2房单元周租",s=>s.latest.rentF2??s.latest.rentEst,fmt$,1],
-  ["g1","屋价1年涨幅",s=>s.latest.g1,v=>fmtP(v,1)],
+  ["gqq","屋价季度变化",s=>s.latest.gqq,v=>fmtP(v,1)],
+  ["g1","屋价1年涨幅",s=>s.latest.gq1??s.latest.g1,v=>fmtP(v,1)],
   ["g5","屋价5年年化",s=>s.latest.g5,v=>fmtP(v,1)],
   ["g10","屋价10年年化",s=>s.latest.g10,v=>fmtP(v,1)],
   ["pop","人口(2021)",s=>s.latest.pop,nf],
@@ -142,7 +144,7 @@ const COLS=[
 const RANKS=[
   ["yieldHouse",-1,"独立屋收益率 高→低"],["yieldUnit",-1,"单元收益率 高→低"],
   ["house",-1,"独立屋房价 高→低"],["house",1,"独立屋房价 低→高"],["unit",-1,"单元房价 高→低"],
-  ["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],
+  ["gqq",-1,"季度涨幅"],["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],
 ];
 let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0, FS=false;
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&FS){document.getElementById("fsbtn")?.click()}});
@@ -187,8 +189,8 @@ function rows(){
   list.forEach((s,i)=>s._rank=i+1);
   const shown=q?list.filter(s=>label(s).toLowerCase().includes(q)):list;
   const medal=r=>r<=3?`<span class="medal m${r}">${r}</span>`:r;
-  document.getElementById("tb").innerHTML=shown.slice(0,5000).map(s=>`<tr data-id="${s.id}"><td class="rank">${medal(s._rank)}</td>${COLS.map(c=>{const t=c[3]?c[3](c[2](s)):esc(c[2](s));return `<td>${c[4]?est(s,t):t}</td>`}).join("")}</tr>`).join("");
-  document.getElementById("cnt").textContent=`按「${col[1]}」排名，共 ${list.length} 个有数据的区${q?`，搜索结果 ${shown.length} 个（名次为全州排名）`:""}。带 ≈ 的为估算租金/收益率（该区不在 DFFH 租金区组内）。点击某一行查看详情和走势图。`;
+  document.getElementById("tb").innerHTML=shown.slice(0,5000).map(s=>`<tr data-id="${s.id}"><td class="rank">${medal(s._rank)}</td>${COLS.map(c=>{let t=c[3]?c[3](c[2](s)):esc(c[2](s)); if(c[5]&&c[5](s)&&t!="–") t=`<span title="该季度成交少于 10 套，中位价波动大" style="color:var(--muted)">*</span>${t}`; return `<td>${c[4]?est(s,t):t}</td>`}).join("")}</tr>`).join("");
+  document.getElementById("cnt").textContent=`按「${col[1]}」排名，共 ${list.length} 个有数据的区${q?`，搜索结果 ${shown.length} 个（名次为全州排名）`:""}。房价为最新季度中位价（${DB.suburbs.find(x=>x.latest.houseAsOf&&x.latest.houseAsOf.includes("Q"))?.latest.houseAsOf||""}），带 * 表示该季度成交少于 10 套；收益率 = 最新租金 × 52 ÷ 最新房价。带 ≈ 的为估算租金/收益率（该区不在 DFFH 租金区组内）。点击某一行查看详情和走势图。`;
   document.querySelectorAll("#tb tr[data-id]").forEach(tr=>tr.onclick=()=>{FS=false;location.hash=tr.dataset.id});
 }
 
@@ -201,15 +203,15 @@ function suburbView(s){
   <h2 style="font-size:26px;margin-bottom:4px">${s.postcode?`<span style="color:var(--muted);font-weight:500">${s.postcode}</span> `:""}${esc(s.name)}${s.lga?` <span class="tag" style="font-size:12px;vertical-align:middle">${esc(s.lga)}</span>`:""}</h2>
   <p class="note" style="margin-top:0">${s.rentGroup?`租金数据：DFFH 区组「${esc(s.rentGroup)}」${s.rentMatch=="approx"?"（按邻近区名近似匹配）":""}`:isEst(s)?"租金为估算值：该区不在 DFFH 租金区组内，用 2021 年普查租金中位数按全州租金指数推算（所有房型）":"该区没有租金数据"}</p>
   <section class="grid kpis">
-    <div class="card kpi"><div class="l">独立屋中位价</div><div class="v">${fmtK(L.house)}</div><div class="s">${L.year||""}${L.g1!=null?` · 1年 ${L.g1>0?"+":""}${L.g1}%`:""}${rankOf("house")}</div></div>
-    <div class="card kpi"><div class="l">单元中位价</div><div class="v">${fmtK(L.unit)}</div><div class="s">${L.g5!=null?`屋价5年年化 ${L.g5}%`:""}</div></div>
+    <div class="card kpi"><div class="l">独立屋中位价 · ${L.houseAsOf||""}</div><div class="v">${L.houseQLow?"*":""}${fmtK(L.house)}</div><div class="s">${L.houseQN?`成交 ${L.houseQN} 套`:""}${L.gqq!=null?` · 环比 ${L.gqq>0?"+":""}${L.gqq}%`:""}${(L.gq1??L.g1)!=null?` · 同比 ${(L.gq1??L.g1)>0?"+":""}${L.gq1??L.g1}%`:""}${rankOf("house")}</div></div>
+    <div class="card kpi"><div class="l">单元中位价 · ${L.unitAsOf||""}</div><div class="v">${L.unitQLow?"*":""}${fmtK(L.unit)}</div><div class="s">${L.unitQN?`成交 ${L.unitQN} 套 · `:""}${L.g5!=null?`屋价5年年化 ${L.g5}%`:""}</div></div>
     <div class="card kpi"><div class="l">${isEst(s)?"估算周租（所有房型）":"3房屋周租"}</div><div class="v">${est(s,fmt$(L.rentH3??L.rentEst))}</div><div class="s">${isEst(s)?"":"2房单元 "+fmt$(L.rentF2)}</div></div>
     <div class="card kpi hl"><div class="l">独立屋毛收益率</div><div class="v">${est(s,fmtP(L.yieldHouse))}</div><div class="s">单元 ${fmtP(L.yieldUnit)}${rankOf("yieldHouse")}</div></div>
     <div class="card kpi"><div class="l">人口（2021 普查）</div><div class="v">${L.pop?L.pop.toLocaleString():"–"}</div><div class="s">${L.popGrowth5!=null?"SA2 人口5年年化 "+L.popGrowth5+"%":"&nbsp;"}</div></div>
     <div class="card kpi"><div class="l">单元类住宅占比</div><div class="v">${L.unitShare!=null?L.unitShare+"%":"–"}</div><div class="s">${dw21?"公寓 "+dw21.flat+"% · 联排 "+dw21.semi+"%":""}</div></div>
   </section>
   <section class="grid two">
-    <div class="card"><h2>房价走势</h2><div class="chartbox"><canvas id="cPrice"></canvas></div></div>
+    <div class="card"><h2>房价走势</h2><div class="chartbox"><canvas id="cPrice"></canvas></div>${qtable(s)}</div>
     <div class="card"><h2>租金收益率走势</h2><div class="chartbox"><canvas id="cYield"></canvas></div></div>
     <div class="card"><h2>周租金走势</h2><div class="chartbox"><canvas id="cRent"></canvas></div></div>
     <div class="card"><h2>空置率走势</h2><div class="chartbox" style="display:flex;align-items:center;justify-content:center;text-align:center"><p class="note">维州没有免费的区级空置率时间序列。<br>SQM Research 有邮编级数据（商业数据），后续可接入。</p></div></div>
@@ -233,8 +235,11 @@ const pick=(o,ks)=>ks.map(k=>o&&o[k]!=null?o[k]:null);
 
 function charts(s){
   const A=css("--accent"),W=css("--warn"),G=css("--gold"),B=css("--blue");
-  let ks=yrs(s.house,s.unit);
-  line("cPrice",ks,[{label:"独立屋",data:pick(s.house,ks),borderColor:A,backgroundColor:A},{label:"单元",data:pick(s.unit,ks),borderColor:G,backgroundColor:G}],fmtK);
+  let ks=yrs(s.house,s.unit), lastY=ks.length?+ks[ks.length-1]:0;
+  const qk=[...new Set([...Object.keys(s.houseQ||{}),...Object.keys(s.unitQ||{})])].filter(q=>+q.slice(0,4)>lastY).sort();
+  const ql=q=>q.slice(0,4)+"Q"+(+q.slice(5)/3);
+  const pv=(ann,qs)=>[...pick(ann,ks),...qk.map(q=>qs&&qs[q]!=null?qs[q]:null)];
+  line("cPrice",[...ks,...qk.map(ql)],[{label:"独立屋",data:pv(s.house,s.houseQ),borderColor:A,backgroundColor:A},{label:"单元",data:pv(s.unit,s.unitQ),borderColor:G,backgroundColor:G}],fmtK);
   ks=yrs(s.yieldHouse,s.yieldUnit);
   line("cYield",ks,[{label:"独立屋（3房）",data:pick(s.yieldHouse,ks),borderColor:A,backgroundColor:A},{label:"单元（2房）",data:pick(s.yieldUnit,ks),borderColor:G,backgroundColor:G}],v=>v==null?"":v.toFixed(1)+"%");
   const r=s.rent||{}; ks=yrs(r.h3,r.f2,r.h4,r.f1,r.est);
@@ -246,6 +251,16 @@ function charts(s){
   line("cPop",ks,sets,v=>v==null?"":Math.round(v).toLocaleString());
   const dw=s.dwTs||(s.dw2021?{2021:s.dw2021}:{}); ks=Object.keys(dw).sort();
   line("cDw",ks,[{label:"公寓 (flat/apartment)",data:ks.map(k=>dw[k].flat),borderColor:G,backgroundColor:G},{label:"联排/半独立 (townhouse)",data:ks.map(k=>dw[k].semi),borderColor:W,backgroundColor:W},{label:"合计（单元类）",data:ks.map(k=>+(dw[k].flat+dw[k].semi).toFixed(1)),borderColor:A,backgroundColor:A,borderDash:[5,4]}],v=>v==null?"":(+v).toFixed(0)+"%");
+}
+
+function qtable(s){
+  const qs=[...new Set([...Object.keys(s.houseQ||{}),...Object.keys(s.unitQ||{})])].sort();
+  if(!qs.length) return "";
+  const ql=q=>q.slice(0,4)+" Q"+(+q.slice(5)/3);
+  return `<table class="mt" style="font-size:13px"><thead><tr><th>最近季度中位价</th>${qs.map(q=>`<th>${ql(q)}</th>`).join("")}</tr></thead><tbody>
+    <tr><td>独立屋</td>${qs.map(q=>`<td>${fmtK((s.houseQ||{})[q])}</td>`).join("")}</tr>
+    <tr><td>单元</td>${qs.map(q=>`<td>${fmtK((s.unitQ||{})[q])}</td>`).join("")}</tr></tbody></table>
+    <p class="note">年度点为全年中位价；${qs.length?"季度点来自 Valuer-General 季度报告。":""}</p>`;
 }
 
 /* ---------------- calculator ---------------- */
