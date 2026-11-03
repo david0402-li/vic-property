@@ -203,7 +203,7 @@ function natRender(){
   line("cYieldB",yq.map(ql),[{label:"独立屋（3房）",data:yq.map(q=>+(mr.h3[q]*52/mel.house[q]*100).toFixed(2)),borderColor:"#1f6f5c",backgroundColor:"#1f6f5c",pointRadius:0},
     {label:"单元（2房）",data:yq.map(q=>mel.unit&&mel.unit[q]&&mr.f2[q]?+(mr.f2[q]*52/mel.unit[q]*100).toFixed(2):null),borderColor:"#c08a1e",backgroundColor:"#c08a1e",pointRadius:0}],v=>v==null?"":(+v).toFixed(1)+"%");
 }
-let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0, FS=false;
+let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=10000, FS=false;
 document.addEventListener("keydown",e=>{if(e.key=="Escape"&&FS){document.getElementById("fsbtn")?.click()}});
 function listView(){
   const all=DB.suburbs, med=k=>{const a=all.map(s=>s.latest[k]).filter(x=>x!=null).sort((a,b)=>a-b);return a.length?a[Math.floor(a.length/2)]:null};
