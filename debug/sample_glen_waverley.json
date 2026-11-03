@@ -1,6 +1,10 @@
 {
  "id": "glen-waverley",
  "name": "Glen Waverley",
+ "postcode": "3150",
+ "lat": -37.876968,
+ "lng": 145.170841,
+ "lga": "Monash",
  "rentGroup": "Glen Waverley-Mulgrave",
  "rentMatch": "exact",
  "house": {
