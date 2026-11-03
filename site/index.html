@@ -13,7 +13,7 @@
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Noto Sans SC",system-ui,sans-serif;line-height:1.55}
 a{color:var(--accent)}
-.wrap{max-width:1180px;margin:0 auto;padding:24px 18px 60px}
+.wrap{max-width:1680px;margin:0 auto;padding:24px 24px 60px}
 header.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:18px}
 h1{font-size:28px;margin:0;letter-spacing:-.4px}
 h1 small{display:block;font-size:13.5px;font-weight:500;color:var(--muted);letter-spacing:0;margin-top:3px}
@@ -29,13 +29,21 @@ h2{font-size:18px;margin:0 0 12px}
 .controls input,.controls select{padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);font:inherit}
 .controls input{flex:1;min-width:220px}
 table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
-td,th{padding:8px 6px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+td,th{padding:8px 7px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
 td:first-child,th:first-child{text-align:left}
 #tb td:nth-child(2),thead th:nth-child(2){text-align:left;font-weight:600}
 th{font-size:12px;color:var(--muted);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--card)}
 th.on{color:var(--accent)}
 tbody tr{cursor:pointer} tbody tr:hover{background:var(--bg)}
 .tablewrap{max-height:70vh;overflow:auto}
+.rkhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.rkhead h2{margin:0}
+.fsbtn{border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 12px;border-radius:10px;font:inherit;font-size:13.5px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.fsbtn:hover{border-color:var(--accent);color:var(--accent)}
+.card.fs{position:fixed;inset:0;z-index:100;border-radius:0;border:none;padding:18px 24px;display:flex;flex-direction:column;overflow:hidden}
+.card.fs .tablewrap{max-height:none;flex:1}
+body.noscroll{overflow:hidden}
+@media(max-width:1440px){#tb td,thead th{padding:7px 4px;font-size:13px}.wrap{padding:20px 14px 50px}#rkcard:not(.fs){padding:14px}}
 .muted{color:var(--muted)} .note{font-size:12.5px;color:var(--muted)}
 .back{display:inline-block;margin-bottom:10px;text-decoration:none;font-size:14px}
 .chartbox{position:relative;height:260px}
@@ -105,7 +113,7 @@ fetch("data/"+STATE.toLowerCase()+".json",{cache:"no-cache"}).then(r=>r.json()).
 }).catch(e=>{document.getElementById("app").innerHTML=`<div class="err">数据加载失败：${esc(e)}</div>`});
 
 function route(){
-  CHARTS.forEach(c=>c.destroy()); CHARTS=[];
+  CHARTS.forEach(c=>c.destroy()); CHARTS=[]; document.body.classList.remove("noscroll");
   const id=decodeURIComponent(location.hash.slice(1));
   if(id && DB.byId[id]) suburbView(DB.byId[id]); else listView();
   window.scrollTo(0,0);
@@ -136,7 +144,8 @@ const RANKS=[
   ["house",-1,"独立屋房价 高→低"],["house",1,"独立屋房价 低→高"],["unit",-1,"单元房价 高→低"],
   ["g5",-1,"5年涨幅"],["g1",-1,"1年涨幅"],["popGrowth5",-1,"人口增长"],["unitShare",-1,"单元占比"],
 ];
-let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0;
+let SORT={k:"yieldHouse",dir:-1}, Q="", MIN=0, MINSALES=0, MINPOP=0, FS=false;
+document.addEventListener("keydown",e=>{if(e.key=="Escape"&&FS){document.getElementById("fsbtn")?.click()}});
 function listView(){
   const all=DB.suburbs, med=k=>{const a=all.map(s=>s.latest[k]).filter(x=>x!=null).sort((a,b)=>a-b);return a.length?a[Math.floor(a.length/2)]:null};
   const c=DB.meta.counts;
@@ -147,8 +156,8 @@ function listView(){
     <div class="card kpi"><div class="l">独立屋中位价（各区中位）</div><div class="v">${fmtK(med("house"))}</div><div class="s">${all.find(s=>s.latest.year)?.latest.year||""} 年</div></div>
     <div class="card kpi"><div class="l">屋价 5 年年化（各区中位）</div><div class="v">${fmtP(med("g5"),1)}</div><div class="s">&nbsp;</div></div>
   </section>
-  <div class="card">
-    <h2>排行榜</h2>
+  <div class="card" id="rkcard">
+    <div class="rkhead"><h2>排行榜</h2><button class="fsbtn" id="fsbtn" title="全屏显示排行榜（Esc 退出）">⛶ 全屏</button></div>
     <div class="rk">${RANKS.map(([k,d,l])=>`<button data-k="${k}" data-d="${d}" class="${SORT.k==k&&SORT.dir==d?"on":""}">${l}</button>`).join("")}</div>
     <div class="controls">
       <input id="q" placeholder="搜索区名或邮编，例如 Glen Waverley 或 3150" value="${esc(Q)}">
@@ -163,6 +172,9 @@ function listView(){
   pp.onchange=()=>{MINPOP=+pp.value;rows()};
   q.oninput=()=>{Q=q.value;rows()}; mn.onchange=()=>{MIN=+mn.value;rows()}; ty.onchange=()=>{MINSALES=+ty.value;rows()};
   document.querySelectorAll("th[data-k]").forEach(th=>th.onclick=()=>{const k=th.dataset.k;SORT={k,dir:SORT.k==k?-SORT.dir:(k=="name"?1:-1)};listView()});
+  const card=document.getElementById("rkcard"), fb=document.getElementById("fsbtn");
+  const setFs=on=>{FS=on;card.classList.toggle("fs",on);document.body.classList.toggle("noscroll",on);fb.innerHTML=on?"✕ 退出全屏":"⛶ 全屏"};
+  fb.onclick=()=>setFs(!FS); if(FS) setFs(true);
   document.querySelectorAll(".rk button").forEach(b=>b.onclick=()=>{SORT={k:b.dataset.k,dir:+b.dataset.d};listView()});
   rows();
 }
@@ -175,9 +187,9 @@ function rows(){
   list.forEach((s,i)=>s._rank=i+1);
   const shown=q?list.filter(s=>label(s).toLowerCase().includes(q)):list;
   const medal=r=>r<=3?`<span class="medal m${r}">${r}</span>`:r;
-  document.getElementById("tb").innerHTML=shown.slice(0,500).map(s=>`<tr data-id="${s.id}"><td class="rank">${medal(s._rank)}</td>${COLS.map(c=>{const t=c[3]?c[3](c[2](s)):esc(c[2](s));return `<td>${c[4]?est(s,t):t}</td>`}).join("")}</tr>`).join("");
-  document.getElementById("cnt").textContent=`按「${col[1]}」排名，共 ${list.length} 个有数据的区${q?`，搜索结果 ${shown.length} 个（名次为全州排名）`:""}${shown.length>500?"，仅显示前 500 名":""}。带 ≈ 的为估算租金/收益率（该区不在 DFFH 租金区组内）。点击某一行查看详情和走势图。`;
-  document.querySelectorAll("#tb tr[data-id]").forEach(tr=>tr.onclick=()=>location.hash=tr.dataset.id);
+  document.getElementById("tb").innerHTML=shown.slice(0,5000).map(s=>`<tr data-id="${s.id}"><td class="rank">${medal(s._rank)}</td>${COLS.map(c=>{const t=c[3]?c[3](c[2](s)):esc(c[2](s));return `<td>${c[4]?est(s,t):t}</td>`}).join("")}</tr>`).join("");
+  document.getElementById("cnt").textContent=`按「${col[1]}」排名，共 ${list.length} 个有数据的区${q?`，搜索结果 ${shown.length} 个（名次为全州排名）`:""}。带 ≈ 的为估算租金/收益率（该区不在 DFFH 租金区组内）。点击某一行查看详情和走势图。`;
+  document.querySelectorAll("#tb tr[data-id]").forEach(tr=>tr.onclick=()=>{FS=false;location.hash=tr.dataset.id});
 }
 
 /* ---------------- suburb view ---------------- */
