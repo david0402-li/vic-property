@@ -37,6 +37,8 @@ CKAN = "https://discover.data.vic.gov.au/api/3/action/package_show?id="
 PKG_HOUSE = "victorian-property-sales-report-median-house-by-suburb-time-series"
 PKG_UNIT = "victorian-property-sales-report-median-unit-by-suburb-time-series"
 PKG_RENT = "rental-report-quarterly-moving-annual-rents-by-suburb"
+PKG_HOUSE_Q = "victorian-property-sales-report-median-house-by-suburb"
+PKG_UNIT_Q = "victorian-property-sales-report-median-unit-by-suburb"
 ABS_TSP_URLS_UNUSED = [
     "https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_TSP_SAL_for_VIC_short-header.zip",
     "https://www.abs.gov.au/census/find-census-data/datapacks/download/2021_TSP_all_for_VIC_short-header.zip",
@@ -220,6 +222,73 @@ def parse_vpsr(path, label):
                 result[key] = series
         log(f"  {label}: sheet '{sn}' header row {hdr_idx}, years {min(years.values())}-{max(years.values())}, "
             f"suburb col {best}, parsed {len(result)} suburbs")
+    return result
+
+
+# ---------------------------------------------------------------- VPSR quarterly
+QMON = {m: i for i, m in enumerate(["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"], 1)}
+
+
+def quarter_label(v):
+    """'Jul - Sep 2025' / 'Sep Qtr 2025' / 'Sep 2025' / datetime -> 'YYYY-MM' (quarter-end month)."""
+    if isinstance(v, (pd.Timestamp, datetime.datetime, datetime.date)):
+        return f"{v.year}-{v.month:02d}"
+    t = str(v).upper()
+    yrs = re.findall(r"(?:19|20)\d{2}", t)
+    mons = [QMON[m] for m in re.findall(r"\b(JAN|FEB|MAR|APR|MAY|JUN|JUL|AUG|SEP|OCT|NOV|DEC)[A-Z]*", t)]
+    if not yrs or not mons:
+        return None
+    m = mons[-1]
+    if m not in (3, 6, 9, 12):
+        m = {1: 3, 2: 3, 4: 6, 5: 6, 7: 9, 8: 9, 10: 12, 11: 12}[m]
+    return f"{yrs[-1]}-{m:02d}"
+
+
+def parse_vpsr_quarterly(path, label):
+    sheets = read_all_sheets(path)
+    dump_sheets(sheets, f"raw_{label}_q.txt", rows=14)
+    result = {}
+    for sn, df in sheets.items():
+        hdr_idx, qcols = None, {}
+        for i in range(min(25, len(df))):
+            q = {}
+            for j, v in enumerate(df.iloc[i].tolist()):
+                if isinstance(v, str) and re.search(r"(?:19|20)\d{2}", v) and quarter_label(v):
+                    q[j] = quarter_label(v)
+                elif isinstance(v, (pd.Timestamp, datetime.datetime)):
+                    q[j] = quarter_label(v)
+            if len(q) >= 3:
+                hdr_idx, qcols = i, q
+                break
+        if hdr_idx is None:
+            continue
+        # keep first occurrence of each quarter label (later columns tend to be counts/changes)
+        seen, cols = set(), {}
+        for j in sorted(qcols):
+            if qcols[j] not in seen:
+                seen.add(qcols[j]); cols[j] = qcols[j]
+        first = min(cols)
+        best, best_cnt = 0, -1
+        for j in range(first):
+            cnt = sum(isinstance(x, str) and len(x.strip()) > 2 for x in df.iloc[hdr_idx + 1:, j])
+            if cnt > best_cnt:
+                best, best_cnt = j, cnt
+        for i in range(hdr_idx + 1, len(df)):
+            nm = df.iat[i, best]
+            if not isinstance(nm, str) or not nm.strip():
+                continue
+            key = norm(nm)
+            if key in ("LOCALITY", "SUBURB", "VICTORIA") or key.startswith("SOURCE") or "TOTAL" in key:
+                continue
+            ser = {}
+            for j, q in cols.items():
+                val = num(df.iat[i, j])
+                if val and val > 10000:
+                    ser[q] = round(val)
+            if ser:
+                result[key] = ser
+        log(f"  {label} quarterly: sheet '{sn}' header row {hdr_idx}, quarters {sorted(set(cols.values()))}, "
+            f"suburb col {best}, parsed {len(result)}")
     return result
 
 
@@ -577,6 +646,32 @@ def main():
             else:
                 ERRORS.append(f"{label}: {e}")
 
+    houseq, unitq = {}, {}
+    for label, pkg in (("houseq", PKG_HOUSE_Q), ("unitq", PKG_UNIT_Q)):
+        try:
+            log(f"[{label}] CKAN {pkg}")
+            res, _ = ckan_latest(pkg)
+            ext = ".xlsx" if res["url"].lower().endswith("x") else ".xls"
+            p, via = download_cached(res["url"], f"vpsr_{label}{ext}")
+            data = parse_vpsr_quarterly(p, label)
+            if len(data) < 100:
+                raise RuntimeError(f"only {len(data)} suburbs parsed")
+            store_save(label, data, {"name": res.get("name"), "url": res["url"], "via": via, "fetched": meta["generated"]})
+            meta["sources"][label] = {"name": res.get("name"), "url": res["url"], "via": via}
+        except Exception as e:
+            log(traceback.format_exc())
+            data, m = store_load(label)
+            if data:
+                meta["sources"][label] = dict(m, stale=True)
+                ERRORS.append(f"{label}: 本次下载失败，沿用 {m.get('fetched','')} 的数据")
+            else:
+                data = {}
+                ERRORS.append(f"{label}: {e}")
+        if label == "houseq":
+            houseq = data
+        else:
+            unitq = data
+
     try:
         log("[rent] CKAN " + PKG_RENT)
         res, _ = ckan_latest(PKG_RENT)
@@ -665,21 +760,39 @@ def main():
 
         latest = lambda s: s[max(s)] if s else None  # noqa
         dw21 = sal.get("dw2021")
+        hq, uq = houseq.get(key, {}), unitq.get(key, {})
+        def now(ann, q):
+            """most recent price: latest quarter if it is newer than the last annual median"""
+            if q:
+                lq = max(q)
+                if not ann or int(lq[:4]) >= max(ann):
+                    return q[lq], f"{lq[:4]}Q{int(lq[5:]) // 3}"
+            if ann:
+                return ann[max(ann)], str(max(ann))
+            return None, None
+        hNow, hAsOf = now(h, hq)
+        uNow, uAsOf = now(u, uq)
+        rH = latest(rq.get("h3", {})) or latest(rq.get("all", {})) or latest(rq.get("est", {}))
+        rU = latest(rq.get("f2", {})) or latest(rq.get("all", {})) or latest(rq.get("est", {}))
         pcinfo = {k: v for k, v in postcode_for(key, pcs).items() if not k.startswith("_")}
         rec = {
             "id": slug(key), "name": title(key), "postcode": pcinfo.get("pc"),
             "lat": pcinfo.get("lat"), "lng": pcinfo.get("lng"), "lga": pcinfo.get("lga"), "rentGroup": g, "rentMatch": how,
-            "house": h, "unit": u, "rent": {t: {q: v for q, v in ser.items() if q >= "2010"} for t, ser in rq.items()},
+            "house": h, "unit": u, "houseQ": hq or None, "unitQ": uq or None, "rent": {t: {q: v for q, v in ser.items() if q >= "2010"} for t, ser in rq.items()},
             "yieldHouse": yh, "yieldUnit": yu,
             "sa2": [d["name"] for d in sa2s],
             "erp": dict(sorted(erp.items())) or None,
             "dwTs": dw_ts or None,
             "pop2021": sal.get("pop2021"), "dw2021": dw21,
             "latest": {
-                "house": latest(h), "unit": latest(u), "year": max(h) if h else (max(u) if u else None),
+                "house": hNow, "unit": uNow, "houseAsOf": hAsOf, "unitAsOf": uAsOf,
+                "houseAnnual": latest(h), "unitAnnual": latest(u),
+                "year": max(h) if h else (max(u) if u else None),
                 "rentH3": latest(rq.get("h3", {})), "rentF2": latest(rq.get("f2", {})), "rentAll": latest(rq.get("all", {})), "rentEst": latest(rq.get("est", {})), "rentMatch": how,
                 "rentQ": max(rq.get("all", rq.get("h3", {})) or {"": 0}) or None,
-                "yieldHouse": latest(yh), "yieldUnit": latest(yu),
+                "yieldHouse": round(rH * 52 / hNow * 100, 2) if rH and hNow else None,
+                "yieldUnit": round(rU * 52 / uNow * 100, 2) if rU and uNow else None,
+                "gq1": (round((hq[max(hq)] / hq[sorted(hq)[-5]] - 1) * 100, 1) if len(hq) >= 5 else None),
                 "g1": growth(h, 1), "g5": growth(h, 5), "g10": growth(h, 10), "gu5": growth(u, 5),
                 "pop": sal.get("pop2021"), "erp": latest(erp) if erp else None,
                 "popGrowth5": growth(dict(erp), 5) if erp else None,
@@ -708,7 +821,7 @@ def main():
     import shutil
     os.makedirs(os.path.join(DEBUG, "raw"), exist_ok=True)
     for fn in os.listdir(CACHE):
-        if fn.endswith(".xlsx") and os.path.getsize(os.path.join(CACHE, fn)) < 5e6:
+        if fn.endswith((".xlsx", ".xls")) and os.path.getsize(os.path.join(CACHE, fn)) < 5e6:
             shutil.copy(os.path.join(CACHE, fn), os.path.join(DEBUG, "raw", fn))
     if not suburbs:
         sys.exit(1)
