@@ -8,8 +8,7 @@
   downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls -> vpsr_houseq.xls (255 KB) via direct
   houseq: sheet 'Sheet1' header row 0, quarters ['2025-03', '2025-06', '2025-09', '2025-12', '2026-03'], sales col 11, parsed 773
 [unitq] CKAN victorian-property-sales-report-median-unit-by-suburb
-  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via wayback:20261005223113
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via direct
   unitq: sheet 'Sheet1' header row 0, quarters ['2025-03', '2025-06', '2025-09', '2025-12', '2026-03'], sales col 11, parsed 446
 [rent] CKAN rental-report-quarterly-moving-annual-rents-by-suburb
   downloaded https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel -> dffh_rents.xlsx (1109 KB) via direct
