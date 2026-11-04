@@ -1,24 +1,27 @@
 [house] CKAN victorian-property-sales-report-median-house-by-suburb-time-series
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx -> vpsr_house.xlsx (135 KB) via direct
+  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx); trying Wayback Machine
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx -> vpsr_house.xlsx (135 KB) via wayback:20261020232915
   house: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 797 suburbs
 [unit] CKAN victorian-property-sales-report-median-unit-by-suburb-time-series
   downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx -> vpsr_unit.xlsx (81 KB) via direct
   unit: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 463 suburbs
 [houseq] CKAN victorian-property-sales-report-median-house-by-suburb
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls -> vpsr_houseq.xls (255 KB) via direct
+  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls); trying Wayback Machine
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls -> vpsr_houseq.xls (255 KB) via wayback:20261004181818
   houseq: sheet 'Sheet1' header row 0, quarters ['2025-03', '2025-06', '2025-09', '2025-12', '2026-03'], sales col 11, parsed 773
 [unitq] CKAN victorian-property-sales-report-median-unit-by-suburb
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via direct
+  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls); trying Wayback Machine
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via wayback:20261005223113
   unitq: sheet 'Sheet1' header row 0, quarters ['2025-03', '2025-06', '2025-09', '2025-12', '2026-03'], sales col 11, parsed 446
 [rent] CKAN rental-report-quarterly-moving-annual-rents-by-suburb
-  downloaded https://www.dffh.vic.gov.au/moving-annual-rent-suburb-september-quarter-2025-excel -> dffh_rents.xlsx (1109 KB) via direct
-  rents: sheet '1 bedroom flat' -> f1: 145 suburb groups, 103 quarters
-  rents: sheet '2 bedroom flat' -> f2: 146 suburb groups, 103 quarters
-  rents: sheet '3 bedroom flat' -> f3: 145 suburb groups, 103 quarters
-  rents: sheet '2 bedroom house' -> h2: 143 suburb groups, 103 quarters
-  rents: sheet '3 bedroom house' -> h3: 143 suburb groups, 103 quarters
-  rents: sheet '4 bedroom house' -> h4: 143 suburb groups, 103 quarters
-  rents: sheet 'All properties' -> all: 146 suburb groups, 103 quarters
+  downloaded https://www.dffh.vic.gov.au/moving-annual-median-rent-suburb-and-town-june-quarter-2026 -> dffh_rents.xlsx (1149 KB) via direct
+  rents: sheet '1 bedroom flat' -> f1: 145 suburb groups, 106 quarters
+  rents: sheet '2 bedroom flat' -> f2: 146 suburb groups, 106 quarters
+  rents: sheet '3 bedroom flat' -> f3: 145 suburb groups, 106 quarters
+  rents: sheet '2 bedroom house' -> h2: 143 suburb groups, 106 quarters
+  rents: sheet '3 bedroom house' -> h3: 143 suburb groups, 106 quarters
+  rents: sheet '4 bedroom house' -> h4: 143 suburb groups, 106 quarters
+  rents: sheet 'All properties' -> all: 146 suburb groups, 106 quarters
 [abs] ABS Data API
   ABS C21_G01_SAL key=3.P_1..SAL.2: 2946 rows
   SAL population: 2946 suburbs
