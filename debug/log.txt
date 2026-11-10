@@ -1,28 +1,7 @@
 [house] CKAN victorian-property-sales-report-median-house-by-suburb-time-series
   direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx); trying Wayback Machine
-Traceback (most recent call last):
-  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 112, in download_cached
-    r = get(url, tries=2, timeout=90)
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
-    raise last
-  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
-    raise RuntimeError(f"HTTP {r.status_code} for {url}")
-RuntimeError: HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 812, in main
-    p, via = download_cached(res["url"], f"vpsr_{label}.xlsx")
-             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 120, in download_cached
-    raw, ts = wayback(url)
-              ^^^^^^^^^^^^
-  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 101, in wayback
-    raise RuntimeError("no wayback snapshot for " + url)
-RuntimeError: no wayback snapshot for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx
-
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx -> vpsr_house.xlsx (135 KB) via wayback:20261020232915
+  house: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 797 suburbs
 [unit] CKAN victorian-property-sales-report-median-unit-by-suburb-time-series
   direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx); trying Wayback Machine
   downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx -> vpsr_unit.xlsx (81 KB) via wayback:20261020233355
@@ -72,5 +51,4 @@ RuntimeError: HTTP 404 for https://discover.data.vic.gov.au/api/3/action/package
 counts: {'suburbs': 803, 'rentGroups': 146, 'withRent': 272, 'withRentEst': 500, 'withYield': 768, 'withCensus': 763, 'withErp': 458, 'withPostcode': 797, 'withCrime': 771, 'withSchools': 642}
 
 ERRORS:
-house: 本次下载失败，沿用 2026-11-08T22:08Z 的数据
 rent: 本次下载失败，沿用 2026-11-08T22:08Z 的数据
