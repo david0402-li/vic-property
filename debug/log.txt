@@ -1,18 +1,86 @@
 [house] CKAN victorian-property-sales-report-median-house-by-suburb-time-series
   direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx -> vpsr_house.xlsx (135 KB) via wayback:20261020232915
-  house: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 797 suburbs
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 112, in download_cached
+    r = get(url, tries=2, timeout=90)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
+    raise last
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
+    raise RuntimeError(f"HTTP {r.status_code} for {url}")
+RuntimeError: HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 812, in main
+    p, via = download_cached(res["url"], f"vpsr_{label}.xlsx")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 121, in download_cached
+    r = get(raw, tries=3, timeout=120)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
+    raise last
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
+    raise RuntimeError(f"HTTP {r.status_code} for {url}")
+RuntimeError: HTTP 498 for https://web.archive.org/web/20261020232915id_/https://www.land.vic.gov.au/__data/assets/excel_doc/0033/775617/houses-by-suburb-2015-2025.xlsx
+
 [unit] CKAN victorian-property-sales-report-median-unit-by-suburb-time-series
   direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx -> vpsr_unit.xlsx (81 KB) via wayback:20261020233355
-  unit: sheet 'Sheet1' header row 1, years 2015-2025, suburb col 0, parsed 463 suburbs
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 112, in download_cached
+    r = get(url, tries=2, timeout=90)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
+    raise last
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
+    raise RuntimeError(f"HTTP {r.status_code} for {url}")
+RuntimeError: HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 812, in main
+    p, via = download_cached(res["url"], f"vpsr_{label}.xlsx")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 121, in download_cached
+    r = get(raw, tries=3, timeout=120)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
+    raise last
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
+    raise RuntimeError(f"HTTP {r.status_code} for {url}")
+RuntimeError: HTTP 498 for https://web.archive.org/web/20261020233355id_/https://www.land.vic.gov.au/__data/assets/excel_doc/0034/775618/units-by-suburb-2015-2025.xlsx
+
 [houseq] CKAN victorian-property-sales-report-median-house-by-suburb
   direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls -> vpsr_houseq.xls (255 KB) via wayback:20261004181818
-  houseq: sheet 'Sheet1' header row 0, quarters ['2025-03', '2025-06', '2025-09', '2025-12', '2026-03'], sales col 11, parsed 773
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 112, in download_cached
+    r = get(url, tries=2, timeout=90)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
+    raise last
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
+    raise RuntimeError(f"HTTP {r.status_code} for {url}")
+RuntimeError: HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 839, in main
+    p, via = download_cached(res["url"], f"vpsr_{label}{ext}")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 121, in download_cached
+    r = get(raw, tries=3, timeout=120)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 74, in get
+    raise last
+  File "/home/runner/work/vic-property/vic-property/scripts/pipeline.py", line 69, in get
+    raise RuntimeError(f"HTTP {r.status_code} for {url}")
+RuntimeError: HTTP 498 for https://web.archive.org/web/20261004181818id_/https://www.land.vic.gov.au/__data/assets/excel_doc/0037/777961/median-house-march-quarter-2026.xls
+
 [unitq] CKAN victorian-property-sales-report-median-unit-by-suburb
-  direct download failed (HTTP 403 for https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls); trying Wayback Machine
-  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via wayback:20261005223113
+  downloaded https://www.land.vic.gov.au/__data/assets/excel_doc/0036/777960/median-unit-march-quarter-2026.xls -> vpsr_unitq.xls (161 KB) via direct
   unitq: sheet 'Sheet1' header row 0, quarters ['2025-03', '2025-06', '2025-09', '2025-12', '2026-03'], sales col 11, parsed 446
 [rent] CKAN rental-report-quarterly-moving-annual-rents-by-suburb
 Traceback (most recent call last):
@@ -51,4 +119,7 @@ RuntimeError: HTTP 404 for https://discover.data.vic.gov.au/api/3/action/package
 counts: {'suburbs': 803, 'rentGroups': 146, 'withRent': 272, 'withRentEst': 500, 'withYield': 768, 'withCensus': 763, 'withErp': 458, 'withPostcode': 797, 'withCrime': 771, 'withSchools': 642}
 
 ERRORS:
+house: 本次下载失败，沿用 2026-11-18T00:58Z 的数据
+unit: 本次下载失败，沿用 2026-11-18T00:58Z 的数据
+houseq: 本次下载失败，沿用 2026-11-18T00:58Z 的数据
 rent: 本次下载失败，沿用 2026-11-08T22:08Z 的数据
